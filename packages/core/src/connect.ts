@@ -13,7 +13,7 @@ import { wait } from './utils.js'
 import { validateConnectOptions } from './validation.js'
 
 async function connect(
-  options?: ConnectOptions | ConnectOptionsString
+    options?: ConnectOptions | ConnectOptionsString
 ): Promise<WalletState[]> {
   if (options) {
     const error = validateConnectOptions(options)
@@ -28,7 +28,7 @@ async function connect(
   // so we must ensure at least one is set
   if (!chains.length)
     throw new Error(
-      'At least one chain must be set before attempting to connect a wallet'
+        'At least one chain must be set before attempting to connect a wallet'
     )
 
   const { autoSelect } = options || {
@@ -47,19 +47,19 @@ async function connect(
 
   connectWallet$.next({
     autoSelect:
-      typeof autoSelect === 'string'
-        ? { label: autoSelect, disableModals: false }
-        : autoSelect,
+        typeof autoSelect === 'string'
+            ? { label: autoSelect, disableModals: false }
+            : autoSelect,
     inProgress: true
   })
 
   const result$ = connectWallet$.pipe(
-    filter(
-      ({ inProgress, actionRequired }) =>
-        inProgress === false && !actionRequired
-    ),
-    withLatestFrom(wallets$),
-    pluck(1)
+      filter(
+          ({ inProgress, actionRequired }) =>
+              inProgress === false && !actionRequired
+      ),
+      withLatestFrom(wallets$),
+      pluck(1)
   )
 
   return firstValueFrom(result$)

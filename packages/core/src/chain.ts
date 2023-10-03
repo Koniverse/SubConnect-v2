@@ -36,27 +36,27 @@ async function setChain(options: {
 
   // validate that chainId has been added to chains
   const chain = chains.find(
-    ({ namespace, id }) =>
-      namespace === chainNamespace &&
-      id.toLowerCase() === chainIdHex.toLowerCase()
+      ({ namespace, id }) =>
+          namespace === chainNamespace &&
+          id.toLowerCase() === chainIdHex.toLowerCase()
   )
 
   if (!chain) {
     throw new Error(
-      `Chain with chainId: ${chainId} and chainNamespace: ${chainNamespace} has not been set and must be added when Onboard is initialized.`
+        `Chain with chainId: ${chainId} and chainNamespace: ${chainNamespace} has not been set and must be added when Onboard is initialized.`
     )
   }
 
   const wallet = walletToSet
-    ? wallets.find(({ label }) => label === walletToSet)
-    : wallets[0]
+      ? wallets.find(({ label }) => label === walletToSet)
+      : wallets[0]
 
   // validate a wallet is connected
   if (!wallet) {
     throw new Error(
-      walletToSet
-        ? `Wallet with label ${walletToSet} is not connected`
-        : 'A wallet must be connected before a chain can be set'
+        walletToSet
+            ? `Wallet with label ${walletToSet} is not connected`
+            : 'A wallet must be connected before a chain can be set'
     )
   }
 
@@ -64,8 +64,8 @@ async function setChain(options: {
 
   // check if wallet is already connected to chainId
   if (
-    walletConnectedChain.namespace === chainNamespace &&
-    walletConnectedChain.id === chainIdHex
+      walletConnectedChain.namespace === chainNamespace &&
+      walletConnectedChain.id === chainIdHex
   ) {
     return true
   }
@@ -76,12 +76,12 @@ async function setChain(options: {
   } catch (error) {
     const { code } = error as { code: number }
     const switchChainModalClosed$ = switchChainModal$.pipe(
-      filter(x => x === null),
-      map(() => false)
+        filter(x => x === null),
+        map(() => false)
     )
     if (
-      code === ProviderRpcErrorCode.CHAIN_NOT_ADDED ||
-      code === ProviderRpcErrorCode.UNRECOGNIZED_CHAIN_ID
+        code === ProviderRpcErrorCode.CHAIN_NOT_ADDED ||
+        code === ProviderRpcErrorCode.UNRECOGNIZED_CHAIN_ID
     ) {
       // chain has not been added to wallet
       if (rpcUrl || label || token) {
@@ -102,10 +102,10 @@ async function setChain(options: {
 
       // add chain to wallet
       return chainNotInWallet(
-        wallet,
-        chain,
-        switchChainModalClosed$,
-        chainIdHex
+          wallet,
+          chain,
+          switchChainModalClosed$,
+          chainIdHex
       )
     }
 
@@ -120,10 +120,10 @@ async function setChain(options: {
 }
 
 const chainNotInWallet = async (
-  wallet: WalletState,
-  chain: Chain,
-  switchChainModalClosed$: Observable<boolean>,
-  chainIdHex: string
+    wallet: WalletState,
+    chain: Chain,
+    switchChainModalClosed$: Observable<boolean>,
+    chainIdHex: string
 ): Promise<boolean> => {
   try {
     await addNewChain(wallet.provider, chain)

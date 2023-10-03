@@ -121,14 +121,14 @@ function init(options: InitOptions): OnboardAPI {
   initI18N(i18n)
   addChains(chainIdToHex(chains))
 
-  if (typeof connect !== undefined) {
+  if (typeof connect !== 'undefined') {
     updateConnectModal(connect)
   }
   // update accountCenter
   if (typeof accountCenter !== 'undefined') {
     let accountCenterUpdate
     const { hideTransactionProtectionBtn, transactionProtectionInfoLink } =
-      accountCenter
+        accountCenter
 
     if (device.type === 'mobile') {
       accountCenterUpdate = {
@@ -158,19 +158,19 @@ function init(options: InitOptions): OnboardAPI {
       }
 
       if (
-        (!notify.desktop || (notify.desktop && !notify.desktop.position)) &&
-        accountCenter &&
-        accountCenter.desktop &&
-        accountCenter.desktop.position
+          (!notify.desktop || (notify.desktop && !notify.desktop.position)) &&
+          accountCenter &&
+          accountCenter.desktop &&
+          accountCenter.desktop.position
       ) {
         notify.desktop.position = accountCenter.desktop.position
       }
 
       if (
-        (!notify.mobile || (notify.mobile && !notify.mobile.position)) &&
-        accountCenter &&
-        accountCenter.mobile &&
-        accountCenter.mobile.position
+          (!notify.mobile || (notify.mobile && !notify.mobile.position)) &&
+          accountCenter &&
+          accountCenter.mobile &&
+          accountCenter.mobile.position
       ) {
         notify.mobile.position = accountCenter.mobile.position
       }
@@ -243,18 +243,18 @@ function init(options: InitOptions): OnboardAPI {
 
   // handle auto connection of last wallet
   if (
-    connect &&
-    (connect.autoConnectLastWallet || connect.autoConnectAllPreviousWallet)
+      connect &&
+      (connect.autoConnectLastWallet || connect.autoConnectAllPreviousWallet)
   ) {
     const lastConnectedWallets = getLocalStore(
-      STORAGE_KEYS.LAST_CONNECTED_WALLET
+        STORAGE_KEYS.LAST_CONNECTED_WALLET
     )
     try {
       const lastConnectedWalletsParsed = JSON.parse(lastConnectedWallets)
       if (
-        lastConnectedWalletsParsed &&
-        Array.isArray(lastConnectedWalletsParsed) &&
-        lastConnectedWalletsParsed.length
+          lastConnectedWalletsParsed &&
+          Array.isArray(lastConnectedWalletsParsed) &&
+          lastConnectedWalletsParsed.length
       ) {
         connectAllPreviousWallets(lastConnectedWalletsParsed, connect)
       }
@@ -276,16 +276,16 @@ function init(options: InitOptions): OnboardAPI {
 }
 
 const fontFamilyExternallyDefined = (
-  theme: Theme,
-  disableFontDownload: boolean
+    theme: Theme,
+    disableFontDownload: boolean
 ): boolean => {
   if (disableFontDownload) return true
   if (
-    document.body &&
-    (getComputedStyle(document.body).getPropertyValue(
-      '--onboard-font-family-normal'
-    ) ||
-      getComputedStyle(document.body).getPropertyValue('--w3o-font-family'))
+      document.body &&
+      (getComputedStyle(document.body).getPropertyValue(
+              '--onboard-font-family-normal'
+          ) ||
+          getComputedStyle(document.body).getPropertyValue('--w3o-font-family'))
   )
     return true
   if (!theme) return false
@@ -306,8 +306,8 @@ const importInterFont = async (): Promise<void> => {
 }
 
 const connectAllPreviousWallets = async (
-  lastConnectedWallets: Array<string>,
-  connect: ConnectModalOptions
+    lastConnectedWallets: Array<string>,
+    connect: ConnectModalOptions
 ): Promise<void> => {
   const activeWalletsList = []
   const parsedWalletList = lastConnectedWallets
@@ -330,8 +330,8 @@ const connectAllPreviousWallets = async (
     }
   }
   setLocalStore(
-    STORAGE_KEYS.LAST_CONNECTED_WALLET,
-    JSON.stringify(activeWalletsList)
+      STORAGE_KEYS.LAST_CONNECTED_WALLET,
+      JSON.stringify(activeWalletsList)
   )
 }
 
@@ -401,7 +401,6 @@ function mountApp(theme: Theme, disableFontDownload: boolean) {
           --warning-700: #664600;
 
           /* FONTS */
-          --font-family-normal: var(--w3o-font-family, Inter, sans-serif);
 
           --font-size-1: 3rem;
           --font-size-2: 2.25rem;
@@ -454,23 +453,21 @@ function mountApp(theme: Theme, disableFontDownload: boolean) {
   const connectModalContEl = configuration.containerElements.connectModal
 
   const containerElementQuery =
-    connectModalContEl || state.get().accountCenter.containerElement || 'body'
+      connectModalContEl || state.get().accountCenter.containerElement || 'body'
 
   const containerElement = document.querySelector(containerElementQuery)
 
   if (!containerElement) {
     throw new Error(
-      `Element with query ${containerElementQuery} does not exist.`
+        `Element with query ${containerElementQuery} does not exist.`
     )
   }
 
   containerElement.appendChild(onboard)
 
-  const app = new App({
+  return new App({
     target
   })
-
-  return app
 }
 
 export default init

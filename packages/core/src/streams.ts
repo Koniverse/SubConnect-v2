@@ -29,7 +29,7 @@ export const switchChainModal$ = new BehaviorSubject<null | {
 }>(null)
 
 export const wallets$ = (
-  state.select('wallets') as Observable<WalletState[]>
+    state.select('wallets') as Observable<WalletState[]>
 ).pipe(shareReplay(1))
 
 // reset logic
@@ -52,7 +52,7 @@ export function updateTransaction(tx: EthereumTransactionData): void {
 
   if (txIndex !== -1) {
     const updatedTransactions = currentTransactions.map((val, i) =>
-      i === txIndex ? tx : val
+        i === txIndex ? tx : val
     )
 
     transactions$.next(updatedTransactions)
