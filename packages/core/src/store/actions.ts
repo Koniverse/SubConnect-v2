@@ -107,12 +107,12 @@ export function updateChain(updatedChain: Chain): void {
 }
 
 export function addWallet(wallet: WalletState): void {
-  const error = validateWallet(wallet)
-
-  if (error) {
-    console.error(error)
-    throw error
-  }
+  // const error = validateWallet(wallet)
+  //
+  // if (error) {
+  //   console.error(error)
+  //   throw error
+  // }
 
   const action = {
     type: ADD_WALLET,

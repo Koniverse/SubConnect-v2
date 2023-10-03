@@ -1,20 +1,5 @@
-import fortmaticModule from '@web3-onboard/fortmatic'
-import safeModule from '@web3-onboard/gnosis'
+
 import injectedModule from '@web3-onboard/injected-wallets'
-import keepkeyModule from '@web3-onboard/keepkey'
-import keystoneModule from '@web3-onboard/keystone'
-import ledgerModule from '@web3-onboard/ledger'
-import portisModule from '@web3-onboard/portis'
-import torusModule from '@web3-onboard/torus'
-import trezorModule from '@web3-onboard/trezor'
-import walletConnectModule from '@web3-onboard/walletconnect'
-import coinbaseModule from '@web3-onboard/coinbase'
-import magicModule from '@web3-onboard/magic'
-import dcentModule from '@web3-onboard/dcent'
-import mewModule from '@web3-onboard/mew-wallet'
-import sequenceModule from '@web3-onboard/sequence'
-import tahoWalletModule from '@web3-onboard/taho'
-import web3authModule from '@web3-onboard/web3auth'
 
 import { init } from '@web3-onboard/react'
 
@@ -30,67 +15,10 @@ const injected = injectedModule({
   }
 })
 
-const walletLink = coinbaseModule()
-
-const walletConnect = walletConnectModule()
-const portis = portisModule({
-  // Replace with your apiKey
-  apiKey: 'b2b7586f-2b1e-4c30-a7fb-c2d1533b153b'
-})
-
-const fortmatic = fortmaticModule({
-  // Replace with your apiKey
-  apiKey: 'pk_test_886ADCAB855632AA'
-})
-
-const torus = torusModule()
-const ledger = ledgerModule()
-const keepkey = keepkeyModule()
-const keystone = keystoneModule()
-const safe = safeModule()
-const dcent = dcentModule()
-const mew = mewModule()
-const tahoWalletSdk = tahoWalletModule() // Previously named Tally Ho wallet
-const web3auth = web3authModule({
-  clientId:
-    'DJuUOKvmNnlzy6ruVgeWYWIMKLRyYtjYa9Y10VCeJzWZcygDlrYLyXsBQjpJ2hxlBO9dnl8t9GmAC2qOP5vnIGo'
-})
-
-const sequence = sequenceModule({
-  appName: 'My app'
-})
-
-const trezorOptions = {
-  email: 'test@test.com',
-  appUrl: 'https://www.blocknative.com'
-}
-const trezor = trezorModule(trezorOptions)
-
-const magic = magicModule({
-  // Replace with your apiKey
-  apiKey: 'pk_live_02207D744E81C2BA'
-})
-
 export default init({
   // An array of wallet modules that you would like to be presented to the user to select from when connecting a wallet.
   wallets: [
     injected,
-    safe,
-    fortmatic,
-    portis,
-    walletLink,
-    magic,
-    torus,
-    ledger,
-    trezor,
-    walletConnect,
-    keepkey,
-    keystone,
-    dcent,
-    mew,
-    tahoWalletSdk,
-    web3auth,
-    sequence
   ],
   // An array of Chains that your app supports
   chains: [

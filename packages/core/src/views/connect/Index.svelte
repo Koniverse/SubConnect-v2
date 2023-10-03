@@ -4,7 +4,7 @@
   import { BigNumber } from 'ethers'
   import { _ } from 'svelte-i18n'
   import en from '../../i18n/en.json'
-  import { listenAccountsChanged } from '../../provider.js'
+  import {enable, listenAccountsChanged} from '../../provider.js'
   import { state } from '../../store/index.js'
   import { connectWallet$, onDestroy$ } from '../../streams.js'
   import { addWallet, updateAccount } from '../../store/actions.js'
@@ -117,7 +117,8 @@
   async function selectWallet({
     label,
     icon,
-    getInterface
+    getInterface,
+    type
   }: WalletWithLoadingIcon): Promise<void> {
     connectingWalletLabel = label
 
@@ -150,6 +151,7 @@
       selectedWallet = {
         label,
         icon: loadedIcon,
+        type,
         provider,
         instance,
         accounts: [],
@@ -177,15 +179,16 @@
   }
 
   async function autoSelectWallet(wallet: WalletModule): Promise<void> {
-    const { getIcon, getInterface, label } = wallet
+    const { getIcon, getInterface, label, type } = wallet
     const icon = getIcon()
-    selectWallet({ label, icon, getInterface })
+    selectWallet({ label, icon, getInterface , type })
   }
 
   async function loadWalletsForSelection() {
-    wallets = walletModules.map(({ getIcon, getInterface, label }) => {
+    wallets = walletModules.map(({ getIcon, getInterface, label , type }) => {
       return {
         label,
+        type,
         icon: getIcon(),
         getInterface
       }
@@ -200,14 +203,14 @@
   async function connectWallet() {
     connectionRejected = false
 
-    const { provider, label } = selectedWallet
+    const { provider, label , type } = selectedWallet
 
     cancelPreviousConnect$.next()
 
     try {
       const [address] = await Promise.race([
         // resolved account
-        requestAccounts(provider),
+        type === 'evm' ? await requestAccounts(provider) : await enable(label) ,
         // or connect wallet is called again whilst waiting for response
         firstValueFrom(cancelPreviousConnect$.pipe(mapTo([])))
       ])
@@ -252,23 +255,27 @@
         )
       }
 
-      const chain = await getChainId(provider)
+      let chain = null;
+      if( type === 'evm'){
+        chain = await getChainId(provider)
 
-      if (state.get().notify.enabled) {
-        const sdk = await getBNMulitChainSdk()
+        if (state.get().notify.enabled) {
+          const sdk = await getBNMulitChainSdk()
 
-        if (sdk) {
-          try {
-            sdk.subscribe({
-              id: address,
-              chainId: chain,
-              type: 'account'
-            })
-          } catch (error) {
-            // unsupported network for transaction events
+          if (sdk) {
+            try {
+              sdk.subscribe({
+                id: address,
+                chainId: chain,
+                type: 'account'
+              })
+            } catch (error) {
+              // unsupported network for transaction events
+            }
           }
         }
       }
+
 
       const update: Pick<WalletState, 'accounts' | 'chains'> = {
         accounts: [{ address, ens: null, uns: null, balance: null }],
@@ -325,7 +332,7 @@
 
   // ==== CONNECTED WALLET ==== //
   async function updateAccountDetails() {
-    const { accounts, chains: selectedWalletChains } = selectedWallet
+    const { accounts, chains: selectedWalletChains, type } = selectedWallet
     const appChains = state.get().chains
     const [connectedWalletChain] = selectedWalletChains
 
@@ -339,7 +346,7 @@
     let { balance, ens, uns, secondaryTokens } = accounts[0]
 
     if (balance === null) {
-      getBalance(address, appChain).then(balance => {
+      getBalance(address, appChain, type).then(balance => {
         updateAccount(selectedWallet.label, address, {
           balance
         })
