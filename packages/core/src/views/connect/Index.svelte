@@ -222,12 +222,12 @@
         state.get().connect.autoConnectLastWallet ||
         state.get().connect.autoConnectAllPreviousWallet
       ) {
-        let labelsList: string | Array<String> = getLocalStore(
+        let labelsList: string | Array<string> = getLocalStore(
           STORAGE_KEYS.LAST_CONNECTED_WALLET
         )
 
         try {
-          let labelsListParsed: Array<String> = JSON.parse(labelsList)
+          let labelsListParsed: Array<string> = JSON.parse(labelsList)
           if (labelsListParsed && Array.isArray(labelsListParsed)) {
             const tempLabels = labelsListParsed
             labelsList = [...new Set([label, ...tempLabels])]

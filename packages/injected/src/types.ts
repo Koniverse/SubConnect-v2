@@ -67,7 +67,9 @@ export enum ProviderIdentityFlag {
   Fordefi = 'isFordefi',
   Coin98Wallet = 'isCoin98',
   SubWallet = 'isSubWallet',
-  Kayros = 'isKayros'
+  Kayros = 'isKayros',
+  SubWalletDOT = 'subwallet-js',
+  TalismanDOT = 'talisman'
 }
 
 /**
@@ -81,12 +83,12 @@ export enum ProviderIdentityFlag {
 export enum ProviderExternalUrl {
   Binance = 'https://www.bnbchain.org/ru/blog/binance-extension-wallet/',
   BitKeep = 'https://bitkeep.com/en/download?type=0',
-  Coinbase = 'https://go.cb-w.com/dapp',
-  MetaMask = 'https://metamask.app.link/dapp/',
+  Coinbase = 'https://www.coinbase.com/wallet/downloads',
+  MetaMask = 'https://metamask.io/download/',
   OKXWallet = 'https://okx.com/download',
-  Phantom = 'https://phantom.app/ul/v1/connect',
+  Phantom = 'https://phantom.app/download',
   Talisman = 'https://www.talisman.xyz/',
-  Trust = 'https://link.trustwallet.com',
+  Trust = 'https://trustwallet.com/download/',
   OneKey = 'https://onekey.so/download/',
   RoninWallet = 'https://wallet.skymavis.com/',
   Coin98Wallet = 'https://coin98.com/wallet/',
@@ -150,7 +152,9 @@ export enum ProviderLabel {
   RoninWallet = 'Ronin Wallet',
   Coin98Wallet = 'Coin98 Wallet',
   SubWallet = 'SubWallet',
-  Kayros = 'Kayros'
+  Kayros = 'Kayros',
+  SubWalletDOT = 'subwallet-js',
+  TalismanDOT = 'talisman'
 }
 
 export interface MeetOneProvider extends ExternalProvider {
@@ -187,7 +191,10 @@ export enum InjectedNameSpace {
   RoninWallet = 'ronin',
   Coin98Wallet = 'coin98',
   SubWallet = 'SubWallet',
-  Kayros = 'kayros'
+  Kayros = 'kayros',
+  SubWalletDOT = 'subwallet-js',
+  TalismanDOT = 'talisman'
+
 }
 
 export interface CustomWindow extends Window {
@@ -240,10 +247,10 @@ export interface CustomWindow extends Window {
 }
 
 export type InjectedProvider = ExternalProvider &
-  BinanceProvider &
-  MeetOneProvider &
-  Record<string, boolean> &
-  Record<string, InjectedProvider[]>
+    BinanceProvider &
+    MeetOneProvider &
+    Record<string, boolean> &
+    Record<string, InjectedProvider[]>
 
 export type WalletFilters = {
   /**A provider label mapped to a list of excluded platforms
@@ -284,4 +291,6 @@ export interface InjectedWalletModule extends WalletModule {
    * to be shown if not installed or available on the browser
    */
   externalUrl?: string
+
+
 }
