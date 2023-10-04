@@ -17,6 +17,7 @@ import updateBalances from './update-balances.js'
 import { chainIdToHex, getLocalStore, setLocalStore } from './utils.js'
 import { preflightNotifications } from './preflight-notifications.js'
 
+
 import {
   validateInitOptions,
   validateNotify,

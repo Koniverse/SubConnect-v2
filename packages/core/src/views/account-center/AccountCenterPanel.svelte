@@ -249,7 +249,7 @@
       )
     );
     border-top: 1px solid var(--border-color);
-    border-radius: var(--account-center-border-radius, inherit);
+    border-radius: var(--account-center-border-radius);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -461,7 +461,9 @@
           </div>
         </div>
         <!-- Only display on Eth Mainnet if protectedRpcUrl is not set per chain -->
-        {#if !$accountCenter$.hideTransactionProtectionBtn && (primaryWalletOnMainnet || validAppChain?.protectedRpcUrl)}
+        {#if
+                !$accountCenter$.hideTransactionProtectionBtn
+        && (primaryWalletOnMainnet || validAppChain?.protectedRpcUrl)}
           <div
             on:click={() => (enableTransactionProtection = true)}
             class="protect action-container flex items-center pointer"

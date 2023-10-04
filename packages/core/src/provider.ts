@@ -446,7 +446,6 @@ export async function getBalance(
       method: 'eth_getBalance',
       params: [address, 'latest']
     }) : '0x0'
-    console.log('type', wallet.type)
     return balanceHex ? { [ wallet.type === 'evm' ? chain.token || 'ETH' : 'DOT']: weiToEth(balanceHex) } : null
   } catch (error) {
     console.error(error)

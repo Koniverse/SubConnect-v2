@@ -114,6 +114,7 @@ export function addWallet(wallet: WalletState): void {
   //   throw error
   // }
 
+  console.log(wallet)
   const action = {
     type: ADD_WALLET,
     payload: wallet
@@ -159,12 +160,12 @@ export function removeWallet(id: string): void {
 }
 
 export function setPrimaryWallet(wallet: WalletState, address?: string): void {
-  const error =
-    validateWallet(wallet) || (address && validateString(address, 'address'))
-
-  if (error) {
-    throw error
-  }
+  // const error =
+  //   validateWallet(wallet) || (address && validateString(address, 'address'))
+  //
+  // if (error) {
+  //   throw error
+  // }
 
   // if also setting the primary account
   if (address) {

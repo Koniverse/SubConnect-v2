@@ -2,7 +2,11 @@
 export { default as defaultBnIcon } from './blocknative-icon.js'
 export { default as poweredByBlocknative } from './poweredByBlocknative.js'
 // chain icons
-export { default as ethereumIcon } from './ethereum.js'
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
+
+export { default as ethereumIcon } from './kabocha.js'
 export { default as polygonIcon } from './polygon.js'
 export { default as binanceIcon } from './binance.js'
 export { default as fantomIcon } from './fantom.js'

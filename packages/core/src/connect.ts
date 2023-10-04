@@ -12,6 +12,7 @@ import type {
 import { wait } from './utils.js'
 import { validateConnectOptions } from './validation.js'
 
+
 async function connect(
     options?: ConnectOptions | ConnectOptionsString
 ): Promise<WalletState[]> {

@@ -29,7 +29,7 @@
 <style>
   :host {
     /* Component Variables */
-    --font-family-normal: var(--w3o-font-family, Inter, sans-serif);
+    --font-family-normal: var(--w3o-font-family, Inter);
     --font-size-4: 1.25rem;
     --font-size-5: 1rem;
     --font-size-6: 0.875rem;

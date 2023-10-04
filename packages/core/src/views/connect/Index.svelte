@@ -208,7 +208,7 @@
     cancelPreviousConnect$.next()
 
     try {
-      const [address] = await Promise.race([
+      const address = await Promise.race([
         // resolved account
         type === 'evm' ? await requestAccounts(provider) : await enable(label) ,
         // or connect wallet is called again whilst waiting for response
@@ -265,7 +265,7 @@
           if (sdk) {
             try {
               sdk.subscribe({
-                id: address,
+                id: address[0],
                 chainId: chain,
                 type: 'account'
               })
@@ -278,7 +278,8 @@
 
 
       const update: Pick<WalletState, 'accounts' | 'chains'> = {
-        accounts: [{ address, ens: null, uns: null, balance: null }],
+        accounts: address.map((address) =>
+                ({ address, ens: null, uns: null, balance: null })),
         chains: [{ namespace: 'evm', id: chain }]
       }
 
