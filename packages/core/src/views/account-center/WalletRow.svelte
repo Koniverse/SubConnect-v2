@@ -85,7 +85,6 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 100%;
     width: 100%;
     background: var(--action-color);
     border-radius: 12px;
@@ -198,7 +197,7 @@
 </style>
 
 {#each wallet.accounts as { address, ens, uns, balance }, i}
-  <div class="relative">
+  <div class="relative" >
     <div
       on:click={() => setPrimaryWallet(wallet, address)}
       class:primary={primary && i === 0}

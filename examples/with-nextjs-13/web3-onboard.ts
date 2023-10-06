@@ -1,11 +1,13 @@
 
 import injectedModule from '@web3-onboard/injected-wallets'
-
+import transactionPreviewModule from '@web3-onboard/transaction-preview'
 import { init } from '@web3-onboard/react'
+import coinbaseModule from '@web3-onboard/coinbase';
+
 
 // Example key • Replace with your infura key
 const INFURA_KEY = '2996ff3d1a1142689324a8341cb75c68'
-
+const transactionPreview = transactionPreviewModule({requireTransactionApproval : true})
 const injected = injectedModule({
   custom: [
     // include custom injected wallet modules here
@@ -14,11 +16,14 @@ const injected = injectedModule({
     // mapping of wallet labels to filter here
   }
 })
+const coinBase = coinbaseModule()
 
 export default init({
+  transactionPreview,
   // An array of wallet modules that you would like to be presented to the user to select from when connecting a wallet.
   wallets: [
     injected,
+    coinBase
   ],
   // An array of Chains that your app supports
   chains: [
@@ -51,7 +56,14 @@ export default init({
       token: 'MATIC',
       label: 'Matic Mainnet',
       rpcUrl: 'https://matic-mainnet.chainstacklabs.com'
-    }
+    },
+    {
+      id: 80001,
+      token: 'MATIC',
+      label: 'Polygon Testnet',
+      rpcUrl: 'https://rpc-mumbai.maticvigil.com'
+    },
+
   ],
   appMetadata: {
     // The name of your dApp

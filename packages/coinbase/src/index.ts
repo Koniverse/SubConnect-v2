@@ -7,6 +7,7 @@ function coinbaseWallet({
 } = {}): WalletInit {
   return () => {
     return {
+      type : 'evm',
       label: 'Coinbase Wallet',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, appMetadata }) => {
@@ -35,8 +36,8 @@ function coinbaseWallet({
         })
 
         const coinbaseWalletProvider = instance.makeWeb3Provider(
-          chain.rpcUrl,
-          parseInt(chain.id)
+            chain.rpcUrl,
+            parseInt(chain.id || '0x0')
         )
 
         // patch the chainChanged event

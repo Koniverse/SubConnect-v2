@@ -30,7 +30,8 @@ import type {
   UpdateConnectModalAction,
   Theme,
   UpdateChainsAction,
-  UpdateAppMetadataAction
+  UpdateAppMetadataAction,
+  SendSignMessage
 } from '../types.js'
 
 import {
@@ -66,7 +67,7 @@ import {
   UPDATE_ALL_WALLETS,
   UPDATE_CONNECT_MODAL,
   UPDATE_CHAINS,
-  UPDATE_APP_METADATA
+  UPDATE_APP_METADATA, SEND_SIGN_MESSAGE
 } from './constants.js'
 
 export function addChains(chains: Chain[]): void {
@@ -114,7 +115,6 @@ export function addWallet(wallet: WalletState): void {
   //   throw error
   // }
 
-  console.log(wallet)
   const action = {
     type: ADD_WALLET,
     payload: wallet
@@ -458,4 +458,16 @@ export function updateAppMetadata(
   }
 
   dispatch(action as UpdateAppMetadataAction)
+}
+
+export function sendSignMessage(message : string): void {
+
+  if(!message || message.length === 0) return ;
+  console.log(message)
+  const action = {
+    type: SEND_SIGN_MESSAGE ,
+    payload: message
+  }
+
+  dispatch(action as SendSignMessage)
 }

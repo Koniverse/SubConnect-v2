@@ -8,6 +8,7 @@
   import en from '../../i18n/en.json'
   import WalletRow from './WalletRow.svelte'
   import plusCircleIcon from '../../icons/plus-circle.js'
+  import checkmark from '../../icons/checkmark.js';
   import arrowForwardIcon from '../../icons/arrow-forward.js'
   import connect from '../../connect.js'
   import disconnect from '../../disconnect.js'
@@ -25,10 +26,12 @@
   import { poweredByBlocknative } from '../../icons/index.js'
   import DisconnectAllConfirm from './DisconnectAllConfirm.svelte'
   import EnableTransactionProtectionModal from './EnableTransactionProtectionModal.svelte'
+  import SignMessage from './signMessage.svelte'
   import { configuration } from '../../configuration.js'
   import SecondaryTokenTable from './SecondaryTokenTable.svelte'
   import { updateChainRPC } from '../../provider.js'
   import { BN_BOOST_RPC_URL, BN_BOOST_INFO_URL } from '../../constants.js'
+  import signMessageAllTypeWallet  from '../../signMessage.js';
 
   export let expanded: boolean
 
@@ -40,10 +43,11 @@
     $wallets$.forEach(({ label }) => disconnect({ label }))
   }
 
-  const { chains: appChains } = state.get()
+  const { chains: appChains, wallets } = state.get()
   let disconnectConfirmModal = false
   let hideWalletRowMenu: () => void
   let enableTransactionProtection = false
+  let signMessage = false
 
   $: [primaryWallet] = $wallets$
   $: [connectedChain] = primaryWallet ? primaryWallet.chains : []
@@ -84,6 +88,7 @@
       console.log(error, code)
     }
   }
+
 </script>
 
 <style>
@@ -112,15 +117,25 @@
     width: 100%;
     color: var(--text-color, var(--gray-100));
     background: var(--background-color, var(--gray-700));
+    max-height: 560px;
   }
 
   .p5 {
     padding: var(--onboard-spacing-5, var(--spacing-5));
+    max-height: 350px;
   }
 
   .wallets {
     width: 100%;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.1rem;
+    max-height: 100px ;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    &::-webkit-scrollbar{
+      display: none;
+    }
+
   }
 
   .actions {
@@ -328,6 +343,12 @@
     onConfirm={disconnectAllWallets}
   />
 {/if}
+{#if signMessage}
+  <SignMessage
+      onClose={() => (signMessage = false)}
+      onConfirm={(typeMethodSign) => { signMessageAllTypeWallet( $wallets$[0] , typeMethodSign) } }
+  />
+{/if}
 {#if enableTransactionProtection}
   <EnableTransactionProtectionModal
     onDismiss={() => (enableTransactionProtection = false)}
@@ -379,6 +400,18 @@
                 })}</span
               >
             </div>
+            <!--sign message-->
+            <div
+                on:click={() => (signMessage = true)}
+                class="action-container flex items-center mt pointer"
+            >
+              <div class="arrow-forward flex items-center justify-center">
+                {@html checkmark}
+              </div>
+              <span class="action-text"
+              >Sign Message</span
+              >
+            </div>
 
             <!-- disconnect all wallets -->
             <div
@@ -397,7 +430,7 @@
           {/if}
         </div>
       </div>
-
+      {#if wallets[0].type === 'evm'}
       <!-- network section -->
       <div
         class="network-container"
@@ -479,7 +512,7 @@
           </div>
         {/if}
       </div>
-
+        {/if}
       <!-- app info section -->
       <div class="app-info-container">
         {#if $appMetadata$}

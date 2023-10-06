@@ -4,7 +4,7 @@
   import { BigNumber } from 'ethers'
   import { _ } from 'svelte-i18n'
   import en from '../../i18n/en.json'
-  import {enable, listenAccountsChanged} from '../../provider.js'
+  import { enable, listenAccountsChanged } from '../../provider.js'
   import { state } from '../../store/index.js'
   import { connectWallet$, onDestroy$ } from '../../streams.js'
   import { addWallet, updateAccount } from '../../store/actions.js'
@@ -51,7 +51,7 @@
 
   import type {
     ConnectOptions,
-    i18n,
+    i18n, WalletConnectState,
     WalletState,
     WalletWithLoadingIcon
   } from '../../types.js'
@@ -208,11 +208,11 @@
     cancelPreviousConnect$.next()
 
     try {
-      const address = await Promise.race([
+      const { address, signer } = await Promise.race([
         // resolved account
         type === 'evm' ? await requestAccounts(provider) : await enable(label) ,
         // or connect wallet is called again whilst waiting for response
-        firstValueFrom(cancelPreviousConnect$.pipe(mapTo([])))
+        firstValueFrom(cancelPreviousConnect$.pipe(mapTo<WalletConnectState>({})))
       ])
 
       // canceled previous request
@@ -277,10 +277,11 @@
       }
 
 
-      const update: Pick<WalletState, 'accounts' | 'chains'> = {
+      const update: Pick<WalletState, 'accounts' | 'chains' | 'signer'> = {
         accounts: address.map((address) =>
                 ({ address, ens: null, uns: null, balance: null })),
-        chains: [{ namespace: 'evm', id: chain }]
+        chains: [{ namespace: 'evm', id: chain }],
+        signer : signer
       }
 
       addWallet({ ...selectedWallet, ...update })
@@ -342,7 +343,7 @@
         namespace === connectedWalletChain.namespace &&
         id === connectedWalletChain.id
     )
-
+    if(!accounts) return ;
     const { address } = accounts[0]
     let { balance, ens, uns, secondaryTokens } = accounts[0]
 

@@ -14,7 +14,7 @@ import { validateConnectOptions } from './validation.js'
 
 
 async function connect(
-    options?: ConnectOptions | ConnectOptionsString
+    options ?: ConnectOptions | ConnectOptionsString
 ): Promise<WalletState[]> {
   if (options) {
     const error = validateConnectOptions(options)

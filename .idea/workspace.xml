@@ -5,20 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="afdf17c2-aa03-4d21-9afa-20f7e1432b02" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/kabocha.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/core/src/signMessage.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/signMessage.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/styles/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/styles/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/coinbase/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/coinbase/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/common/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/src/types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/connect.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/connect.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/icons/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/icons/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/i18n/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/i18n/en.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/provider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/provider.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/store/actions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/store/actions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/store/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/store/constants.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/store/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/store/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/AccountCenterPanel.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/AccountCenterPanel.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/chain/SwitchChain.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/chain/SwitchChain.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/WalletRow.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/WalletRow.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/notify/Notification.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/notify/Notification.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/transaction-preview/src/views/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/transaction-preview/src/views/Index.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/injected/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/src/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,11 +35,17 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 3
 }</component>
   <component name="ProjectId" id="2WFITQJcKZA60mGvxrI1GIi3XLo" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -63,8 +73,28 @@
     </key>
   </component>
   <component name="RunManager" selected="npm.dev">
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/packages/common/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="dev (1)" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="dev (2)" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/packages/common/package.json" />
       <command value="run" />
       <scripts>
         <script value="dev" />
@@ -86,6 +116,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.dev" />
+        <item itemvalue="npm.dev (2)" />
+        <item itemvalue="npm.build" />
         <item itemvalue="npm.dev (1)" />
       </list>
     </recent_temporary>
@@ -100,7 +132,11 @@
       <updated>1696321908852</updated>
       <workItem from="1696321912967" duration="11144000" />
       <workItem from="1696392892346" duration="227000" />
-      <workItem from="1696401932682" duration="6057000" />
+      <workItem from="1696401932682" duration="15896000" />
+      <workItem from="1696488552015" duration="15504000" />
+      <workItem from="1696575696340" duration="8661000" />
+      <workItem from="1696584768868" duration="2059000" />
+      <workItem from="1696587935284" duration="1167000" />
     </task>
     <servers />
   </component>

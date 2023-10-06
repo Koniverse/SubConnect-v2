@@ -64,6 +64,12 @@ export type RequestPatch = {
     params: EIP712Request['params']
   }) => Promise<string>)
       | null
+  eth_signTypedData_v4?:
+      | ((args: {
+    baseRequest: EIP1193Provider['request']
+    params: EIP712Request_v4['params']
+  }) => Promise<string>)
+      | null
   wallet_switchEthereumChain?:
       | ((args: {
     baseRequest: EIP1193Provider['request']
@@ -322,6 +328,11 @@ export interface EIP712Request {
   params: [Address, EIP712TypedData]
 }
 
+export interface EIP712Request_v4{
+  method: 'eth_signTypedData_v4'
+  params: [Address, EIP712TypedData]
+}
+
 export interface EthBalanceRequest {
   method: 'eth_getBalance'
   params: [string, (number | 'latest' | 'earliest' | 'pending')?]
@@ -356,6 +367,13 @@ export type AddChainParams = {
   rpcUrls: string[]
 }
 
+export const listMethodTypeMessage = [
+  'Personal Sign',
+  'ETH Sign',
+  'Sign Typed Data',
+  'Sign Typed Data v4'
+]
+
 export interface EIP1193Provider extends SimpleEventEmitter {
   on(event: 'connect', listener: ConnectListener): void
   on(event: 'disconnect', listener: DisconnectListener): void
@@ -373,6 +391,7 @@ export interface EIP1193Provider extends SimpleEventEmitter {
   request(args: EthSignMessageRequest): Promise<string>
   request(args: PersonalSignMessageRequest): Promise<string>
   request(args: EIP712Request): Promise<string>
+  request(args: EIP712Request_v4): Promise<string>
   request(args: { method: string; params?: Array<unknown> }): Promise<unknown>
   disconnect?(): void
 }
@@ -397,7 +416,7 @@ export interface Chain {
    */
   namespace?: 'evm'
   /* Hex encoded string, eg '0x1' for Ethereum Mainnet */
-  id: ChainId
+  id : ChainId
   /**
    * Recommended to include. Used for network requests
    * (eg Alchemy or Infura end point).

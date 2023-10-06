@@ -2,7 +2,7 @@ import { fromEventPattern, Observable } from 'rxjs'
 import { filter, takeUntil, take, share, switchMap } from 'rxjs/operators'
 import partition from 'lodash.partition'
 import { providers, utils } from 'ethers'
-import { weiToEth } from '@web3-onboard/common'
+import { EthSignMessageRequest, PersonalSignMessageRequest, weiToEth, EIP712Request_v4, EIP712Request } from '@web3-onboard/common'
 import { disconnectWallet$ } from './streams.js'
 import { updateAccount, updateWallet } from './store/actions.js'
 import { validEnsChain } from './utils.js'
@@ -11,6 +11,7 @@ import { state } from './store/index.js'
 import { getBNMulitChainSdk } from './services.js'
 import { configuration } from './configuration.js'
 import type {
+  Injected,
   InjectedWindow
 } from '@polkadot/extension-inject/types';
 
@@ -30,7 +31,7 @@ import type {
   Account,
   Address,
   Balances,
-  Ens,
+  Ens, WalletConnectState,
   WalletPermission,
   WalletState
 } from './types.js'
@@ -56,11 +57,12 @@ export function getProvider(chain: Chain): providers.StaticJsonRpcProvider {
   return ethersProviders[chain.rpcUrl]
 }
 
-export function requestAccounts(
+export async function requestAccounts(
     provider: EIP1193Provider
-): Promise<ProviderAccounts> {
+): Promise<WalletConnectState> {
   const args = { method: 'eth_requestAccounts' } as EIP1102Request
-  return provider.request(args)
+  const address = await provider.request(args)
+  return ({ address })
 }
 
 export function selectAccounts(
@@ -73,6 +75,9 @@ export function selectAccounts(
 export function getChainId(provider: EIP1193Provider): Promise<string> {
   return provider.request({ method: 'eth_chainId' }) as Promise<string>
 }
+
+
+
 
 export function listenAccountsChanged(args: {
   provider: EIP1193Provider
@@ -526,6 +531,135 @@ export async function getPermissions(
   }
 }
 
+export async function signPersonalSignMessageRequest(
+    provider : EIP1193Provider
+) : Promise<string> {
+  const { wallets } = state.get();
+  return provider.request({
+    method: 'personal_sign',
+    params: ['hello, Im from subwallet connect', wallets[0].accounts[0].address]
+  } as PersonalSignMessageRequest)
+}
+
+export async function signEthSignMessageRequest(
+    provider : EIP1193Provider
+) : Promise<string> {
+  const { wallets } = state.get();
+
+  return provider.request({
+    method: 'eth_sign',
+    params: [wallets[0].accounts[0].address, 'hello']
+  } as EthSignMessageRequest)
+}
+
+
+export async function signTypedDataMessageRequest(
+    provider : EIP1193Provider
+) : Promise<string>{
+  const { wallets, chains } = state.get();
+  return provider.request({
+    method: 'eth_signTypedData',
+    params: [wallets[0].accounts[0].address,  {
+      types: {
+        EIP712Domain: [
+          { name: 'name', type: 'string' },
+          { name: 'version', type: 'string' },
+          { name: 'chainId', type: 'uint256' },
+          { name: 'verifyingContract', type: 'address' }
+        ],
+        Person: [
+          { name: 'name', type: 'string' },
+          { name: 'wallet', type: 'address' }
+        ],
+        Mail: [
+          { name: 'from', type: 'Person' },
+          { name: 'to', type: 'Person' },
+          { name: 'contents', type: 'string' }
+        ]
+      },
+      primaryType: 'Mail',
+      domain: {
+        name: 'Ether Mail',
+        version: '1',
+        chainId : chains[0].id,
+        verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC'
+      },
+      message: {
+        from: {
+          name: 'John Doe',
+          wallet: wallets[0].accounts[0].address
+        },
+        to: {
+          name: 'Alice',
+          wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB'
+        },
+        contents: 'Hello'
+      }
+    }]
+  } as EIP712Request)
+}
+
+
+export async function signTypedData_v4MessageRequest(
+    provider : EIP1193Provider
+) : Promise<string>{
+  const { wallets, chains } = state.get();
+  return provider.request({
+    method: 'eth_signTypedData_v4',
+    params: [wallets[0].accounts[0].address,  {
+      domain: {
+        chainId : chains[0].id,
+        name: 'Ether Mail',
+        verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+        version: '1'
+      },
+      message: {
+        contents: 'Hello',
+        from: {
+          name: 'Cow',
+          wallets: [
+            wallets[0].accounts[0].address,
+            '0xDeaDbeefdEAdbeefdEadbEEFdeadbeEFdEaDbeeF'
+          ]
+        },
+        to: [
+          {
+            name: 'Alice',
+            wallets: [
+              '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
+              '0xB0BdaBea57B0BDABeA57b0bdABEA57b0BDabEa57',
+              '0xB0B0b0b0b0b0B000000000000000000000000000'
+            ]
+          }
+        ]
+      },
+      primaryType: 'Mail',
+      types: {
+        EIP712Domain: [
+          { name: 'name', type: 'string' },
+          { name: 'version', type: 'string' },
+          { name: 'chainId', type: 'uint256' },
+          { name: 'verifyingContract', type: 'address' }
+        ],
+        Group: [
+          { name: 'name', type: 'string' },
+          { name: 'members', type: 'Person[]' }
+        ],
+        Mail: [
+          { name: 'from', type: 'Person' },
+          { name: 'to', type: 'Person[]' },
+          { name: 'contents', type: 'string' }
+        ],
+        Person: [
+          { name: 'name', type: 'string' },
+          { name: 'wallets', type: 'address[]' }
+        ]
+      }
+    }]
+  } as EIP712Request_v4)
+}
+
+
 export async function syncWalletConnectedAccounts(
     label: WalletState['label']
 ): Promise<void> {
@@ -552,13 +686,14 @@ export async function syncWalletConnectedAccounts(
 
 
 
+
 const DAPP_NAME = 'SubWallet Connect_v2';
+
 
 export const  isInstalled = (extensionName : string) =>{
   const injectedWindow = window as Window & InjectedWindow;
   const injectedExtension =
       injectedWindow?.injectedWeb3[extensionName]
-  console.log(injectedExtension)
   return !!injectedExtension;
 }
 
@@ -567,11 +702,11 @@ export const  getRawExtension = (extensionName : string)=>{
   return injectedWindow?.injectedWeb3[extensionName];
 }
 
-export const enable = async ( extensionName : string) => {
+export const enable = async ( extensionName : string)
+    : Promise<WalletConnectState> => {
   if (!isInstalled(extensionName)) {
     return;
   }
-  console.log('extensionName', extensionName)
   try {
     const injectedExtension = getRawExtension(extensionName);
 
@@ -585,10 +720,21 @@ export const enable = async ( extensionName : string) => {
     }
     const accounts = await rawExtension.accounts.get();
 
-    return accounts.map( (account: { address: string })  => account.address);
+    return { address : accounts.map(
+            (account: { address: string })  => account.address
+            ),
+          signer : rawExtension.signer }
   }catch (e) {
     console.log('error', (e as Error).message);
   }
 }
+export const signDummy = async (wallet : WalletState) => {
+  const signer = wallet?.signer;
+  if (signer && signer.signRaw) {
+    return  await signer.signRaw({ address : wallet.accounts[0].address, data: 'This is dummy message', type: 'bytes' } );
+  }
+}
+
+
 
 

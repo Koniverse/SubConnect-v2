@@ -49,7 +49,7 @@ function injected(options?: InjectedWalletOptions): WalletInit  {
 
                 let walletAvailable = false;
                 if(type === 'evm'){
-
+                    // @ts-ignore
                     const provider = window[injectedNamespace] as CustomWindow['ethereum']
                     walletAvailable = isWalletAvailable(
                         provider,

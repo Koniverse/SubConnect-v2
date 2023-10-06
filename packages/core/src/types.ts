@@ -8,7 +8,7 @@ import type {
   WalletModule,
   Chain,
   TokenSymbol,
-  ChainWithDecimalId
+  ChainWithDecimalId, AccountAddress
 } from '@web3-onboard/common'
 
 import type gas from '@web3-onboard/gas'
@@ -146,6 +146,7 @@ export type Account = {
   uns: Uns | null
   balance: Balances | null
   secondaryTokens?: SecondaryTokenBalances[] | null
+  message ?: string
 }
 
 
@@ -471,6 +472,7 @@ export type Action =
     | UpdateAllWalletsAction
     | UpdateConnectModalAction
     | UpdateAppMetadataAction
+    | SendSignMessage
 
 export type AddChainsAction = { type: 'add_chains'; payload: Chain[] }
 export type UpdateChainsAction = { type: 'update_chains'; payload: Chain }
@@ -541,6 +543,11 @@ export type UpdateAppMetadataAction = {
   payload: AppMetadata | Partial<AppMetadata>
 }
 
+export type SendSignMessage = {
+  type : 'send_sign_message',
+  payload : string
+}
+
 // ==== MISC ==== //
 export type ChainStyle = {
   icon: string
@@ -570,4 +577,9 @@ export type WalletPermission = {
   }[]
 
   date: number
+}
+
+export type WalletConnectState = {
+  signer ?: Signer,
+  address ?: AccountAddress[]
 }

@@ -39,8 +39,9 @@ import {
   REMOVE_NOTIFICATION,
   UPDATE_ALL_WALLETS,
   UPDATE_CHAINS,
-  UPDATE_APP_METADATA
+  UPDATE_APP_METADATA, SEND_SIGN_MESSAGE
 } from './constants.js'
+import wallets from "@web3-onboard/injected-wallets/dist/wallets";
 
 function reducer(state: AppState, action: Action): AppState {
   const { type, payload } = action
@@ -234,6 +235,13 @@ function reducer(state: AppState, action: Action): AppState {
 
     case RESET_STORE:
       return APP_INITIAL_STATE
+
+    case SEND_SIGN_MESSAGE : {
+      state.wallets[0].accounts[0].message = payload as string;
+      return {
+        ...state
+      }
+    }
 
     default:
       throw new Error(`Unknown type: ${type} in appStore reducer`)
