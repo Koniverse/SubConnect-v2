@@ -21,11 +21,15 @@ const injected = injectedModule({
 })
 const walletConnect = walletConnectModule({
   projectId : '16c6ad72b95e09bfdddfde13bf7f90b4',
-  version: 2
+  version: 2,
 })
 
 export default init({
   transactionPreview,
+  connect : {
+    autoConnectLastWallet : true,
+    autoConnectAllPreviousWallet : true
+  },
   // An array of wallet modules that you would like to be presented to the user to select from when connecting a wallet.
   wallets: [
     injected,

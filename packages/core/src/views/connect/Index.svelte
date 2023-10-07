@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ProviderRpcErrorCode, WalletModule } from '@web3-onboard/common'
+  import { EIP1193Provider, ProviderRpcErrorCode, WalletModule } from '@web3-onboard/common'
   import EventEmitter from 'eventemitter3'
   import { BigNumber } from 'ethers'
   import { _ } from 'svelte-i18n'
@@ -204,13 +204,12 @@
     connectionRejected = false
 
     const { provider, label , type } = selectedWallet
-
+    console.log('selectedWallet', selectedWallet);
     cancelPreviousConnect$.next()
-
     try {
       const { address, signer } = await Promise.race([
         // resolved account
-        type === 'evm' ? await requestAccounts(provider) : await enable(label) ,
+        type === 'evm' ? await requestAccounts(provider as EIP1193Provider) : await enable(provider as string) ,
         // or connect wallet is called again whilst waiting for response
         firstValueFrom(cancelPreviousConnect$.pipe(mapTo<WalletConnectState>({})))
       ])
@@ -257,7 +256,7 @@
 
       let chain = null;
       if( type === 'evm'){
-        chain = await getChainId(provider)
+        chain = await getChainId((provider as EIP1193Provider))
 
         if (state.get().notify.enabled) {
           const sdk = await getBNMulitChainSdk()

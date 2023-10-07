@@ -153,8 +153,8 @@ export enum ProviderLabel {
   Coin98Wallet = 'Coin98 Wallet',
   SubWallet = 'SubWallet',
   Kayros = 'Kayros',
-  SubWalletDOT = 'subwallet-js',
-  TalismanDOT = 'talisman'
+  SubWalletDOT = 'SubWallet(substrate)',
+  TalismanDOT = 'Talisman(substrate)'
 }
 
 export interface MeetOneProvider extends ExternalProvider {

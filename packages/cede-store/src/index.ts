@@ -9,6 +9,7 @@ type CustomWindow = typeof window & {
 function cedeStoreWallet(): WalletInit {
   if (typeof window === 'undefined') return () => null
   return () => ({
+    type : 'evm',
     label: 'cede.store',
     injectedNamespace: 'cede',
     checkProviderIdentity: () => (window as CustomWindow).cede,

@@ -5,24 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="afdf17c2-aa03-4d21-9afa-20f7e1432b02" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/packages/core/src/signMessage.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/signMessage.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/pages/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/styles/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/styles/globals.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/coinbase/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/coinbase/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/blocto/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/blocto/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/cede-store/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/cede-store/src/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/common/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/src/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/connect.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/connect.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/i18n/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/i18n/en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/chain.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/chain.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/provider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/provider.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/store/actions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/store/actions.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/store/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/store/constants.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/replacement.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/replacement.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/signMessage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/signMessage.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/store/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/store/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/update-balances.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/update-balances.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/AccountCenterPanel.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/AccountCenterPanel.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/WalletRow.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/WalletRow.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/injected/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/injected/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/src/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/injected/src/wallets.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/src/wallets.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/walletconnect/src/v1.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/walletconnect/src/v1.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/walletconnect/src/v2.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/walletconnect/src/v2.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +41,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -57,7 +62,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Admin/Documents/temp/Reactjs-project2/ipfs_checker&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Admin/Documents/temp/Reactjs-project2/web3-onboard/packages&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -68,6 +73,9 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard\packages" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard\packages\core\src\icons" />
     </key>
@@ -103,6 +111,16 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="dev (3)" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/packages/walletconnect/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/examples/with-nextjs-13/package.json" />
       <command value="run" />
@@ -116,6 +134,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.dev" />
+        <item itemvalue="npm.dev (3)" />
         <item itemvalue="npm.dev (2)" />
         <item itemvalue="npm.build" />
         <item itemvalue="npm.dev (1)" />
@@ -136,7 +155,14 @@
       <workItem from="1696488552015" duration="15504000" />
       <workItem from="1696575696340" duration="8661000" />
       <workItem from="1696584768868" duration="2059000" />
-      <workItem from="1696587935284" duration="1167000" />
+      <workItem from="1696587935284" duration="2886000" />
+      <workItem from="1696590983105" duration="12000" />
+      <workItem from="1696591134342" duration="1387000" />
+      <workItem from="1696649586876" duration="2785000" />
+      <workItem from="1696654379510" duration="323000" />
+      <workItem from="1696657238438" duration="488000" />
+      <workItem from="1696662104598" duration="851000" />
+      <workItem from="1696663279779" duration="8414000" />
     </task>
     <servers />
   </component>

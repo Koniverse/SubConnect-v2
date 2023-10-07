@@ -130,7 +130,7 @@ export type ConnectedChain = {
 export interface WalletState {
   label: string //  wallet name
   icon: string // wallet icon svg string
-  provider: EIP1193Provider
+  provider: EIP1193Provider | string
   accounts: Account[]
   // in future it will be possible that a wallet
   // is connected to multiple chains at once

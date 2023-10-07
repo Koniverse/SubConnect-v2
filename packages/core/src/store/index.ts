@@ -41,7 +41,7 @@ import {
   UPDATE_CHAINS,
   UPDATE_APP_METADATA, SEND_SIGN_MESSAGE
 } from './constants.js'
-import wallets from "@web3-onboard/injected-wallets/dist/wallets";
+
 
 function reducer(state: AppState, action: Action): AppState {
   const { type, payload } = action

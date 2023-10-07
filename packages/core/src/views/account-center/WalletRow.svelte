@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n'
   import { fade } from 'svelte/transition'
-  import { ProviderRpcErrorCode } from '@web3-onboard/common'
+  import { EIP1193Provider, ProviderRpcErrorCode } from '@web3-onboard/common'
   import type { WalletState } from '../../types.js'
   import {
     shortenAddress,
@@ -37,7 +37,8 @@
 
   async function selectAnotherAccount(wallet: WalletState) {
     try {
-      await selectAccounts(wallet.provider)
+      if( wallet.type !== 'evm') return;
+      await selectAccounts((wallet.provider as EIP1193Provider))
     } catch (error) {
       const { code } = error as { code: number }
 
@@ -178,6 +179,7 @@
     margin: 0;
     padding: 0;
     border: none;
+    position: absolute;
     overflow: hidden;
     z-index: 1;
   }

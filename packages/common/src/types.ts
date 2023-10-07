@@ -193,7 +193,8 @@ export interface WalletModule {
   /**
    * @returns the wallet interface associated with the module
    */
-  getInterface: (helpers: GetInterfaceHelpers) => Promise<WalletInterface>
+  getInterface: (helpers: GetInterfaceHelpers) =>
+      Promise<WalletInterface | WalletInterfaceSubstrate>
 
   signer ?: Signer | undefined
 
@@ -216,6 +217,10 @@ export type WalletInterface = {
   provider: EIP1193Provider
   instance?: unknown
 }
+export type WalletInterfaceSubstrate = {
+  provider : string
+}
+
 
 export interface ProviderRpcError extends Error {
   message: string

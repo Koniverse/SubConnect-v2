@@ -1,6 +1,6 @@
 import { firstValueFrom, Observable } from 'rxjs'
 import { filter, map } from 'rxjs/operators'
-import { Chain, ProviderRpcErrorCode } from '@web3-onboard/common'
+import { Chain, EIP1193Provider, ProviderRpcErrorCode } from '@web3-onboard/common'
 import { addNewChain, switchChain } from './provider.js'
 import { state } from './store/index.js'
 import { switchChainModal$ } from './streams.js'
@@ -71,7 +71,7 @@ async function setChain(options: {
   }
 
   try {
-    await switchChain(wallet.provider, chainIdHex)
+    wallet.type === 'evm' && await switchChain((wallet.provider as EIP1193Provider), chainIdHex)
     return true
   } catch (error) {
     const { code } = error as { code: number }
@@ -126,8 +126,11 @@ const chainNotInWallet = async (
     chainIdHex: string
 ): Promise<boolean> => {
   try {
-    await addNewChain(wallet.provider, chain)
-    await switchChain(wallet.provider, chainIdHex)
+    if(wallet.type === 'evm'){
+      await addNewChain(( wallet.provider as EIP1193Provider ), chain)
+      await switchChain(( wallet.provider as EIP1193Provider ), chainIdHex)
+    }
+
     return true
   } catch (error) {
     const { code } = error as { code: number }

@@ -945,7 +945,7 @@ const subwalletDOT: InjectedWalletModule = {
   getIcon: async () => (await import('./icons/subwallet')).default,
   platforms: ['all'],
   getInterface: async () => ({
-    provider: createEIP1193Provider(window.SubWallet)
+    provider: InjectedNameSpace.SubWalletDOT
   }),
   externalUrl: ProviderExternalUrl.SubWallet,
 
@@ -959,7 +959,7 @@ const talismanDOT: InjectedWalletModule = {
       provider?.injectedWeb3?.[ProviderIdentityFlag.TalismanDOT],
   getIcon: async () => (await import('./icons/talisman')).default,
   getInterface: async () => ({
-    provider: createEIP1193Provider(window.talismanEth)
+    provider: InjectedNameSpace.TalismanDOT
   }),
   platforms: ['all'],
   externalUrl: ProviderExternalUrl.Talisman

@@ -80,16 +80,18 @@ export function getChainId(provider: EIP1193Provider): Promise<string> {
 
 
 export function listenAccountsChanged(args: {
-  provider: EIP1193Provider
+  provider: EIP1193Provider | string
   disconnected$: Observable<string>
 }): Observable<ProviderAccounts> {
   const { provider, disconnected$ } = args
 
   const addHandler = (handler: AccountsListener) => {
+    if( typeof provider === 'string') return;
     provider.on('accountsChanged', handler)
   }
 
   const removeHandler = (handler: AccountsListener) => {
+    if( typeof provider === 'string') return;
     provider.removeListener('accountsChanged', handler)
   }
 
@@ -104,10 +106,12 @@ export function listenChainChanged(args: {
 }): Observable<ChainId> {
   const { provider, disconnected$ } = args
   const addHandler = (handler: ChainListener) => {
+    if(typeof provider === 'string') return;
     provider.on('chainChanged', handler)
   }
 
   const removeHandler = (handler: ChainListener) => {
+    if(typeof provider === 'string') return;
     provider.removeListener('chainChanged', handler)
   }
 
@@ -447,7 +451,7 @@ export async function getBalance(
     const wallet = wallets.find(wallet => !!wallet.provider);
     const provider = wallet.provider
 
-    const balanceHex = wallet.type === 'evm' ? await provider.request({
+    const balanceHex = wallet.type === 'evm' ? await ( provider as  EIP1193Provider) .request({
       method: 'eth_getBalance',
       params: [address, 'latest']
     }) : '0x0'
@@ -459,7 +463,7 @@ export async function getBalance(
 }
 
 export function switchChain(
-    provider: EIP1193Provider,
+    provider: EIP1193Provider ,
     chainId: ChainId
 ): Promise<unknown> {
   return provider.request({
@@ -518,9 +522,10 @@ export function updateChainRPC(
 }
 
 export async function getPermissions(
-    provider: EIP1193Provider
+    provider: EIP1193Provider | string
 ): Promise<WalletPermission[]> {
   try {
+    if(typeof  provider === 'string') return []
     const permissions = (await provider.request({
       method: 'wallet_getPermissions'
     })) as WalletPermission[]

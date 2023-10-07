@@ -161,6 +161,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
 
               if (method === 'eth_requestAccounts') {
                 return new Promise<ProviderAccounts>((resolve, reject) => {
+                  console.log('pass')
                   // Subscribe to connection events
                   fromEvent(this.connector, 'connect', (error, payload) => {
                     if (error) {

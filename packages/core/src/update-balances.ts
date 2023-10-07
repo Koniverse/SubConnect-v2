@@ -2,7 +2,7 @@ import { state } from './store/index.js'
 import { getBalance } from './provider.js'
 import { updateAllWallets } from './store/actions.js'
 import { ethers } from 'ethers'
-import { AccountAddress, Chain, weiToEth } from '@web3-onboard/common'
+import { AccountAddress, Chain, EIP1193Provider, weiToEth } from '@web3-onboard/common'
 import type { SecondaryTokenBalances, WalletState } from './types'
 
 async function updateBalances(addresses?: string[]): Promise<void> {
@@ -48,12 +48,13 @@ export const updateSecondaryTokens = async (
     chain: Chain
 ): Promise<SecondaryTokenBalances[]> => {
     if (!chain) return
+    if( wallet.type !== 'evm') return ;
     const chainRPC = chain.rpcUrl
     if (!chain.secondaryTokens || !chain.secondaryTokens.length || !chainRPC)
         return
 
     const ethersProvider = new ethers.providers.Web3Provider(
-        wallet.provider,
+       ( wallet.provider as EIP1193Provider),
         'any'
     )
     const signer = ethersProvider.getSigner()

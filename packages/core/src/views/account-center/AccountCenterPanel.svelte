@@ -32,6 +32,7 @@
   import { updateChainRPC } from '../../provider.js'
   import { BN_BOOST_RPC_URL, BN_BOOST_INFO_URL } from '../../constants.js'
   import signMessageAllTypeWallet  from '../../signMessage.js';
+  import type {EIP1193Provider} from "@web3-onboard/common";
 
   export let expanded: boolean
 
@@ -77,8 +78,9 @@
 
   const enableProtectionRPC = async () => {
     try {
+      if( primaryWallet.type !== 'evm') return;
       await updateChainRPC(
-        primaryWallet.provider,
+        (primaryWallet.provider as EIP1193Provider),
         validAppChain,
         validAppChain?.protectedRpcUrl || BN_BOOST_RPC_URL
       )
