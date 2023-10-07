@@ -2,11 +2,14 @@
 import injectedModule from '@web3-onboard/injected-wallets'
 import transactionPreviewModule from '@web3-onboard/transaction-preview'
 import { init } from '@web3-onboard/react'
-import coinbaseModule from '@web3-onboard/coinbase';
-
+import walletConnectModule from '@web3-onboard/walletconnect'
+import bloctoModule from '@web3-onboard/blocto'
+import cedeStoreWalletModule from '@web3-onboard/cede-store'
 
 // Example key • Replace with your infura key
 const INFURA_KEY = '2996ff3d1a1142689324a8341cb75c68'
+const blockTo = bloctoModule();
+const cedeStore = cedeStoreWalletModule();
 const transactionPreview = transactionPreviewModule({requireTransactionApproval : true})
 const injected = injectedModule({
   custom: [
@@ -16,14 +19,19 @@ const injected = injectedModule({
     // mapping of wallet labels to filter here
   }
 })
-const coinBase = coinbaseModule()
+const walletConnect = walletConnectModule({
+  projectId : '16c6ad72b95e09bfdddfde13bf7f90b4',
+  version: 2
+})
 
 export default init({
   transactionPreview,
   // An array of wallet modules that you would like to be presented to the user to select from when connecting a wallet.
   wallets: [
     injected,
-    coinBase
+    walletConnect,
+    blockTo,
+      cedeStore
   ],
   // An array of Chains that your app supports
   chains: [
