@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { EIP1193Provider, ProviderRpcErrorCode, WalletModule } from '@web3-onboard/common'
+  import { EIP1193Provider, ProviderRpcErrorCode, SubstrateProvider, WalletModule } from '@web3-onboard/common'
   import EventEmitter from 'eventemitter3'
   import { BigNumber } from 'ethers'
   import { _ } from 'svelte-i18n'
@@ -137,6 +137,7 @@
         return
       }
 
+
       const { chains } = state.get()
 
       const { provider, instance } = await getInterface({
@@ -204,14 +205,15 @@
     connectionRejected = false
 
     const { provider, label , type } = selectedWallet
-    console.log('selectedWallet', selectedWallet);
     cancelPreviousConnect$.next()
     try {
       const { address, signer } = await Promise.race([
         // resolved account
-        type === 'evm' ? await requestAccounts(provider as EIP1193Provider) : await enable(provider as string) ,
+        type === 'evm' ? await requestAccounts(provider as EIP1193Provider) : await enable(provider as SubstrateProvider) ,
         // or connect wallet is called again whilst waiting for response
-        firstValueFrom(cancelPreviousConnect$.pipe(mapTo<WalletConnectState>({})))
+        firstValueFrom(cancelPreviousConnect$.pipe(mapTo<WalletConnectState>({
+          address : undefined
+        })))
       ])
 
       // canceled previous request
@@ -284,7 +286,7 @@
       }
 
       addWallet({ ...selectedWallet, ...update })
-      trackWallet(provider, label)
+      trackWallet( provider, label , type)
       updateSelectedWallet(update)
       setStep('connectedWallet')
       scrollToTop()
@@ -319,7 +321,8 @@
           disconnected$: connectWallet$.pipe(
             filter(({ inProgress }) => !inProgress),
             mapTo('')
-          )
+          ),
+          type
         })
           .pipe(take(1))
           .subscribe(([account]) => {

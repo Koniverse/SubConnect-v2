@@ -4,7 +4,7 @@ import { configuration } from './configuration.js'
 import { state } from './store/index.js'
 import type { WalletState } from './types.js'
 import { gweiToWeiHex, networkToChainId, toHexString } from './utils.js'
-import type {EIP1193Provider} from "@web3-onboard/common";
+import type { EIP1193Provider } from '@web3-onboard/common';
 
 const ACTIONABLE_EVENT_CODES: string[] = ['txPool']
 const VALID_GAS_NETWORKS: Network[] = ['main', 'matic-main']

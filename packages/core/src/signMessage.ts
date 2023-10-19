@@ -7,7 +7,7 @@ import {
     signTypedDataMessageRequest
 } from './provider';
 import { sendSignMessage } from './store/actions';
-import type {EIP1193Provider} from "@web3-onboard/common";
+import type { EIP1193Provider } from '@web3-onboard/common';
 
 
 async function signMessageAllTypeWallet (

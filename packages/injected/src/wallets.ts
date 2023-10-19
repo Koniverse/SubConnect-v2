@@ -2,27 +2,32 @@ import type {
   EIP1193Provider,
   ChainListener,
   SimpleEventEmitter,
-  ChainId
+  ChainId,
+  WalletInterfaceSubstrate, SubstrateProvider
 } from '@web3-onboard/common'
-
-import { createEIP1193Provider } from '@web3-onboard/common'
+import type {
+  InjectedWindow
+} from '@polkadot/extension-inject/types';
+import {createEIP1193Provider, ProviderAccounts} from '@web3-onboard/common'
 import {
   InjectedWalletModule,
   CustomWindow,
   BinanceProvider,
   ProviderExternalUrl
 } from './types.js'
-
+import type { Signer } from  '@polkadot/types/types';
 import {
   InjectedNameSpace,
   ProviderIdentityFlag,
   ProviderLabel
 } from './types.js'
 
+
 declare const window: CustomWindow
 
 const UNSUPPORTED_METHOD = null
 
+const DAPP_NAME = 'SubWallet Connect_v2';
 function getInjectedInterface(
     identity: string,
     checkOtherProviderFlags?: boolean
@@ -944,9 +949,57 @@ const subwalletDOT: InjectedWalletModule = {
       provider?.injectedWeb3?.[ProviderIdentityFlag.SubWalletDOT],
   getIcon: async () => (await import('./icons/subwallet')).default,
   platforms: ['all'],
-  getInterface: async () => ({
-    provider: InjectedNameSpace.SubWalletDOT
-  }),
+  getInterface: async () :Promise<WalletInterfaceSubstrate> => {
+    const  isInstalled = (extensionName : string) =>{
+      const injectedWindow = window as unknown as Window & InjectedWindow;
+      const injectedExtension =
+          injectedWindow?.injectedWeb3[extensionName]
+      return !!injectedExtension;
+    }
+    const  getRawExtension = (extensionName : string)=>{
+      const injectedWindow = window as unknown as Window & InjectedWindow;
+      return injectedWindow?.injectedWeb3[extensionName];
+    }
+    const provider : SubstrateProvider = {
+      async enable  ()   {
+        const extensionName = InjectedNameSpace.SubWalletDOT;
+        if (!isInstalled(extensionName)) {
+          return ;
+        }
+        try {
+          const injectedExtension = getRawExtension(extensionName);
+
+          if (!injectedExtension || !injectedExtension.enable) {
+            return;
+          }
+
+          const rawExtension = await injectedExtension.enable(DAPP_NAME);
+          if (!rawExtension) {
+            return;
+          }
+          const accounts = await rawExtension.accounts.get();
+
+          return {
+            signer : rawExtension.signer as Signer ,
+            address : accounts.map(
+                (account: { address: string })  => account.address
+            )}
+        }catch (e) {
+          console.log('error', (e as Error).message);
+        }
+      },
+      async signDummy( address : string, data : string ,
+                       signer : Signer ) {
+        if (signer && signer.signRaw) {
+          return  await signer.signRaw({ address : address, data: 'This is dummy message', type: 'bytes' } );
+        }
+      }
+    }
+
+    return {
+      provider
+    }
+  },
   externalUrl: ProviderExternalUrl.SubWallet,
 
 }
@@ -958,9 +1011,57 @@ const talismanDOT: InjectedWalletModule = {
   checkProviderIdentity: ({ provider }) =>
       provider?.injectedWeb3?.[ProviderIdentityFlag.TalismanDOT],
   getIcon: async () => (await import('./icons/talisman')).default,
-  getInterface: async () => ({
-    provider: InjectedNameSpace.TalismanDOT
-  }),
+  getInterface: async () :Promise<WalletInterfaceSubstrate> => {
+     const  isInstalled = (extensionName : string) =>{
+      const injectedWindow = window as unknown as Window & InjectedWindow;
+      const injectedExtension =
+          injectedWindow?.injectedWeb3[extensionName]
+      return !!injectedExtension;
+    }
+     const  getRawExtension = (extensionName : string)=>{
+      const injectedWindow = window as unknown as Window & InjectedWindow;
+      return injectedWindow?.injectedWeb3[extensionName];
+    }
+    const provider : SubstrateProvider = {
+      async enable  ()   {
+        const extensionName = InjectedNameSpace.TalismanDOT;
+        if (!isInstalled(extensionName)) {
+          return ;
+        }
+        try {
+          const injectedExtension = getRawExtension(extensionName);
+
+          if (!injectedExtension || !injectedExtension.enable) {
+            return;
+          }
+
+          const rawExtension = await injectedExtension.enable(DAPP_NAME);
+          if (!rawExtension) {
+            return;
+          }
+          const accounts = await rawExtension.accounts.get();
+
+          return {
+            signer : rawExtension.signer as Signer ,
+            address : accounts.map(
+                (account: { address: string })  => account.address
+            )}
+        }catch (e) {
+          console.log('error', (e as Error).message);
+        }
+      },
+      async signDummy( address : string, data : string ,
+                       signer : Signer ) {
+        if (signer && signer.signRaw) {
+          return  await signer.signRaw({ address : address, data: 'This is dummy message', type: 'bytes' } );
+        }
+      }
+    }
+
+      return {
+       provider
+     }
+  },
   platforms: ['all'],
   externalUrl: ProviderExternalUrl.Talisman
 }

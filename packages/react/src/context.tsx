@@ -24,6 +24,7 @@ export function Web3OnboardProvider({
   children,
   web3Onboard
 }: React.PropsWithChildren<Web3OnboardProviderProps>) {
+
   // Set the flag indicating that we are using the context provider rather than raw hooks
   usingContextProvider = true
   // Set the global web3Onboard instance to null as we are going to use the provided instance

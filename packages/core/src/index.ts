@@ -83,7 +83,6 @@ export type { EIP1193Provider } from '@web3-onboard/common'
 
 function init(options: InitOptions): OnboardAPI {
   if (typeof window === 'undefined') return API
-
   if (options) {
     const error = validateInitOptions(options)
 

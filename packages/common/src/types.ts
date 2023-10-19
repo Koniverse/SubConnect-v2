@@ -3,7 +3,7 @@ import type EventEmitter from 'eventemitter3'
 import type { TypedData as EIP712TypedData } from 'eip-712'
 import type { ethers } from 'ethers'
 export type { TypedData as EIP712TypedData } from 'eip-712'
-import type { Signer } from '@polkadot/types/types';
+import type { Signer, SignerResult } from '@polkadot/types/types';
 
 
 /**
@@ -218,7 +218,8 @@ export type WalletInterface = {
   instance?: unknown
 }
 export type WalletInterfaceSubstrate = {
-  provider : string
+  provider : SubstrateProvider,
+  instance ?: unknown
 }
 
 
@@ -399,6 +400,14 @@ export interface EIP1193Provider extends SimpleEventEmitter {
   request(args: EIP712Request_v4): Promise<string>
   request(args: { method: string; params?: Array<unknown> }): Promise<unknown>
   disconnect?(): void
+}
+
+export interface SubstrateProvider {
+  enable () : Promise<{
+    signer : Signer,
+    address : AccountAddress[] } | undefined>,
+  signDummy( address : string, data : string ,
+             wallet : Signer | string ) : Promise<SignerResult | undefined>
 }
 
 export enum ProviderRpcErrorCode {

@@ -2,7 +2,14 @@ import { fromEventPattern, Observable } from 'rxjs'
 import { filter, takeUntil, take, share, switchMap } from 'rxjs/operators'
 import partition from 'lodash.partition'
 import { providers, utils } from 'ethers'
-import { EthSignMessageRequest, PersonalSignMessageRequest, weiToEth, EIP712Request_v4, EIP712Request } from '@web3-onboard/common'
+import {
+  EthSignMessageRequest,
+  PersonalSignMessageRequest,
+  weiToEth,
+  EIP712Request_v4,
+  EIP712Request,
+  SubstrateProvider
+} from '@web3-onboard/common'
 import { disconnectWallet$ } from './streams.js'
 import { updateAccount, updateWallet } from './store/actions.js'
 import { validEnsChain } from './utils.js'
@@ -80,19 +87,20 @@ export function getChainId(provider: EIP1193Provider): Promise<string> {
 
 
 export function listenAccountsChanged(args: {
-  provider: EIP1193Provider | string
-  disconnected$: Observable<string>
+  provider: EIP1193Provider | SubstrateProvider
+  disconnected$: Observable<string>,
+  type : 'evm'|'substrate'
 }): Observable<ProviderAccounts> {
-  const { provider, disconnected$ } = args
+  const { provider, disconnected$, type } = args
 
   const addHandler = (handler: AccountsListener) => {
-    if( typeof provider === 'string') return;
-    provider.on('accountsChanged', handler)
+    if( type === 'substrate') return ;
+    (provider as EIP1193Provider).on('accountsChanged', handler)
   }
 
   const removeHandler = (handler: AccountsListener) => {
-    if( typeof provider === 'string') return;
-    provider.removeListener('accountsChanged', handler)
+    if( type === 'substrate') return ;
+    (provider as EIP1193Provider).removeListener('accountsChanged', handler)
   }
 
   return fromEventPattern<ProviderAccounts>(addHandler, removeHandler).pipe(
@@ -101,18 +109,19 @@ export function listenAccountsChanged(args: {
 }
 
 export function listenChainChanged(args: {
-  provider: EIP1193Provider
+  provider: EIP1193Provider | SubstrateProvider
   disconnected$: Observable<string>
+  type : 'evm' | 'substrate'
 }): Observable<ChainId> {
-  const { provider, disconnected$ } = args
+  const { provider, disconnected$, type } = args
   const addHandler = (handler: ChainListener) => {
-    if(typeof provider === 'string') return;
-    provider.on('chainChanged', handler)
+    if( type === 'substrate') return;
+    (provider as EIP1193Provider).on('chainChanged', handler)
   }
 
   const removeHandler = (handler: ChainListener) => {
-    if(typeof provider === 'string') return;
-    provider.removeListener('chainChanged', handler)
+    if( type === 'substrate') return;
+    (provider as EIP1193Provider).removeListener('chainChanged', handler)
   }
 
   return fromEventPattern<ChainId>(addHandler, removeHandler).pipe(
@@ -121,15 +130,18 @@ export function listenChainChanged(args: {
 }
 
 export function trackWallet(
-    provider: EIP1193Provider,
-    label: WalletState['label']
+    provider: EIP1193Provider | SubstrateProvider,
+    label: WalletState['label'],
+    type : 'evm' | 'substrate'
 ): void {``
   const disconnected$ = disconnectWallet$.pipe(
       filter(wallet => wallet === label),
       take(1)
   )
 
+
   const accountsChanged$ = listenAccountsChanged({
+    type,
     provider,
     disconnected$
   }).pipe(share())
@@ -256,7 +268,8 @@ export function trackWallet(
         updateAccount(label, address, { balance, ens, uns, secondaryTokens })
       })
 
-  const chainChanged$ = listenChainChanged({ provider, disconnected$ }).pipe(
+  const chainChanged$ = listenChainChanged(
+      { provider, disconnected$, type }).pipe(
       share()
   )
 
@@ -375,7 +388,9 @@ export function trackWallet(
       })
 
   disconnected$.subscribe(() => {
-    provider.disconnect && provider.disconnect()
+    if( type  === 'substrate') return ;
+    (provider as EIP1193Provider).disconnect
+    && (provider as EIP1193Provider).disconnect()
   })
 }
 
@@ -522,10 +537,10 @@ export function updateChainRPC(
 }
 
 export async function getPermissions(
-    provider: EIP1193Provider | string
+    provider: EIP1193Provider
 ): Promise<WalletPermission[]> {
   try {
-    if(typeof  provider === 'string') return []
+
     const permissions = (await provider.request({
       method: 'wallet_getPermissions'
     })) as WalletPermission[]
@@ -669,7 +684,7 @@ export async function syncWalletConnectedAccounts(
     label: WalletState['label']
 ): Promise<void> {
   const wallet = state.get().wallets.find(wallet => wallet.label === label)
-  const permissions = await getPermissions(wallet.provider)
+  const permissions = wallet.type === 'evm' ? await getPermissions((wallet.provider) as EIP1193Provider) : []
   const accountsPermissions = permissions.find(
       ({ parentCapability }) => parentCapability === 'eth_accounts'
   )
@@ -689,46 +704,15 @@ export async function syncWalletConnectedAccounts(
   }
 }
 
-
-
-
-const DAPP_NAME = 'SubWallet Connect_v2';
-
-
-export const  isInstalled = (extensionName : string) =>{
-  const injectedWindow = window as Window & InjectedWindow;
-  const injectedExtension =
-      injectedWindow?.injectedWeb3[extensionName]
-  return !!injectedExtension;
-}
-
-export const  getRawExtension = (extensionName : string)=>{
-  const injectedWindow = window as Window & InjectedWindow;
-  return injectedWindow?.injectedWeb3[extensionName];
-}
-
-export const enable = async ( extensionName : string)
+export const enable = async (
+    provider : SubstrateProvider
+)
     : Promise<WalletConnectState> => {
-  if (!isInstalled(extensionName)) {
-    return;
-  }
+
   try {
-    const injectedExtension = getRawExtension(extensionName);
+    const accounts = await provider.enable();
 
-    if (!injectedExtension || !injectedExtension.enable) {
-      return;
-    }
-
-    const rawExtension = await injectedExtension.enable(DAPP_NAME);
-    if (!rawExtension) {
-      return;
-    }
-    const accounts = await rawExtension.accounts.get();
-
-    return { address : accounts.map(
-            (account: { address: string })  => account.address
-            ),
-          signer : rawExtension.signer }
+    return accounts
   }catch (e) {
     console.log('error', (e as Error).message);
   }

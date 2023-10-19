@@ -4,7 +4,36 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="afdf17c2-aa03-4d21-9afa-20f7e1432b02" name="Changes" comment="" />
+    <list default="true" id="afdf17c2-aa03-4d21-9afa-20f7e1432b02" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/packages/keepkey/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/keepkey/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/keepkey/src/icon.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/keepkey/src/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/keepkey/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/keystone/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/keystone/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/keystone/src/icon.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/keystone/src/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/keystone/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/ledger/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/ledger/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/ledger/src/icon.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/ledger/src/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/ledger/src/v1.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/ledger/src/v2.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/ledger/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/common/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/src/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/connect.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/connect.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/provider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/provider.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/replacement.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/replacement.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/signMessage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/signMessage.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/react/src/context.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react/src/context.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,7 +46,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -57,6 +86,16 @@
     </key>
   </component>
   <component name="RunManager" selected="npm.dev">
+    <configuration name="build (1)" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/packages/common/package.json" />
       <command value="run" />
@@ -87,16 +126,6 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="dev (3)" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/packages/walletconnect/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="dev" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/examples/with-nextjs-13/package.json" />
       <command value="run" />
@@ -110,10 +139,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.dev" />
-        <item itemvalue="npm.dev (3)" />
-        <item itemvalue="npm.dev (2)" />
-        <item itemvalue="npm.build" />
         <item itemvalue="npm.dev (1)" />
+        <item itemvalue="npm.build (1)" />
+        <item itemvalue="npm.build" />
+        <item itemvalue="npm.dev (2)" />
       </list>
     </recent_temporary>
   </component>
@@ -139,6 +168,10 @@
       <workItem from="1696657238438" duration="488000" />
       <workItem from="1696662104598" duration="851000" />
       <workItem from="1696663279779" duration="8711000" />
+      <workItem from="1697526506973" duration="2197000" />
+      <workItem from="1697528954175" duration="1760000" />
+      <workItem from="1697530868875" duration="7871000" />
+      <workItem from="1697613590189" duration="34000" />
     </task>
     <servers />
   </component>

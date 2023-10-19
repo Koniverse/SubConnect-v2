@@ -8,7 +8,7 @@ import type {
   WalletModule,
   Chain,
   TokenSymbol,
-  ChainWithDecimalId, AccountAddress
+  ChainWithDecimalId, AccountAddress, SubstrateProvider
 } from '@web3-onboard/common'
 
 import type gas from '@web3-onboard/gas'
@@ -130,7 +130,7 @@ export type ConnectedChain = {
 export interface WalletState {
   label: string //  wallet name
   icon: string // wallet icon svg string
-  provider: EIP1193Provider | string
+  provider: EIP1193Provider | SubstrateProvider
   accounts: Account[]
   // in future it will be possible that a wallet
   // is connected to multiple chains at once
@@ -581,5 +581,5 @@ export type WalletPermission = {
 
 export type WalletConnectState = {
   signer ?: Signer,
-  address ?: AccountAddress[]
+  address : AccountAddress[]
 }

@@ -5,7 +5,9 @@ import { init } from '@web3-onboard/react'
 import walletConnectModule from '@web3-onboard/walletconnect'
 import bloctoModule from '@web3-onboard/blocto'
 import cedeStoreWalletModule from '@web3-onboard/cede-store'
-
+import keepkeyModule from '@web3-onboard/keepkey'
+import keystoneModule from '@web3-onboard/keystone'
+import ledgerModule from '@web3-onboard/ledger'
 
 
 // Example key • Replace with your infura key
@@ -13,6 +15,9 @@ const INFURA_KEY = '2996ff3d1a1142689324a8341cb75c68'
 const blockTo = bloctoModule();
 const cedeStore = cedeStoreWalletModule();
 const transactionPreview = transactionPreviewModule({requireTransactionApproval : true})
+const ledger = ledgerModule({ projectId : '16c6ad72b95e09bfdddfde13bf7f90b4',   walletConnectVersion: 2 })
+const keepkey = keepkeyModule()
+const keystone = keystoneModule()
 const injected = injectedModule({
   custom: [
     // include custom injected wallet modules here
@@ -37,7 +42,10 @@ export default init({
     injected,
     walletConnect,
     blockTo,
-    cedeStore
+    cedeStore,
+    ledger,
+    keepkey,
+    keystone
   ],
   // An array of Chains that your app supports
   chains: [

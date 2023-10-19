@@ -36,6 +36,7 @@ async function connect(
     autoSelect: { label: '', disableModals: false }
   }
 
+
   // if auto selecting, wait until next event loop
   if (autoSelect && (typeof autoSelect === 'string' || autoSelect.label)) {
     await wait(50)
