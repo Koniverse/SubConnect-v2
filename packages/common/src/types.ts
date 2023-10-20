@@ -404,10 +404,11 @@ export interface EIP1193Provider extends SimpleEventEmitter {
 
 export interface SubstrateProvider {
   enable () : Promise<{
-    signer : Signer,
+    signer ?: Signer,
     address : AccountAddress[] } | undefined>,
   signDummy( address : string, data : string ,
-             wallet : Signer | string ) : Promise<SignerResult | undefined>
+             wallet : Signer | string ) :
+      Promise<SignerResult | string >
 }
 
 export enum ProviderRpcErrorCode {
@@ -522,6 +523,6 @@ export interface RPCResponse {
   id: number
   jsonrpc: string
   error?: { code: number; message: string }
-  result?: any
+  result?: unknown
 }
 

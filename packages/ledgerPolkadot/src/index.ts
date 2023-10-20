@@ -1,4 +1,4 @@
-import type {Chain, Platform, SubstrateProvider, WalletInit} from '@web3-onboard/common'
+import type { Chain, Platform, SubstrateProvider, WalletInit, WalletInterfaceSubstrate } from '@web3-onboard/common'
 import type { StaticJsonRpcProvider } from '@ethersproject/providers'
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import Polkadot from "@ledgerhq/hw-app-polkadot";
@@ -9,6 +9,7 @@ import type {
     Account,
     Asset
 } from '@web3-onboard/hw-common'
+
 
 const DEFAULT_PATH = "44'/354'/0'/0/0"
 
@@ -41,7 +42,7 @@ const errorMessages = {
 
 type ErrorCode = 'busy' | 'pairing' | 'choice'
 
-function keepkey({
+function ledgerPolkadot({
                      filter,
                      containerElement,
                      consecutiveEmptyAccountThreshold
@@ -69,8 +70,7 @@ function keepkey({
             type: 'substrate',
             label: 'Ledger Polkadot',
             getIcon,
-            getInterface: async ({ EventEmitter, chains }) => {
-
+            getInterface: async ({ EventEmitter, chains }) : Promise<WalletInterfaceSubstrate> =>  {
 
                 const { createEIP1193Provider, ProviderRpcError } = await import(
                     '@web3-onboard/common'
@@ -161,7 +161,6 @@ function keepkey({
                                 provider,
                                 asset
                             })
-
                             if (
                                 acc &&
                                 acc.balance &&
@@ -271,31 +270,19 @@ function keepkey({
                 )
 
                 const provider : SubstrateProvider = {
-                    async enable  () => {
-                        if (keepKeyWallet && typeof keepKeyWallet.cancel === 'function') {
-                            // cancel any current actions on device
-                            keepKeyWallet.cancel()
-                        }
+                    async enable() {
 
                         try {
-                            keepKeyWallet =
-                                (await keepKeyAdapter.pairDevice()) as KeepKeyHDWallet
+                            await TransportWebUSB.create();
                         } catch (error) {
-                            const { name } = error as { name: string }
+                            const {name} = error as { name: string }
                             // This error indicates that the keepkey is paired with another app
-                            if (name === HDWalletErrorType.ConflictingApp) {
                                 throw new ProviderRpcError({
                                     code: 4001,
                                     message: errorMessages[ERROR_BUSY]
                                 })
-
-                                // This error indicates that for some reason we can't claim the usb device
-                            } else if (name === HDWalletErrorType.WebUSBCouldNotPair) {
-                                throw new ProviderRpcError({
-                                    code: 4001,
-                                    message: errorMessages[ERROR_PAIRING]
-                                })
-                            }
+                                console.log((error as Error).message)
+                            // This error indicates that for some reason we can't claim the usb device
                         }
 
                         // Triggers the account select modal if no accounts have been selected
@@ -315,136 +302,15 @@ function keepkey({
                                 'The account returned does not have a required address field'
                             )
                         }
-
-                        return [accounts[0].address]
-                    },
-                    eth_selectAccounts: async () => {
-                        const accounts = await getAccounts()
-                        return accounts.map(({ address }) => address)
-                    },
-                    eth_accounts: async () => {
-                        if (!accounts || !Array.isArray(accounts)) {
-                            throw new Error('No accounts were returned from Keepkey device')
+                        return {
+                            address: accounts.map((account) => account.address)
                         }
-                        return accounts[0].hasOwnProperty('address')
-                            ? [accounts[0].address]
-                            : []
                     },
-                    eth_chainId: async () => {
-                        return currentChain && currentChain.id != undefined
-                            ? currentChain.id
-                            : '0x0'
-                    },
-                    eth_signTransaction: async ({ params: [transactionObject] }) => {
-                        if (!accounts || !Array.isArray(accounts) || !accounts.length)
-                            throw new Error(
-                                'No account selected. Must call eth_requestAccounts first.'
-                            )
 
-                        // Per the code above if accounts is empty or undefined then this line of code won't execute
-                        // ∴ account must be defined here which is why it is cast without the 'undefined' type
-                        const account =
-                            !transactionObject || !transactionObject.hasOwnProperty('from')
-                                ? accounts[0]
-                                : (accounts.find(
-                                    account =>
-                                        account.address.toLocaleLowerCase() ===
-                                        transactionObject.from.toLocaleLowerCase()
-                                ) as Account)
-
-                        const { derivationPath, address } = account
-                        const addressNList = bip32ToAddressNList(derivationPath)
-
-                        const signer = ethersProvider.getSigner(address)
-
-                        transactionObject.gasLimit =
-                            transactionObject.gas || transactionObject.gasLimit
-
-                        // 'gas' is an invalid property for the TransactionRequest type
-                        delete transactionObject.gas
-
-                        transactionObject.gasLimit = undefined
-
-                        let populatedTransaction = await signer.populateTransaction(
-                            transactionObject
-                        )
-
-                        const {
-                            to,
-                            value,
-                            nonce,
-                            gasLimit,
-                            gasPrice,
-                            maxFeePerGas,
-                            maxPriorityFeePerGas,
-                            data
-                        } = bigNumberFieldsToStrings(populatedTransaction)
-
-                        const gasData = gasPrice
-                            ? {
-                                gasPrice
-                            }
-                            : {
-                                maxFeePerGas,
-                                maxPriorityFeePerGas
-                            }
-
-                        const txn = {
-                            addressNList,
-                            chainId: parseInt(currentChain.id),
-                            to: to || '',
-                            value: value || '',
-                            nonce: utils.hexValue(nonce),
-                            gasLimit: gasLimit || '0x0',
-                            data: (data || '').toString(),
-                            ...gasData
-                        }
-
-                        let serialized
-                        try {
-                            ;({ serialized } = await keepKeyWallet.ethSignTx(txn))
-                        } catch (error: any) {
-                            if (error.message && error.message.message) {
-                                throw new Error(error.message.message)
-                            } else {
-                                throw new Error(error)
-                            }
-                        }
-                        return serialized
-                    },
-                    eth_sendTransaction: async ({ baseRequest, params }) => {
-                        const signedTx = await provider.request({
-                            method: 'eth_signTransaction',
-                            params
-                        })
-
-                        const transactionHash = await baseRequest({
-                            method: 'eth_sendRawTransaction',
-                            params: [signedTx]
-                        })
-
-                        return transactionHash as string
-                    },
-                    eth_sign: async ({ params: [address, message] }) =>
-                        signMessage(address, message),
-                    personal_sign: async ({ params: [message, address] }) =>
-                        signMessage(address, message),
-                    eth_signTypedData: null,
-                    wallet_switchEthereumChain: async ({ params: [{ chainId }] }) => {
-                        currentChain =
-                            chains.find(({ id }) => id === chainId) || currentChain
-
-                        if (!currentChain)
-                            throw new Error('chain must be set before switching')
-
-                        eventEmitter.emit('chainChanged', currentChain.id)
-                        return null
-                    },
-                    wallet_addEthereumChain: null
-                })
-
-                provider.on = eventEmitter.on.bind(eventEmitter)
-
+                    async signDummy(address: string, message: string) {
+                        return await signMessage(address, message) || '0x0'
+                    }
+                }
                 return {
                     provider,
                     instance: {
@@ -456,4 +322,4 @@ function keepkey({
     }
 }
 
-export default keepkey
+export default ledgerPolkadot

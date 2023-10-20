@@ -993,6 +993,7 @@ const subwalletDOT: InjectedWalletModule = {
         if (signer && signer.signRaw) {
           return  await signer.signRaw({ address : address, data: 'This is dummy message', type: 'bytes' } );
         }
+        return '0x0'
       }
     }
 
@@ -1055,6 +1056,7 @@ const talismanDOT: InjectedWalletModule = {
         if (signer && signer.signRaw) {
           return  await signer.signRaw({ address : address, data: 'This is dummy message', type: 'bytes' } );
         }
+        return '0x0'
       }
     }
 

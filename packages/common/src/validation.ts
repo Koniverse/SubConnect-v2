@@ -3,7 +3,7 @@ import Joi from 'joi'
 export type ValidateReturn = Joi.ValidationResult | null
 
 export function validate(
-  validator: Joi.AnySchema<any>,
+  validator: Joi.AnySchema<unknown>,
   data: unknown
 ): ValidateReturn {
   const result = validator.validate(data)

@@ -5,33 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="afdf17c2-aa03-4d21-9afa-20f7e1432b02" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/packages/keepkey/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/keepkey/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/keepkey/src/icon.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/keepkey/src/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/keepkey/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/keystone/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/keystone/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/keystone/src/icon.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/keystone/src/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/keystone/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/ledger/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/ledger/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/ledger/src/icon.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/ledger/src/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/ledger/src/v1.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/ledger/src/v2.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/ledger/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples/with-nextjs-13/config-overrides.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/common/.eslintrc.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/.eslintrc.cjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/common/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/common/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/src/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/connect.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/connect.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/provider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/provider.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/replacement.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/replacement.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/signMessage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/signMessage.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/react/src/context.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react/src/context.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/common/src/validation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/src/validation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/common/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/injected/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/injected/src/wallets.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/src/wallets.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/ledgerPolkadot/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ledgerPolkadot/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/ledgerPolkadot/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ledgerPolkadot/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/ledgerPolkadot/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ledgerPolkadot/yarn.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -61,33 +48,38 @@
     <option name="showLibraryContents" value="true" />
     <option name="showScratchesAndConsoles" value="false" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Admin/Documents/temp/Reactjs-project2/web3-onboard/packages&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Admin\\Documents\\temp\\Reactjs-project2\\web3-onboard\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "develop",
+    "last_opened_file_path": "C:/Users/Admin/Documents/temp/Reactjs-project2/web3-onboard/packages/ledgerPolkadot",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "ts.external.directory.path": "C:\\Users\\Admin\\Documents\\temp\\Reactjs-project2\\web3-onboard\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard\packages\ledgerPolkadot" />
+      <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard\packages\ledgerPolkadot\src" />
       <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard\packages" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard\examples\with-nextjs-13" />
       <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard\packages\core\src\icons" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.dev">
-    <configuration name="build (1)" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
+  <component name="RunManager" selected="npm.dev (2)">
+    <configuration name="build (4)" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/packages/injected/package.json" />
       <command value="run" />
       <scripts>
         <script value="build" />
@@ -117,7 +109,7 @@
       <method v="2" />
     </configuration>
     <configuration name="dev (2)" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/packages/common/package.json" />
+      <package-json value="$PROJECT_DIR$/examples/with-nextjs-13/package.json" />
       <command value="run" />
       <scripts>
         <script value="dev" />
@@ -127,7 +119,7 @@
       <method v="2" />
     </configuration>
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/examples/with-nextjs-13/package.json" />
+      <package-json value="$PROJECT_DIR$/packages/common/package.json" />
       <command value="run" />
       <scripts>
         <script value="dev" />
@@ -138,11 +130,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.dev" />
-        <item itemvalue="npm.dev (1)" />
-        <item itemvalue="npm.build (1)" />
-        <item itemvalue="npm.build" />
         <item itemvalue="npm.dev (2)" />
+        <item itemvalue="npm.dev (1)" />
+        <item itemvalue="npm.build (4)" />
+        <item itemvalue="npm.build" />
+        <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
   </component>
@@ -172,6 +164,8 @@
       <workItem from="1697528954175" duration="1760000" />
       <workItem from="1697530868875" duration="7871000" />
       <workItem from="1697613590189" duration="34000" />
+      <workItem from="1697699796155" duration="18130000" />
+      <workItem from="1697785398416" duration="3733000" />
     </task>
     <servers />
   </component>

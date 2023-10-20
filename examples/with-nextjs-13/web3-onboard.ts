@@ -8,6 +8,7 @@ import cedeStoreWalletModule from '@web3-onboard/cede-store'
 import keepkeyModule from '@web3-onboard/keepkey'
 import keystoneModule from '@web3-onboard/keystone'
 import ledgerModule from '@web3-onboard/ledger'
+import ledgerPolkadot from "@web3-onboard/ledgerpolkadot";
 
 
 // Example key • Replace with your infura key
@@ -18,6 +19,7 @@ const transactionPreview = transactionPreviewModule({requireTransactionApproval 
 const ledger = ledgerModule({ projectId : '16c6ad72b95e09bfdddfde13bf7f90b4',   walletConnectVersion: 2 })
 const keepkey = keepkeyModule()
 const keystone = keystoneModule()
+const ledgerPolkadot_ = ledgerPolkadot();
 const injected = injectedModule({
   custom: [
     // include custom injected wallet modules here
@@ -45,7 +47,8 @@ export default init({
     cedeStore,
     ledger,
     keepkey,
-    keystone
+    keystone,
+    ledgerPolkadot_
   ],
   // An array of Chains that your app supports
   chains: [
