@@ -720,7 +720,9 @@ export const enable = async (
 export const signDummy = async (wallet : WalletState) => {
   const signer = wallet?.signer;
   if (signer && signer.signRaw) {
-    return  await signer.signRaw({ address : wallet.accounts[0].address, data: 'This is dummy message', type: 'bytes' } );
+    return  await (wallet.provider as SubstrateProvider).signDummy(wallet.accounts[0].address, 'Hello Im from subWallet', signer);
+  }else{
+    return await  (wallet.provider as SubstrateProvider).signDummy(wallet.accounts[0].address, 'Hello Im from subWallet', undefined);
   }
 }
 

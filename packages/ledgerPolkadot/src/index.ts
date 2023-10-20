@@ -2,7 +2,7 @@ import type { Chain, Platform, SubstrateProvider, WalletInit, WalletInterfaceSub
 import type { StaticJsonRpcProvider } from '@ethersproject/providers'
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import Polkadot from "@ledgerhq/hw-app-polkadot";
-
+import type { Signer } from '@polkadot/types/types';
 
 import type {
     ScanAccountsOptions,
@@ -307,7 +307,7 @@ function ledgerPolkadot({
                         }
                     },
 
-                    async signDummy(address: string, message: string) {
+                    async signDummy(address: string, message: string, signer : Signer) {
                         return await signMessage(address, message) || '0x0'
                     }
                 }

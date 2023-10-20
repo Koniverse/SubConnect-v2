@@ -407,7 +407,7 @@ export interface SubstrateProvider {
     signer ?: Signer,
     address : AccountAddress[] } | undefined>,
   signDummy( address : string, data : string ,
-             wallet : Signer | string ) :
+             wallet ?: Signer  ) :
       Promise<SignerResult | string >
 }
 

@@ -5,21 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="afdf17c2-aa03-4d21-9afa-20f7e1432b02" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/examples/with-nextjs-13/config-overrides.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/common/.eslintrc.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/.eslintrc.cjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/common/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/common/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/src/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/common/src/validation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/src/validation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/common/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/injected/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/injected/src/wallets.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/src/wallets.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/ledgerPolkadot/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ledgerPolkadot/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/provider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/provider.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/ledgerPolkadot/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ledgerPolkadot/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/ledgerPolkadot/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ledgerPolkadot/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +66,7 @@
       <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard\packages\core\src\icons" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.dev (2)">
+  <component name="RunManager" selected="npm.build">
     <configuration name="build (4)" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/packages/injected/package.json" />
       <command value="run" />
@@ -130,10 +119,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.build" />
         <item itemvalue="npm.dev (2)" />
         <item itemvalue="npm.dev (1)" />
         <item itemvalue="npm.build (4)" />
-        <item itemvalue="npm.build" />
         <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
@@ -165,7 +154,7 @@
       <workItem from="1697530868875" duration="7871000" />
       <workItem from="1697613590189" duration="34000" />
       <workItem from="1697699796155" duration="18130000" />
-      <workItem from="1697785398416" duration="3733000" />
+      <workItem from="1697785398416" duration="4832000" />
     </task>
     <servers />
   </component>
