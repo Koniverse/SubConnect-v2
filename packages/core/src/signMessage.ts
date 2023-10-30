@@ -37,7 +37,7 @@ async function signMessageAllTypeWallet (
             }
             sendSignMessage(message)
         }else if( wallet.type === 'substrate' && signMethodType === 'signMessageForSubstrateWallet') {
-            message = (await signDummy( wallet )).signature;
+            message = (await signDummy( wallet ));
         }
     } catch (e) {
         console.log((e as Error).message)

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useContext } from "react";
 import Web3Onboard from '@web3-onboard/core'
 import type { InitOptions, OnboardAPI } from '@web3-onboard/core'
 
@@ -25,6 +26,7 @@ export function Web3OnboardProvider({
   web3Onboard
 }: React.PropsWithChildren<Web3OnboardProviderProps>) {
 
+
   // Set the flag indicating that we are using the context provider rather than raw hooks
   usingContextProvider = true
   // Set the global web3Onboard instance to null as we are going to use the provided instance
@@ -40,7 +42,7 @@ export function Web3OnboardProvider({
 export function useWeb3Onboard(): OnboardAPI {
   // Use the context provided instance or the global instance
   const web3Onboard = usingContextProvider
-    ? React.useContext(Context)
+    ? useContext(Context)
     : web3OnboardGlobal
 
   if (!web3Onboard) {

@@ -303,13 +303,16 @@ function ledgerPolkadot({
                             )
                         }
                         return {
-                            address: accounts.map((account) => account.address)
+                            address: accounts.map((account) => account.address),
+                            signer: undefined
                         }
                     },
 
-                    async signDummy(address: string, message: string, signer : Signer) {
+                    async signDummy(address: string, message: string, signer : Signer|undefined) {
                         return await signMessage(address, message) || '0x0'
-                    }
+                    },
+
+                    async disconnect(){}
                 }
                 return {
                     provider,

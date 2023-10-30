@@ -55,7 +55,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^4.5.5",
+    "typescript": "^5.2.2",
     "@walletconnect/types": "^2.9.0"
   },
   "dependencies": {

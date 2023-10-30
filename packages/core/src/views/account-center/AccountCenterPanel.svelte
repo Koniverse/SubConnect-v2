@@ -32,7 +32,7 @@
   import { updateChainRPC } from '../../provider.js'
   import { BN_BOOST_RPC_URL, BN_BOOST_INFO_URL } from '../../constants.js'
   import signMessageAllTypeWallet  from '../../signMessage.js';
-  import type {EIP1193Provider} from "@web3-onboard/common";
+  import type { EIP1193Provider } from '@web3-onboard/common';
 
   export let expanded: boolean
 
@@ -68,6 +68,8 @@
   )
 
   $: primaryWalletOnMainnet = connectedChain && connectedChain.id === '0x1'
+
+  console.log($wallets$)
 
   const appMetadata$ = state
     .select('appMetadata')

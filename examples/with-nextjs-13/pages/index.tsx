@@ -28,7 +28,7 @@ export default function Home() {
   // create an ethers provider
   let ethersProvider
 
-  if (wallet&& wallet.type === 'evm') {
+  if (wallet&& wallet.type === 'evm' && wallet.label !== 'QrCode') {
     ethersProvider = new ethers.providers.Web3Provider( wallet.provider as (ExternalProvider | JsonRpcFetchFunc), 'any')
   }
   

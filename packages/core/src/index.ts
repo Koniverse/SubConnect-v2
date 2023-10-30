@@ -2,7 +2,7 @@ import connectWallet from './connect.js'
 import disconnectWallet from './disconnect.js'
 import setChain from './chain.js'
 import { state } from './store/index.js'
-import { reset$, wallets$ } from './streams.js'
+import {  reset$, wallets$ } from './streams.js'
 import initI18N from './i18n/index.js'
 import App from './views/Index.svelte'
 import type {
@@ -38,6 +38,7 @@ import {
 } from './store/actions.js'
 import type { PatchedEIP1193Provider } from '@web3-onboard/transaction-preview'
 import { getBlocknativeSdk } from './services.js'
+
 
 const API = {
   connectWallet,
@@ -107,6 +108,7 @@ function init(options: InitOptions): OnboardAPI {
     disableFontDownload,
     unstoppableResolution
   } = options
+
 
   if (containerElements) updateConfiguration({ containerElements })
 
@@ -220,6 +222,7 @@ function init(options: InitOptions): OnboardAPI {
     transactionPreview,
     unstoppableResolution
   })
+
 
   appMetadata && updateAppMetadata(appMetadata)
 

@@ -4,6 +4,7 @@ import { dispatch } from './index.js'
 import { configuration } from '../configuration.js'
 import { handleThemeChange, returnTheme } from '../themes.js'
 
+
 import type {
   Account,
   AddChainsAction,
@@ -69,6 +70,7 @@ import {
   UPDATE_CHAINS,
   UPDATE_APP_METADATA, SEND_SIGN_MESSAGE
 } from './constants.js'
+
 
 export function addChains(chains: Chain[]): void {
   // chains are validated on init
@@ -155,6 +157,8 @@ export function removeWallet(id: string): void {
       id
     }
   }
+
+  console.log('remove wallet', id)
 
   dispatch(action as RemoveWalletAction)
 }

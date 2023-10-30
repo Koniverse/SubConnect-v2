@@ -14,6 +14,7 @@ async function disconnect(options: DisconnectOptions): Promise<WalletState[]> {
   }
 
   const { label } = options
+  console.log('disconnect in Disconnect')
 
   if (state.get().notify.enabled) {
     // handle unwatching addresses

@@ -991,9 +991,13 @@ const subwalletDOT: InjectedWalletModule = {
       async signDummy( address : string, data : string ,
                        signer : Signer ) {
         if (signer && signer.signRaw) {
-          return  await signer.signRaw({ address : address, data: 'This is dummy message', type: 'bytes' } );
+          return  (await signer.signRaw({ address : address, data: 'This is dummy message', type: 'bytes' } )).signature as string;
         }
         return '0x0'
+      },
+
+      async disconnect() {
+
       }
     }
 
@@ -1054,9 +1058,13 @@ const talismanDOT: InjectedWalletModule = {
       async signDummy( address : string, data : string ,
                        signer : Signer ) {
         if (signer && signer.signRaw) {
-          return  await signer.signRaw({ address : address, data: 'This is dummy message', type: 'bytes' } );
+          return  (await signer.signRaw({ address : address, data: 'This is dummy message', type: 'bytes' } )).signature as string;
         }
         return '0x0'
+      },
+
+      async disconnect(){
+
       }
     }
 

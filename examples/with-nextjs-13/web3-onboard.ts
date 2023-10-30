@@ -1,9 +1,8 @@
 
 import injectedModule from '@web3-onboard/injected-wallets'
-import transactionPreviewModule from '@web3-onboard/transaction-preview'
 import { init } from '@web3-onboard/react'
 import walletConnectModule from '@web3-onboard/walletconnect'
-import bloctoModule from '@web3-onboard/blocto'
+
 import cedeStoreWalletModule from '@web3-onboard/cede-store'
 import keepkeyModule from '@web3-onboard/keepkey'
 import keystoneModule from '@web3-onboard/keystone'
@@ -13,11 +12,10 @@ import ledgerPolkadot from "@web3-onboard/ledgerpolkadot";
 
 // Example key • Replace with your infura key
 const INFURA_KEY = '2996ff3d1a1142689324a8341cb75c68'
-const blockTo = bloctoModule();
+
 const cedeStore = cedeStoreWalletModule();
-const transactionPreview = transactionPreviewModule({requireTransactionApproval : true})
 const ledger = ledgerModule({ projectId : '16c6ad72b95e09bfdddfde13bf7f90b4',   walletConnectVersion: 2 })
-const keepkey = keepkeyModule()
+// const keepkey = keepkeyModule()
 const keystone = keystoneModule()
 const ledgerPolkadot_ = ledgerPolkadot();
 const injected = injectedModule({
@@ -34,7 +32,6 @@ const walletConnect = walletConnectModule({
 })
 
 export default init({
-  transactionPreview,
   connect : {
     autoConnectLastWallet : true,
     autoConnectAllPreviousWallet : true
@@ -43,10 +40,9 @@ export default init({
   wallets: [
     injected,
     walletConnect,
-    blockTo,
     cedeStore,
     ledger,
-    keepkey,
+    // keepkey,
     keystone,
     ledgerPolkadot_
   ],

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n'
   import { fade } from 'svelte/transition'
-  import { EIP1193Provider, ProviderRpcErrorCode } from '@web3-onboard/common'
+  import { type EIP1193Provider, ProviderRpcErrorCode } from '@web3-onboard/common'
   import type { WalletState } from '../../types.js'
   import {
     shortenAddress,

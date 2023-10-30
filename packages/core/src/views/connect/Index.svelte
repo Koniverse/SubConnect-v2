@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { EIP1193Provider, ProviderRpcErrorCode, SubstrateProvider, WalletModule } from '@web3-onboard/common'
+  import type { EIP1193Provider, SubstrateProvider, WalletModule } from '@web3-onboard/common'
+  import {  ProviderRpcErrorCode  } from '@web3-onboard/common';
   import EventEmitter from 'eventemitter3'
   import { BigNumber } from 'ethers'
   import { _ } from 'svelte-i18n'
   import en from '../../i18n/en.json'
   import { enable, listenAccountsChanged } from '../../provider.js'
   import { state } from '../../store/index.js'
-  import { connectWallet$, onDestroy$ } from '../../streams.js'
+  import { AccountQrConnect$, connectWallet$, onDestroy$, qrConnect$ } from '../../streams.js'
   import { addWallet, updateAccount } from '../../store/actions.js'
   import {
     validEnsChain,
@@ -26,7 +27,7 @@
   import { getBNMulitChainSdk } from '../../services.js'
   import { MOBILE_WINDOW_WIDTH, STORAGE_KEYS } from '../../constants.js'
   import { defaultBnIcon } from '../../icons/index.js'
-
+  import { withLatestFrom } from 'rxjs/operators';
   import {
     BehaviorSubject,
     distinctUntilChanged,
@@ -57,15 +58,22 @@
   } from '../../types.js'
   import { updateSecondaryTokens } from '../../update-balances'
 
+
+
   export let autoSelect: ConnectOptions['autoSelect']
 
   const appMetadata$ = state
     .select('appMetadata')
     .pipe(startWith(state.get().appMetadata), shareReplay(1))
 
+  qrConnect$.subscribe( async (qrConnect) => {
+    await qrConnect.uri();
+  })
+
   const { unstoppableResolution, device } = configuration
 
   const { walletModules, connect, chains } = state.get()
+  console.log(walletModules)
   const cancelPreviousConnect$ = new Subject<void>()
 
   let connectionRejected = false
@@ -110,8 +118,24 @@
       takeUntil(onDestroy$)
     )
     .subscribe(() => {
+      console.log('selected', selectedWallet)
       selectedWallet && connectWallet()
     })
+
+  AccountQrConnect$.pipe(
+          withLatestFrom(qrConnect$)
+  ).subscribe((obser) => {
+      const { getIcon, getInterface, label, type } = obser[1].walletConnect()
+      const icon = getIcon()
+      const existingWallet = state
+              .get()
+              .wallets.find(wallet => wallet.label === 'QrCode')
+
+      if (!existingWallet && obser[0].length > 0) {
+        selectWalletQrConnect({ icon, label, getInterface, type })
+      }
+    }
+  )
 
   // ==== SELECT WALLET ==== //
   async function selectWallet({
@@ -127,6 +151,7 @@
         .get()
         .wallets.find(wallet => wallet.label === label)
 
+      console.log(existingWallet)
       if (existingWallet) {
         // set as first wallet
         addWallet(existingWallet)
@@ -171,6 +196,185 @@
     }
   }
 
+  async function selectWalletQrConnect({
+    label,
+    icon,
+    getInterface,
+    type
+  }: WalletWithLoadingIcon): Promise<void> {
+    console.log(type)
+    connectingWalletLabel = label
+
+    try {
+      const existingWallet = state
+              .get()
+              .wallets.find(wallet => wallet.label === label)
+
+      if (existingWallet) {
+        // set as first wallet
+        addWallet(existingWallet)
+        setTimeout(() => setStep('connectedWallet'), 1)
+
+        selectedWallet = existingWallet
+
+        return
+      }
+
+
+      const { chains } = state.get()
+
+      const { provider, instance } = await getInterface({
+        chains,
+        BigNumber,
+        EventEmitter,
+        appMetadata: $appMetadata$
+      })
+
+
+      const loadedIcon = await icon
+
+      selectedWallet = {
+        label,
+        icon: loadedIcon,
+        type,
+        provider,
+        instance,
+        accounts: [],
+        chains: [{ namespace: 'evm', id: '0x1' }]
+      }
+
+      connectionRejected = false
+
+      cancelPreviousConnect$.next()
+
+      const accounts = AccountQrConnect$.getValue()
+
+
+        // canceled previous request
+        if (!accounts) {
+          return
+        }
+
+        // store last connected wallet
+        if (
+                state.get().connect.autoConnectLastWallet ||
+                state.get().connect.autoConnectAllPreviousWallet
+        ) {
+          let labelsList: string | Array<string> = getLocalStore(
+                  STORAGE_KEYS.LAST_CONNECTED_WALLET
+          )
+
+          try {
+            let labelsListParsed: Array<string> = JSON.parse(labelsList)
+            if (labelsListParsed && Array.isArray(labelsListParsed)) {
+              const tempLabels = labelsListParsed
+              labelsList = [...new Set([label, ...tempLabels])]
+            }
+          } catch (err) {
+            if (
+                    err instanceof SyntaxError &&
+                    labelsList &&
+                    typeof labelsList === 'string'
+            ) {
+              const tempLabel = labelsList
+              labelsList = [tempLabel]
+            } else {
+              throw new Error(err as string)
+            }
+          }
+
+          if (!labelsList) labelsList = [label]
+          setLocalStore(
+                  STORAGE_KEYS.LAST_CONNECTED_WALLET,
+                  JSON.stringify(labelsList)
+          )
+        }
+
+        let chain = null;
+        // if( type === 'evm'){
+        //   chain = await getChainId((provider as EIP1193Provider))
+        //
+        //   if (state.get().notify.enabled) {
+        //     const sdk = await getBNMulitChainSdk()
+        //
+        //     if (sdk) {
+        //       try {
+        //         sdk.subscribe({
+        //           id: accounts[0].address,
+        //           chainId: chain,
+        //           type: 'account'
+        //         })
+        //       } catch (error) {
+        //         console.log('pass3')
+        //       }
+        //     }
+        //   }
+        // }
+
+
+        const update: Pick<WalletState, 'accounts' | 'chains' | 'signer'> = {
+          accounts: accounts.map(({ address, balance, balanceSymbol }) =>
+                  ({ address, ens: null, uns: null,
+                    balance: { [balanceSymbol] : balance } })),
+          chains: [{ namespace: 'evm', id: chain }],
+          signer : undefined
+        }
+        selectedWallet.accounts = update.accounts
+
+
+        addWallet({ ...selectedWallet, ...update })
+        trackWallet( provider, label , type)
+        updateSelectedWallet(update)
+        setStep('connectedWallet')
+        scrollToTop()
+      } catch (error) {
+        const { code } = error as { code: number; message: string }
+        scrollToTop()
+
+        // user rejected account access
+        if (code === ProviderRpcErrorCode.ACCOUNT_ACCESS_REJECTED) {
+          connectionRejected = true
+
+          if (autoSelect.disableModals) {
+            connectWallet$.next({ inProgress: false })
+          } else if (autoSelect.label) {
+            autoSelect.label = ''
+          }
+
+          return
+        }
+
+        // account access has already been requested and is awaiting approval
+        if (code === ProviderRpcErrorCode.ACCOUNT_ACCESS_ALREADY_REQUESTED) {
+          previousConnectionRequest = true
+
+          if (autoSelect.disableModals) {
+            connectWallet$.next({ inProgress: false })
+            return
+          }
+
+          listenAccountsChanged({
+            provider: selectedWallet.provider,
+            disconnected$: connectWallet$.pipe(
+                    filter(({ inProgress }) => !inProgress),
+                    mapTo('')
+            ),
+            type
+          })
+                  .pipe(take(1))
+                  .subscribe(([account]) => {
+                    account && connectWallet()
+                  })
+
+          return
+        }
+      }
+
+      connectingErrorMessage = ''
+      scrollToTop()
+
+  }
+
   function deselectWallet() {
     selectedWallet = null
   }
@@ -182,10 +386,20 @@
   async function autoSelectWallet(wallet: WalletModule): Promise<void> {
     const { getIcon, getInterface, label, type } = wallet
     const icon = getIcon()
-    selectWallet({ label, icon, getInterface , type })
+    selectWallet({ label, icon, getInterface, type })
   }
 
+   function autoSelectWalletQrCode( ){
+    const { getIcon, getInterface, label, type }
+            = qrConnect$.getValue().walletConnect()
+    const icon = getIcon()
+    selectWalletQrConnect({ icon, getInterface, label, type })
+  }
+
+
+
   async function loadWalletsForSelection() {
+    console.log('load image')
     wallets = walletModules.map(({ getIcon, getInterface, label , type }) => {
       return {
         label,
@@ -215,6 +429,7 @@
           address : undefined
         })))
       ])
+
 
       // canceled previous request
       if (!address) {
@@ -345,7 +560,7 @@
         namespace === connectedWalletChain.namespace &&
         id === connectedWalletChain.id
     )
-    if(!accounts) return ;
+    if(!accounts && accounts.length === 0) return ;
     const { address } = accounts[0]
     let { balance, ens, uns, secondaryTokens } = accounts[0]
 
@@ -394,31 +609,36 @@
     setTimeout(() => connectWallet$.next({ inProgress: false }), 1500)
   }
 
-  modalStep$.pipe(takeUntil(onDestroy$)).subscribe(step => {
+  modalStep$.pipe(takeUntil(onDestroy$)).subscribe(async (step) => {
     switch (step) {
       case 'selectingWallet': {
+        console.log('selecting', autoSelect.label)
         if (autoSelect.label) {
           const walletToAutoSelect = walletModules.find(
             ({ label }) =>
               label.toLowerCase() === autoSelect.label.toLowerCase()
           )
-
-          if (walletToAutoSelect) {
+          if(autoSelect.label === 'QrCode'){
+            autoSelectWalletQrCode()
+          }else if (walletToAutoSelect) {
             autoSelectWallet(walletToAutoSelect)
           } else if (autoSelect.disableModals) {
             connectWallet$.next({ inProgress: false })
           }
         } else {
           connectingWalletLabel = ''
+          console.log('hahahahqha')
           loadWalletsForSelection()
         }
         break
       }
       case 'connectingWallet': {
+        console.log('connecting')
         connectWallet()
         break
       }
       case 'connectedWallet': {
+        console.log('connected')
         connectingWalletLabel = ''
         updateAccountDetails()
         break

@@ -2,25 +2,23 @@ import { fromEventPattern, Observable } from 'rxjs'
 import { filter, takeUntil, take, share, switchMap } from 'rxjs/operators'
 import partition from 'lodash.partition'
 import { providers, utils } from 'ethers'
-import {
+import type {
   EthSignMessageRequest,
   PersonalSignMessageRequest,
-  weiToEth,
+
   EIP712Request_v4,
   EIP712Request,
   SubstrateProvider
 } from '@web3-onboard/common'
-import { disconnectWallet$ } from './streams.js'
+import {   weiToEth  } from '@web3-onboard/common'
+import { AccountQrConnect$, disconnectWallet$ } from './streams.js'
 import { updateAccount, updateWallet } from './store/actions.js'
 import { validEnsChain } from './utils.js'
 import disconnect from './disconnect.js'
 import { state } from './store/index.js'
 import { getBNMulitChainSdk } from './services.js'
 import { configuration } from './configuration.js'
-import type {
-  Injected,
-  InjectedWindow
-} from '@polkadot/extension-inject/types';
+
 
 
 import type {
@@ -94,12 +92,12 @@ export function listenAccountsChanged(args: {
   const { provider, disconnected$, type } = args
 
   const addHandler = (handler: AccountsListener) => {
-    if( type === 'substrate') return ;
+    if( type === 'substrate' || typeof (provider as EIP1193Provider).on !== 'function') return ;
     (provider as EIP1193Provider).on('accountsChanged', handler)
   }
 
   const removeHandler = (handler: AccountsListener) => {
-    if( type === 'substrate') return ;
+    if( type === 'substrate' || typeof (provider as EIP1193Provider).on !== 'function') return ;
     (provider as EIP1193Provider).removeListener('accountsChanged', handler)
   }
 
@@ -115,12 +113,12 @@ export function listenChainChanged(args: {
 }): Observable<ChainId> {
   const { provider, disconnected$, type } = args
   const addHandler = (handler: ChainListener) => {
-    if( type === 'substrate') return;
+    if( type === 'substrate' || typeof (provider as EIP1193Provider).on !== 'function') return ;
     (provider as EIP1193Provider).on('chainChanged', handler)
   }
 
   const removeHandler = (handler: ChainListener) => {
-    if( type === 'substrate') return;
+    if( type === 'substrate' || typeof (provider as EIP1193Provider).on !== 'function') return ;
     (provider as EIP1193Provider).removeListener('chainChanged', handler)
   }
 
@@ -133,7 +131,7 @@ export function trackWallet(
     provider: EIP1193Provider | SubstrateProvider,
     label: WalletState['label'],
     type : 'evm' | 'substrate'
-): void {``
+): void {
   const disconnected$ = disconnectWallet$.pipe(
       filter(wallet => wallet === label),
       take(1)
@@ -268,6 +266,19 @@ export function trackWallet(
         updateAccount(label, address, { balance, ens, uns, secondaryTokens })
       })
 
+
+    AccountQrConnect$.subscribe(( account ) => {
+      if(account && account.length > 0){
+        const { address, balance, balanceSymbol } = account[0]
+        updateAccount(label, address, { balance :
+              { [ balanceSymbol ] : balance }, ens : null,
+          uns : null, secondaryTokens : null })
+      }else{
+        return
+      }
+
+    })
+
   const chainChanged$ = listenChainChanged(
       { provider, disconnected$, type }).pipe(
       share()
@@ -387,10 +398,13 @@ export function trackWallet(
         updatedAccounts && updateWallet(label, { accounts: updatedAccounts })
       })
 
-  disconnected$.subscribe(() => {
-    if( type  === 'substrate') return ;
-    (provider as EIP1193Provider).disconnect
-    && (provider as EIP1193Provider).disconnect()
+  disconnected$.subscribe(async () => {
+    console.log(label, 'something')
+    if( type  === 'substrate') { await (provider as SubstrateProvider).disconnect()
+    } else {
+      (provider as EIP1193Provider).disconnect
+      && (provider as EIP1193Provider).disconnect()
+    }
   })
 }
 
@@ -466,11 +480,11 @@ export async function getBalance(
     const wallet = wallets.find(wallet => !!wallet.provider);
     const provider = wallet.provider
 
-    const balanceHex = wallet.type === 'evm' ? await ( provider as  EIP1193Provider) .request({
+    const balanceHex = type === 'evm' ? await ( provider as  EIP1193Provider) .request({
       method: 'eth_getBalance',
       params: [address, 'latest']
     }) : '0x0'
-    return balanceHex ? { [ wallet.type === 'evm' ? chain.token || 'ETH' : 'DOT']: weiToEth(balanceHex) } : null
+    return balanceHex ? { [ type === 'evm' ? chain.token || 'ETH' : 'DOT']: weiToEth(balanceHex) } : null
   } catch (error) {
     console.error(error)
     return null
