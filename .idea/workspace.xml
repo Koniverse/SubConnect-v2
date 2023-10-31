@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="afdf17c2-aa03-4d21-9afa-20f7e1432b02" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/provider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/provider.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/qrConnect/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/qrConnect/src/index.ts" afterDir="false" />
     </list>
@@ -178,7 +177,8 @@
       <workItem from="1698661147235" duration="5000" />
       <workItem from="1698661178805" duration="4897000" />
       <workItem from="1698681510912" duration="4890000" />
-      <workItem from="1698723460780" duration="7314000" />
+      <workItem from="1698723460780" duration="7660000" />
+      <workItem from="1698735710176" duration="2549000" />
     </task>
     <servers />
   </component>

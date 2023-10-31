@@ -125,15 +125,14 @@
       const icon = getIcon()
       const existingWallet = state
               .get()
-              .wallets.find(wallet => wallet.label === 'QrCode')
-    console.log('muhahaha', obser[0])
+              .wallets.find(wallet => wallet.label === label)
+      console.log(label, type, obser[0])
       if (!existingWallet && obser[0].length > 0) {
         selectWalletQrConnect({ icon, label, getInterface, type })
       }
     }
   )
   qrConnect$.subscribe(()=>{
-    console.log('kakakaka')
     qrConnect$.getValue().uri();
   })
 

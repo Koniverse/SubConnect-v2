@@ -143,8 +143,7 @@ export class QrConnect {
 
 
         }catch(error){
-            // eslint-disable-next-line no-console
-            console.log((error as Error).message, 'that error')
+            throw new Error((error as Error).message)
 
         }
 
@@ -194,6 +193,8 @@ export class QrConnect {
 
         connector.on('message', (event: { type: string, data?: unknown }) => {
             if (event.type === 'display_uri') {
+                // eslint-disable-next-line no-console
+                console.log('uri', event.data as string)
                 this._uri.next({...this._uri.value, eth : event.data as string})
                 connector.removeAllListeners()
             }
@@ -301,8 +302,6 @@ export class QrConnect {
 
         const {chain} = getNetwork()
         this.resetAccount()
-        // eslint-disable-next-line no-console
-        console.log(address, 'address')
         if (isConnected && address && chain) {
             this.TypeWalletConnect = 'evm'
             const caipAddress: CaipAddress = `${NAMESPACE}:${chain.id}:${address}`
@@ -332,8 +331,6 @@ export class QrConnect {
 
     // eslint-disable-next-line @typescript-eslint/require-await
     private syncAccount4Polkadot() {
-        // eslint-disable-next-line no-console
-        console.log(this.walletConnectSession)
         if (!this.walletConnectSession || !this.options?.chainsPolkadot) {
             return;
         }
@@ -350,11 +347,11 @@ export class QrConnect {
         if (walletConnectAccount.length > 0 && this.options?.chainsPolkadot[0]) {
             this.resetAccount()
             this.TypeWalletConnect = 'substrate'
+            const Accounts_ = this.Accounts.value
             walletAccountfillter.forEach((account, index) => {
                 const caipAddress: CaipAddress = `polkadot:${CAIPId}:${account}`
                 this.getApprovedCaipNetworksData()
                 this.hasSyncedConnectedAccount = true
-                const Accounts_ = this.Accounts.value
                 Accounts_.push({
                     isConnected: true,
                     caipAddress,
@@ -362,8 +359,8 @@ export class QrConnect {
                     balance: '0',
                     profileName: `Account ${index + 1}`
                 })
-                this.Accounts.next(Accounts_)
             })
+            this.Accounts.next(Accounts_)
         } else {
             this._uri.next({ ...this._uri.value, polkadot : '' } )
         }
@@ -456,7 +453,7 @@ export class QrConnect {
             // eslint-disable-next-line no-negated-condition
             type: this.TypeWalletConnect !== 'null' ? this.TypeWalletConnect : 'evm',
             // eslint-disable-next-line no-negated-condition
-            label: 'QrCode',
+            label: this.TypeWalletConnect === 'evm' ? 'QrCodeEvm' : 'QrCodePolkadot',
             getIcon: async () => (await import('./icon.js')).default,
             // eslint-disable-next-line @typescript-eslint/require-await
             getInterface: async () => {
