@@ -6,56 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="afdf17c2-aa03-4d21-9afa-20f7e1432b02" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/pages/_app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/pages/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/yarn.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/with-vite-react/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-vite-react/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/with-vite-react/src/web3-onboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-vite-react/src/web3-onboard.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/with-vite-react/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-vite-react/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/blocto/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/blocto/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/blocto/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/packages/blocto/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/cede-store/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/cede-store/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/cede-store/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/cede-store/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/cede-store/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/packages/cede-store/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/common/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/src/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/.eslintrc.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/.eslintrc.cjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/rollup.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/rollup.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/disconnect.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/disconnect.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/provider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/provider.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/signMessage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/signMessage.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/store/actions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/store/actions.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/streams.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/streams.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/AccountCenterPanel.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/AccountCenterPanel.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/SecondaryTokenTable.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/SecondaryTokenTable.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/WalletRow.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/WalletRow.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/SelectingWallet.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/SelectingWallet.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/Sidebar.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/Sidebar.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/gas/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/gas/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/hw-common/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/hw-common/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/hw-common/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/packages/hw-common/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/injected/src/wallets.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/src/wallets.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/keepkey/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/keepkey/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/keepkey/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/packages/keepkey/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/keystone/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/keystone/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/keystone/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/packages/keystone/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/ledger/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ledger/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/ledger/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ledger/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/ledgerPolkadot/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ledgerPolkadot/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/react/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/react/src/context.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react/src/context.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/transaction-preview/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/transaction-preview/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/unstoppable-resolution/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/unstoppable-resolution/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/walletconnect/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/walletconnect/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/walletconnect/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/packages/walletconnect/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/qrConnect/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/qrConnect/src/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -222,6 +175,10 @@
       <workItem from="1698573587981" duration="19000" />
       <workItem from="1698632906691" duration="9025000" />
       <workItem from="1698648643164" duration="3499000" />
+      <workItem from="1698661147235" duration="5000" />
+      <workItem from="1698661178805" duration="4897000" />
+      <workItem from="1698681510912" duration="4890000" />
+      <workItem from="1698723460780" duration="7314000" />
     </task>
     <servers />
   </component>

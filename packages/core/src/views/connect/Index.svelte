@@ -66,9 +66,6 @@
     .select('appMetadata')
     .pipe(startWith(state.get().appMetadata), shareReplay(1))
 
-  qrConnect$.subscribe( async (qrConnect) => {
-    await qrConnect.uri();
-  })
 
   const { unstoppableResolution, device } = configuration
 
@@ -118,7 +115,6 @@
       takeUntil(onDestroy$)
     )
     .subscribe(() => {
-      console.log('selected', selectedWallet)
       selectedWallet && connectWallet()
     })
 
@@ -130,12 +126,16 @@
       const existingWallet = state
               .get()
               .wallets.find(wallet => wallet.label === 'QrCode')
-
+    console.log('muhahaha', obser[0])
       if (!existingWallet && obser[0].length > 0) {
         selectWalletQrConnect({ icon, label, getInterface, type })
       }
     }
   )
+  qrConnect$.subscribe(()=>{
+    console.log('kakakaka')
+    qrConnect$.getValue().uri();
+  })
 
   // ==== SELECT WALLET ==== //
   async function selectWallet({

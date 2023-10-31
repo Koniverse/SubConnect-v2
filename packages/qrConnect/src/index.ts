@@ -10,7 +10,7 @@ import {
     switchNetwork,
     watchAccount,
     watchNetwork,
-    signMessage,
+    signMessage, signTypedData,
 } from '@wagmi/core'
 import { Network4PolkadotUtil } from "./listNetwork.js";
 import {  mainnet } from "@wagmi/chains";
@@ -124,10 +124,7 @@ export class QrConnect {
 
 
         this.options = options
-
-        watchAccount(() => {
-            this.syncAccount()
-        })
+        watchAccount( () =>  this.syncAccount())
         watchNetwork(() => this.syncNetwork())
 
     }
@@ -143,6 +140,7 @@ export class QrConnect {
                 // eslint-disable-next-line no-return-assign
                 this.connectWalletConnect4Polkadot()
             ])
+
 
         }catch(error){
             // eslint-disable-next-line no-console
@@ -188,6 +186,7 @@ export class QrConnect {
 
     async connectWalletConnect() {
         const connector = this.wagmiConfig.connectors.find(c => c.id === WALLET_CONNECT_CONNECTOR_ID)
+
         if (!connector) {
             throw new Error('connectionControllerClient:getWalletConnectUri - connector is undefined')
         }
@@ -199,46 +198,41 @@ export class QrConnect {
                 connector.removeAllListeners()
             }
         })
-
-        try{
-            await connect({connector, chainId: mainnet.id})
-        }catch( e ){
-            // eslint-disable-next-line no-console
-            console.log(( e as Error).message)
-        }
-        // eslint-disable-next-line no-console
-        console.log('okk')
-
+        await connect({ connector, chainId: mainnet.id })
     }
 
     async connectWalletConnect4Polkadot() {
+
         this.universalProvider = await UniversalProvider.init({
             projectId: this.projectId,
             relayUrl: 'wss://relay.walletconnect.com',
         })
 
-        this.universalProvider.on("display_uri", (uri : string) => {
-            // eslint-disable-next-line no-console
-            console.log(uri,'uri')
-            this._uri.next({...this._uri.value, polkadot: uri})
-        })
-        this.universalProvider.namespaces = {
-            polkadot: {
-                methods: ['polkadot_signTransaction', 'polkadot_signMessage'],
-                chains: [
-                    'polkadot:91b171bb158e2d3848fa23a9f1c25182',
-                    'polkadot:afdc188f45c71dacbaa0b62e16a91f72',
-                    'polkadot:0f62b701fb12d02237a33b84818c11f6'
-                ],
-                events: ['chainChanged", "accountsChanged']
+        if(this.universalProvider){
+            this.universalProvider.on("display_uri", (uri : string) => {
+                // eslint-disable-next-line no-console
+                console.log(uri,'uri')
+                this._uri.next({...this._uri.value, polkadot: uri})
+            })
+            this.universalProvider.namespaces = {
+                polkadot: {
+                    methods: ['polkadot_signTransaction', 'polkadot_signMessage'],
+                    chains: [
+                        'polkadot:91b171bb158e2d3848fa23a9f1c25182',
+                        'polkadot:afdc188f45c71dacbaa0b62e16a91f72',
+                        'polkadot:0f62b701fb12d02237a33b84818c11f6'
+                    ],
+                    events: ['chainChanged", "accountsChanged']
+                }
             }
+
+            await this.universalProvider.enable();
+
+            this.walletConnectSession = this.universalProvider.session;
+            this.syncNetwork4Polkadot()
+            this.syncAccount4Polkadot()
         }
 
-        await this.universalProvider.enable();
-
-        this.walletConnectSession = this.universalProvider.session;
-        this.syncNetwork4Polkadot()
-        this.syncAccount4Polkadot()
     }
 
     async disconnect() {
@@ -352,8 +346,6 @@ export class QrConnect {
         const walletAccountfillter = walletConnectAccount.filter((account) => (
             account.includes(CAIPId)
         )).map((account) => (account.replace(`polkadot:${CAIPId}:`, "")))
-        // eslint-disable-next-line no-console
-        console.log(walletAccountfillter, 'filter')
 
         if (walletConnectAccount.length > 0 && this.options?.chainsPolkadot[0]) {
             this.resetAccount()
@@ -460,12 +452,10 @@ export class QrConnect {
 
 
     public walletConnect(): WalletModule  {
-        // eslint-disable-next-line no-console
-        console.log('type', this.TypeWalletConnect)
-
         return{
             // eslint-disable-next-line no-negated-condition
             type: this.TypeWalletConnect !== 'null' ? this.TypeWalletConnect : 'evm',
+            // eslint-disable-next-line no-negated-condition
             label: 'QrCode',
             getIcon: async () => (await import('./icon.js')).default,
             // eslint-disable-next-line @typescript-eslint/require-await
@@ -530,10 +520,57 @@ export class QrConnect {
 
                             return this.switchCaipNetwork(chainIdObj.chainId.toString())
                         }
+                        if( method === 'eth_sign') {
+                            if (!params) {
+                                throw new ProviderRpcError({
+                                    code: ProviderRpcErrorCode.INVALID_PARAMS,
+                                    message: `The Provider requires a chainId to be passed in as an argument`
+                                })
+                            }
+
+                            const signature = await signMessage({message: params[1] as string})
+
+                            return signature || ''
+                        }
+
+                        if( method === 'personal_sign'){
+                            if (!params) {
+                                throw new ProviderRpcError({
+                                    code: ProviderRpcErrorCode.INVALID_PARAMS,
+                                    message: `The Provider requires a chainId to be passed in as an argument`
+                                })
+                            }
+
+                            const signature = await signMessage({message: params[0] as string})
+
+                            return signature || ''
+                        }
+
+                        if( method === 'eth_signTypedData' || method === 'eth_signTypedData_v4'){
+                            if (!params) {
+                                throw new ProviderRpcError({
+                                    code: ProviderRpcErrorCode.INVALID_PARAMS,
+                                    message: `The Provider requires a chainId to be passed in as an argument`
+                                })
+                            }
+
+                            try{
+                                const signature = await signTypedData(params[1])
+
+                                return signature || ''
+
+                            }catch (e){
+                                throw new ProviderRpcError({
+                                    code: ProviderRpcErrorCode.UNSUPPORTED_METHOD,
+                                    message: `${(e as Error).message}`
+                                })
+                            }
 
 
+                        }
 
-                        // @ts-expect-error
+
+                     // @ts-expect-error
                         return this.connector.request<Promise<any>>({
                             method,
                             params

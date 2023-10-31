@@ -615,7 +615,7 @@ export async function signTypedDataMessageRequest(
       domain: {
         name: 'Ether Mail',
         version: '1',
-        chainId : chains[0].id,
+        chainId : parseInt(chains[0].id, 16),
         verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC'
       },
       message: {
@@ -637,12 +637,12 @@ export async function signTypedDataMessageRequest(
 export async function signTypedData_v4MessageRequest(
     provider : EIP1193Provider
 ) : Promise<string>{
-  const { wallets, chains } = state.get();
+  const { wallets } = state.get();
   return provider.request({
     method: 'eth_signTypedData_v4',
     params: [wallets[0].accounts[0].address,  {
       domain: {
-        chainId : chains[0].id,
+        chainId : 1,
         name: 'Ether Mail',
         verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
         version: '1'
