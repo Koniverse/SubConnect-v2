@@ -2,6 +2,7 @@
     import { QRCodeImage } from 'svelte-qrcode-image';
     import { fade } from 'svelte/transition'
 
+
     export let uriPolkadot: string;
 
 
@@ -17,6 +18,11 @@
 
     function switchTypeConnect (){
         choiceTypeConnect = !choiceTypeConnect;
+    }
+
+    async function  onCopyUri  (){
+        await navigator.clipboard.
+        writeText(choiceTypeConnect ? uriEth : uriPolkadot)
     }
 
 </script>
@@ -57,4 +63,5 @@
                 <QRCodeImage text = "{uriPolkadot}" displayHeight={120} displayWidth={130}/>
             {/if}
         </label>
+        <button on:click={onCopyUri} >copy</button>
     </div>

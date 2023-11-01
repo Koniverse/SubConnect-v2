@@ -4838,6 +4838,11 @@ svelte-check@^3.5.2:
     svelte-preprocess "^5.0.4"
     typescript "^5.0.3"
 
+svelte-copy-to-clipboard@^0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/svelte-copy-to-clipboard/-/svelte-copy-to-clipboard-0.2.5.tgz#4fd5c89a6415b7f6a4e153a9896b50b2dee12611"
+  integrity sha512-EAULxib4pRa59nyz25dDKITgSAVkrNVojRZVCSO8MIFd5GJljghJaCTIe/7R+O3GxKYIwJ3XHDNoY1hfjJeyEg==
+
 svelte-i18n@^3.3.13:
   version "3.7.4"
   resolved "https://registry.yarnpkg.com/svelte-i18n/-/svelte-i18n-3.7.4.tgz#6cf2c86075fd748bd8ca2de5762e43a596c7d189"

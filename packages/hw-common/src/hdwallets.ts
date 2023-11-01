@@ -87,6 +87,7 @@ export const bigNumberFieldsToStrings = (
     transaction
   ) as StringifiedTransactionRequest
 
+
 /**
  * Helper method for hardware wallets to build an object
  * with a request method used for making rpc requests.

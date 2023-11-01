@@ -3,6 +3,7 @@ import type { StaticJsonRpcProvider } from '@ethersproject/providers'
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import Polkadot from "@ledgerhq/hw-app-polkadot";
 import type { Signer } from '@polkadot/types/types';
+import type { BigNumber } from 'ethers'
 
 import type {
     ScanAccountsOptions,
@@ -22,7 +23,7 @@ const DEFAULT_BASE_PATHS = [
 
 const assets = [
     {
-        label: 'ETH'
+        label: 'POLKADOT'
     }
 ]
 
@@ -124,17 +125,13 @@ function ledgerPolkadot({
                         })
 
                     }
-                    // Retrieve the address associated with the given account index
-
-
-                    const balance = await provider.getBalance( address  )
 
                     return {
                         derivationPath: paths,
                         address,
                         balance: {
                             asset: asset.label || 'DOT',
-                            value: balance || 0
+                            value: 0 as unknown  as BigNumber
                         }
                     }
                 }
@@ -162,10 +159,7 @@ function ledgerPolkadot({
                                 asset
                             })
                             if (
-                                acc &&
-                                acc.balance &&
-                                acc.balance.value &&
-                                acc.balance.value.isZero()
+                                acc
                             ) {
                                 zeroBalanceAccounts++
                                 accounts.push(acc)

@@ -15,7 +15,7 @@ const INFURA_KEY = '2996ff3d1a1142689324a8341cb75c68'
 
 const cedeStore = cedeStoreWalletModule();
 const ledger = ledgerModule({ projectId : '16c6ad72b95e09bfdddfde13bf7f90b4',   walletConnectVersion: 2 })
-// const keepkey = keepkeyModule()
+const keepkey = keepkeyModule()
 const keystone = keystoneModule()
 const ledgerPolkadot_ = ledgerPolkadot();
 const injected = injectedModule({
@@ -48,7 +48,7 @@ export default init({
     walletConnect,
     cedeStore,
     ledger,
-    // keepkey,
+    keepkey,
     keystone,
     ledgerPolkadot_
   ],

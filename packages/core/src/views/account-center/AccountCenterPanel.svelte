@@ -44,7 +44,7 @@
     $wallets$.forEach(({ label }) => disconnect({ label }))
   }
 
-  const { chains: appChains, wallets } = state.get()
+  const { chains: appChains } = state.get()
   console.log('appChains', appChains)
   let disconnectConfirmModal = false
   let hideWalletRowMenu: () => void

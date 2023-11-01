@@ -59,6 +59,7 @@
       errorFromScan = ''
       loadingAccounts = true
       const allAccounts = await scanAccounts(scanAccountOptions)
+      console.log(allAccounts, 'ghoku')
       accountsListObject = {
         all: allAccounts,
         filtered: allAccounts.filter(account => {
