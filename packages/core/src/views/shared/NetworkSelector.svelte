@@ -26,6 +26,7 @@
         : prev[0] && next[0] && prev[0].chains[0].id === next[0].chains[0].id
     )
   )
+  console.log('chain', chains)
 
   $: if ($resize$) {
     resizeSelect()

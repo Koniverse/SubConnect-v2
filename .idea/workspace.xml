@@ -5,9 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="afdf17c2-aa03-4d21-9afa-20f7e1432b02" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/packages/core/src/listNetworkWagmi.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/examples/with-nextjs-13/web3-onboard.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/chain.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/chain.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/connect.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/connect.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/provider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/provider.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/streams.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/streams.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/update-balances.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/update-balances.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/validation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/validation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/AccountCenterPanel.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/AccountCenterPanel.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/shared/NetworkSelector.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/shared/NetworkSelector.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/qrConnect/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/qrConnect/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/qrConnect/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/qrConnect/src/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/qrConnect/src/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/qrConnect/src/utils.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +78,7 @@
       <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard\packages" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard\packages\core\src" />
       <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard\examples\with-nextjs-13" />
       <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard\packages\core\src\icons" />
     </key>
@@ -122,9 +137,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.dev" />
+        <item itemvalue="npm.build" />
         <item itemvalue="npm.build (3)" />
         <item itemvalue="npm.build (2)" />
-        <item itemvalue="npm.build" />
         <item itemvalue="npm.dev (2)" />
       </list>
     </recent_temporary>
@@ -178,7 +193,12 @@
       <workItem from="1698661178805" duration="4897000" />
       <workItem from="1698681510912" duration="4890000" />
       <workItem from="1698723460780" duration="7660000" />
-      <workItem from="1698735710176" duration="2549000" />
+      <workItem from="1698735710176" duration="5727000" />
+      <workItem from="1698741841543" duration="6699000" />
+      <workItem from="1698748728900" duration="2875000" />
+      <workItem from="1698758609224" duration="12907000" />
+      <workItem from="1698804632458" duration="918000" />
+      <workItem from="1698806764623" duration="7762000" />
     </task>
     <servers />
   </component>

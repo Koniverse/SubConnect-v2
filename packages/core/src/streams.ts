@@ -19,6 +19,7 @@ import { mainnet, type Chain as Chain_ } from '@wagmi/core';
 import type { URI } from '@web3-onboard/qrCodeConnect/dist/types';
 import type { AccountQrConnect } from '@web3-onboard/qrCodeConnect/dist/types';
 
+
 export const reset$ = new Subject<void>()
 export const disconnectWallet$ = new Subject<WalletState['label']>()
 
@@ -114,7 +115,7 @@ export const AccountQrConnect$ = new BehaviorSubject<AccountQrConnect[]>([])
 
 
 export  const qrConnect$ = new BehaviorSubject( new QrConnect({
-  chains : [ mainnet as Chain_ ],
+  chains : [ mainnet as Chain_],
   chainsPolkadot : ['polkadot'],
   url : 'http://localhost:3000/',
   uri : uri$ ,

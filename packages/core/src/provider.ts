@@ -44,6 +44,7 @@ import type {
 import type { Uns } from '@web3-onboard/unstoppable-resolution'
 import { updateSecondaryTokens } from './update-balances'
 
+
 export const ethersProviders: {
   [key: string]: providers.StaticJsonRpcProvider
 } = {}
@@ -267,12 +268,58 @@ export function trackWallet(
       })
 
 
-    AccountQrConnect$.subscribe(( account ) => {
-      if(account && account.length > 0){
-        const { address, balance, balanceSymbol } = account[0]
+    AccountQrConnect$.subscribe(async( account ) => {
+      if(account && account.length === 1){
+        const { address, balance, balanceSymbol, caipAddress } = account[0]
         updateAccount(label, address, { balance :
               { [ balanceSymbol ] : balance }, ens : null,
           uns : null, secondaryTokens : null })
+
+        const { wallets } = state.get()
+        const { chains } =
+            wallets.find(wallet => wallet.label === label)
+        const chainId = `0x${ parseInt(caipAddress ?caipAddress.split(':')[1] : '0').toString(16)}`
+        const [connectedWalletChain] = chains
+        if ( chainId === connectedWalletChain.id  )return
+
+
+        if (state.get().notify.enabled) {
+          const sdk = await getBNMulitChainSdk()
+
+          if (sdk) {
+            const wallet = state
+                .get()
+                .wallets.find(wallet => wallet.label === label)
+
+            // Unsubscribe with timeout of 60 seconds
+            // to allow for any currently inflight transactions
+            wallet.accounts.forEach(({ address }) => {
+              sdk.unsubscribe({
+                id: address,
+                chainId: wallet.chains[0].id,
+                timeout: 60000
+              })
+            })
+
+            // resubscribe for new chainId
+            wallet.accounts.forEach(({ address }) => {
+              try {
+                sdk.subscribe({
+                  id: address,
+                  chainId: chainId,
+                  type: 'account'
+                })
+              } catch (error) {
+                // unsupported network for transaction events
+              }
+            })
+          }
+        }
+
+        updateWallet(label, {
+          chains: [{ namespace: 'evm', id: chainId }],
+        })
+
       }else{
         return
       }
@@ -399,7 +446,6 @@ export function trackWallet(
       })
 
   disconnected$.subscribe(async () => {
-    console.log(label, 'something')
     if( type  === 'substrate') { await (provider as SubstrateProvider).disconnect()
     } else {
       (provider as EIP1193Provider).disconnect
@@ -495,6 +541,7 @@ export function switchChain(
     provider: EIP1193Provider ,
     chainId: ChainId
 ): Promise<unknown> {
+
   return provider.request({
     method: 'wallet_switchEthereumChain',
     params: [{ chainId }]

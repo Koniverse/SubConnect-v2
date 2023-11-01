@@ -70,7 +70,6 @@
   const { unstoppableResolution, device } = configuration
 
   const { walletModules, connect, chains } = state.get()
-  console.log(walletModules)
   const cancelPreviousConnect$ = new Subject<void>()
 
   let connectionRejected = false
@@ -126,15 +125,12 @@
       const existingWallet = state
               .get()
               .wallets.find(wallet => wallet.label === label)
-      console.log(label, type, obser[0])
       if (!existingWallet && obser[0].length > 0) {
         selectWalletQrConnect({ icon, label, getInterface, type })
       }
     }
   )
-  qrConnect$.subscribe(()=>{
-    qrConnect$.getValue().uri();
-  })
+
 
   // ==== SELECT WALLET ==== //
   async function selectWallet({
@@ -150,7 +146,6 @@
         .get()
         .wallets.find(wallet => wallet.label === label)
 
-      console.log(existingWallet)
       if (existingWallet) {
         // set as first wallet
         addWallet(existingWallet)
@@ -201,7 +196,6 @@
     getInterface,
     type
   }: WalletWithLoadingIcon): Promise<void> {
-    console.log(type)
     connectingWalletLabel = label
 
     try {
@@ -290,25 +284,24 @@
         }
 
         let chain = null;
-        // if( type === 'evm'){
-        //   chain = await getChainId((provider as EIP1193Provider))
-        //
-        //   if (state.get().notify.enabled) {
-        //     const sdk = await getBNMulitChainSdk()
-        //
-        //     if (sdk) {
-        //       try {
-        //         sdk.subscribe({
-        //           id: accounts[0].address,
-        //           chainId: chain,
-        //           type: 'account'
-        //         })
-        //       } catch (error) {
-        //         console.log('pass3')
-        //       }
-        //     }
-        //   }
-        // }
+        if( type === 'evm'){
+          chain = await getChainId((provider as EIP1193Provider))
+
+          if (state.get().notify.enabled) {
+            const sdk = await getBNMulitChainSdk()
+            if (sdk) {
+              try {
+                sdk.subscribe({
+                  id: accounts[0].address,
+                  chainId: chain,
+                  type: 'account'
+                })
+              } catch (error) {
+                console.log((error as Error).message)
+              }
+            }
+          }
+        }
 
 
         const update: Pick<WalletState, 'accounts' | 'chains' | 'signer'> = {
@@ -398,7 +391,6 @@
 
 
   async function loadWalletsForSelection() {
-    console.log('load image')
     wallets = walletModules.map(({ getIcon, getInterface, label , type }) => {
       return {
         label,
@@ -611,7 +603,6 @@
   modalStep$.pipe(takeUntil(onDestroy$)).subscribe(async (step) => {
     switch (step) {
       case 'selectingWallet': {
-        console.log('selecting', autoSelect.label)
         if (autoSelect.label) {
           const walletToAutoSelect = walletModules.find(
             ({ label }) =>
@@ -626,18 +617,15 @@
           }
         } else {
           connectingWalletLabel = ''
-          console.log('hahahahqha')
           loadWalletsForSelection()
         }
         break
       }
       case 'connectingWallet': {
-        console.log('connecting')
         connectWallet()
         break
       }
       case 'connectedWallet': {
-        console.log('connected')
         connectingWalletLabel = ''
         updateAccountDetails()
         break

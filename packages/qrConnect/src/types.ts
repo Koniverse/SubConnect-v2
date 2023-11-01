@@ -49,7 +49,6 @@ export interface AccountQrConnect{
 export type ConnectorType = 'WALLET_CONNECT' | 'WALLET_CONNECT_POLKADOT';
 
 export interface Web3ModalClientOptions  {
-
     chainsPolkadot ?: string[],
     uri : BehaviorSubject<URI>,
     accountState : BehaviorSubject<AccountQrConnect[]>,
@@ -60,7 +59,6 @@ export interface Web3ModalClientOptions  {
     chainImages?: Record<number, string>
     connectorImages?: Record<string, string>
     tokens?: Record<number, Token>,
-
 }
 
 export type Web3ModalOptions = Omit<Web3ModalClientOptions, '_sdkVersion'>

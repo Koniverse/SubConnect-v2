@@ -36,6 +36,12 @@ export default init({
     autoConnectLastWallet : true,
     autoConnectAllPreviousWallet : true
   },
+  projectId : '16c6ad72b95e09bfdddfde13bf7f90b4',
+
+  url : 'http://localhost:3000/',
+
+  chainsPolkadot:['polkadot'],
+
   // An array of wallet modules that you would like to be presented to the user to select from when connecting a wallet.
   wallets: [
     injected,
@@ -71,19 +77,7 @@ export default init({
       token: 'ARB',
       label: 'Arbitrum Nova',
       rpcUrl: 'https://nova.arbitrum.io/rpc'
-    },
-    {
-      id: '0x89',
-      token: 'MATIC',
-      label: 'Matic Mainnet',
-      rpcUrl: 'https://matic-mainnet.chainstacklabs.com'
-    },
-    {
-      id: 80001,
-      token: 'MATIC',
-      label: 'Polygon Testnet',
-      rpcUrl: 'https://rpc-mumbai.maticvigil.com'
-    },
+    }
 
   ],
   appMetadata: {
@@ -122,14 +116,4 @@ export default init({
       privacyUrl: 'https://www.blocknative.com/privacy-policy'
     }
   }
-  // example customising copy
-  // i18n: {
-  //   en: {
-  //     connect: {
-  //       selectingWallet: {
-  //         header: 'custom text header'
-  //       }
-  //     }
-  //   }
-  // }
 })

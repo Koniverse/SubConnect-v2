@@ -2,7 +2,7 @@ import {BlockchainApiIdentityRequest, BlockchainApiIdentityResponse, CaipNetwork
 import { ConstantsUtil } from "./constants.js";
 
 export function caipNetworkIdToNumber(caipnetworkId?: CaipNetworkId) {
-    return caipnetworkId ?caipnetworkId.split(':')[1] : '0x0'
+    return caipnetworkId ?caipnetworkId.split(':')[1] : '0'
 }
 // -- Types ----------------------------------------------------------------------
 interface Options {

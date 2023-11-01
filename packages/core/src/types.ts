@@ -85,7 +85,14 @@ export interface InitOptions {
    * address resolution similar to that of ens (Ethereum Name Service)
    * ENS resolution will take president if available
    */
-  unstoppableResolution?: typeof unstoppableResolution
+  unstoppableResolution?: typeof unstoppableResolution,
+
+  projectId?: string,
+
+  url : string,
+
+  chainsPolkadot: string[]
+
 }
 
 export type Theme = ThemingMap | BuiltInThemes | 'system'

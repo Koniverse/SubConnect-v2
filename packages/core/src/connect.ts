@@ -3,7 +3,7 @@ import { filter, withLatestFrom, pluck } from 'rxjs/operators'
 import { configuration } from './configuration.js'
 import { state } from './store/index.js'
 import { setWalletModules } from './store/actions.js'
-import { connectWallet$, wallets$ } from './streams.js'
+import { connectWallet$, qrConnect$, wallets$ } from './streams.js'
 import type {
   ConnectOptions,
   ConnectOptionsString,
@@ -53,6 +53,10 @@ async function connect(
             ? { label: autoSelect, disableModals: false }
             : autoSelect,
     inProgress: true
+  })
+
+  qrConnect$.subscribe(async (value)=>{
+    await value.uri();
   })
 
   const result$ = connectWallet$.pipe(

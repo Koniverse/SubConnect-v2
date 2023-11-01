@@ -2,7 +2,7 @@ import connectWallet from './connect.js'
 import disconnectWallet from './disconnect.js'
 import setChain from './chain.js'
 import { state } from './store/index.js'
-import {  reset$, wallets$ } from './streams.js'
+import { AccountQrConnect$, qrConnect$, reset$, uri$, wallets$ } from './streams.js'
 import initI18N from './i18n/index.js'
 import App from './views/Index.svelte'
 import type {
@@ -16,10 +16,9 @@ import { configuration, updateConfiguration } from './configuration.js'
 import updateBalances from './update-balances.js'
 import { chainIdToHex, getLocalStore, setLocalStore } from './utils.js'
 import { preflightNotifications } from './preflight-notifications.js'
-
+import { listWagmiNetwork } from './listNetworkWagmi.js'
 
 import {
-  validateInitOptions,
   validateNotify,
   validateNotifyOptions
 } from './validation.js'
@@ -38,6 +37,8 @@ import {
 } from './store/actions.js'
 import type { PatchedEIP1193Provider } from '@web3-onboard/transaction-preview'
 import { getBlocknativeSdk } from './services.js'
+import { QrConnect } from '@web3-onboard/qrCodeConnect';
+
 
 
 const API = {
@@ -84,13 +85,13 @@ export type { EIP1193Provider } from '@web3-onboard/common'
 
 function init(options: InitOptions): OnboardAPI {
   if (typeof window === 'undefined') return API
-  if (options) {
-    const error = validateInitOptions(options)
-
-    if (error) {
-      throw error
-    }
-  }
+  // if (options) {
+  //   const error = validateInitOptions(options)
+  //
+  //   if (error) {
+  //     throw error
+  //   }
+  // }
 
   const {
     wallets,
@@ -106,8 +107,26 @@ function init(options: InitOptions): OnboardAPI {
     transactionPreview,
     theme,
     disableFontDownload,
-    unstoppableResolution
+    unstoppableResolution,
+    url,
+    chainsPolkadot,
+    projectId
   } = options
+
+
+  qrConnect$.next(new QrConnect({
+        chains: chains.map((chain) => (
+            listWagmiNetwork[typeof  chain.id === 'number' ?
+                chain.id.toString() :
+                parseInt(chain.id, 16).toString()]
+        )),
+        projectId ,
+        url ,
+        chainsPolkadot,
+        uri: uri$,
+        accountState: AccountQrConnect$
+      }
+  ))
 
 
   if (containerElements) updateConfiguration({ containerElements })
@@ -225,6 +244,8 @@ function init(options: InitOptions): OnboardAPI {
 
 
   appMetadata && updateAppMetadata(appMetadata)
+
+
 
   if (apiKey && transactionPreview) {
     const getBnSDK = async () => {

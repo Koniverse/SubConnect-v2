@@ -10,10 +10,11 @@ import {
     switchNetwork,
     watchAccount,
     watchNetwork,
-    signMessage, signTypedData,
+    signMessage,
+    signTypedData,
+
 } from '@wagmi/core'
 import { Network4PolkadotUtil } from "./listNetwork.js";
-import {  mainnet } from "@wagmi/chains";
 
 
 
@@ -44,8 +45,7 @@ import {
     SubstrateProvider, WalletModule
 } from "@web3-onboard/common";
 
-import {caipNetworkIdToNumber, fetchIdentity } from "./utils.js";
-import { isHexString } from "@web3-onboard/walletconnect";
+import { caipNetworkIdToNumber, fetchIdentity } from "./utils.js";
 import { BehaviorSubject } from "rxjs";
 
 
@@ -78,10 +78,13 @@ export class QrConnect {
 
     private TypeWalletConnect:'evm' | 'substrate' | 'null' = 'null'
 
+    private isConnected  = false;
 
     private NetWork: CaipNetwork = {
         id: 'Ethereum:01'
     }
+
+    private chains : Chain[]
 
     private _uri: BehaviorSubject<URI>
 
@@ -93,10 +96,10 @@ export class QrConnect {
     private connector: any;
 
     public constructor(options: Web3ModalClientOptions) {
-        const { chains, url, accountState} = options
-        let { projectId } = options
-        projectId ='16c6ad72b95e09bfdddfde13bf7f90b4'
+        const { chains, url, accountState, projectId} = options
+
         this._uri = options.uri
+        this.chains = chains
         this.Accounts = accountState
         if ( ! projectId) {
             throw new Error('web3modal:constructor - projectId is undefined')
@@ -122,8 +125,8 @@ export class QrConnect {
             throw new Error('web3modal:constructor - WalletConnectConnector is required')
         }
 
-
         this.options = options
+        this.uri()
         watchAccount( () =>  this.syncAccount())
         watchNetwork(() => this.syncNetwork())
 
@@ -131,24 +134,13 @@ export class QrConnect {
 
 
     async uri(){
-
-        // eslint-disable-next-line no-return-assign
-        try{
-            await Promise.all([
-                // eslint-disable-next-line no-return-assign
-                this.connectWalletConnect(),
-                // eslint-disable-next-line no-return-assign
-                this.connectWalletConnect4Polkadot()
-            ])
-
-
-        }catch(error){
-            throw new Error((error as Error).message)
-
-        }
-
-
-    }
+        await Promise.all([
+            // eslint-disable-next-line no-return-assign
+            this.connectWalletConnect(),
+            // eslint-disable-next-line no-return-assign
+            this.connectWalletConnect4Polkadot()
+        ])
+}
 
     async switchCaipNetwork(chainId_ : string ) {
         const chainId = parseInt(chainId_.replace('0x', ''), 10);
@@ -199,7 +191,12 @@ export class QrConnect {
                 connector.removeAllListeners()
             }
         })
-        await connect({ connector, chainId: mainnet.id })
+        if(!this.isConnected){
+            await connect({ connector, chainId: this.chains[0].id })
+        }
+
+
+
     }
 
     async connectWalletConnect4Polkadot() {
@@ -215,29 +212,44 @@ export class QrConnect {
                 console.log(uri,'uri')
                 this._uri.next({...this._uri.value, polkadot: uri})
             })
-            this.universalProvider.namespaces = {
-                polkadot: {
-                    methods: ['polkadot_signTransaction', 'polkadot_signMessage'],
-                    chains: [
-                        'polkadot:91b171bb158e2d3848fa23a9f1c25182',
-                        'polkadot:afdc188f45c71dacbaa0b62e16a91f72',
-                        'polkadot:0f62b701fb12d02237a33b84818c11f6'
-                    ],
-                    events: ['chainChanged", "accountsChanged']
+            await this.universalProvider.connect({
+                namespaces : {
+                    polkadot: {
+                        methods: ['polkadot_signTransaction', 'polkadot_signMessage'],
+                        chains: [
+                            'polkadot:91b171bb158e2d3848fa23a9f1c25182',
+                            'polkadot:afdc188f45c71dacbaa0b62e16a91f72',
+                            'polkadot:0f62b701fb12d02237a33b84818c11f6'
+                        ],
+                        events: ['chainChanged", "accountsChanged']
+                    }
+                },
+                optionalNamespaces : {
+                    polkadot: {
+                        methods: ['polkadot_signTransaction', 'polkadot_signMessage'],
+                        chains: [
+                            'polkadot:91b171bb158e2d3848fa23a9f1c25182',
+                            'polkadot:afdc188f45c71dacbaa0b62e16a91f72',
+                            'polkadot:0f62b701fb12d02237a33b84818c11f6'
+                        ],
+                        events: ['chainChanged", "accountsChanged']
+                    }
                 }
-            }
+            }).then(()=>{
+                if(this.universalProvider){
+                    this.walletConnectSession = this.universalProvider.session;
+                }
+                this.syncNetwork4Polkadot()
+                this.syncAccount4Polkadot()
+            })
 
-            await this.universalProvider.enable();
-
-            this.walletConnectSession = this.universalProvider.session;
-            this.syncNetwork4Polkadot()
-            this.syncAccount4Polkadot()
         }
 
     }
 
     async disconnect() {
         await disconnect();
+        this.isConnected = false;
         this.resetAccount()
         this.TypeWalletConnect = 'null'
     }
@@ -303,6 +315,7 @@ export class QrConnect {
         const {chain} = getNetwork()
         this.resetAccount()
         if (isConnected && address && chain) {
+            this.isConnected = isConnected
             this.TypeWalletConnect = 'evm'
             const caipAddress: CaipAddress = `${NAMESPACE}:${chain.id}:${address}`
 
@@ -338,6 +351,7 @@ export class QrConnect {
         const walletConnectAccount = Object.values(this.walletConnectSession.namespaces)
             .map(namespace => namespace.accounts)
             .flat()
+
 
         const CAIPId = Network4PolkadotUtil[this.options?.chainsPolkadot[0] as keyof typeof Network4PolkadotUtil]
         const walletAccountfillter = walletConnectAccount.filter((account) => (
@@ -383,6 +397,7 @@ export class QrConnect {
         const {address, isConnected} = getAccount()
         const {chain} = getNetwork()
 
+
         if (chain) {
             const chainId = String(chain.id)
             const caipChainId: CaipNetworkId = `${NAMESPACE}:${chainId}`
@@ -393,17 +408,28 @@ export class QrConnect {
                 imageUrl: this.options?.chainImages?.[chain.id]
             }
             if (isConnected && address && this.Accounts.value.length > 0) {
+                const Account : AccountQrConnect = {
+                    isConnected
+                };
                 const caipAddress: CaipAddress = `${NAMESPACE}:${chain.id}:${address}`
-                this.Accounts.value[0].caipAddress = caipAddress
+                Account.caipAddress = caipAddress
                 if (chain.blockExplorers?.default?.url) {
                     const url = `${chain.blockExplorers.default.url}/address/${address}`
-                    this.Accounts.value[0].addressExplorerUrl = url
+                  Account.addressExplorerUrl = url
                 } else {
-                    this.Accounts.value[0].addressExplorerUrl = undefined
+                    Account.addressExplorerUrl = undefined
                 }
                 if (this.hasSyncedConnectedAccount) {
-                    await this.syncBalance(address, chain)
+                    const balance = await this.syncBalance(address, chain)
+                    Account.balance = balance.formatted
+                    Account.balanceSymbol = balance.symbol
+                    // eslint-disable-next-line no-console
+                    console.log('ballancce', balance)
                 }
+                this.Accounts.next([{
+                    ...Account,
+                    address
+                }])
             }
         }
     }
@@ -412,16 +438,16 @@ export class QrConnect {
     private async syncProfile(address: Address) {
         try {
             const {name, avatar} = await fetchIdentity({
-                caipChainId: `${NAMESPACE}:${mainnet.id}`,
+                caipChainId: `${NAMESPACE}:${this.chains[0].id.toString()}`,
                 address
             }, this.projectId)
 
             return {name, avatar}
 
         } catch {
-            const name = await fetchEnsName({address, chainId: mainnet.id})
+            const name = await fetchEnsName({address, chainId: this.chains[0].id})
             if (name) {
-                const avatar = await fetchEnsAvatar({name, chainId: mainnet.id})
+                const avatar = await fetchEnsAvatar({name, chainId: this.chains[0].id})
                 if (avatar) {
 
                     return {name, avatar}
@@ -440,7 +466,7 @@ export class QrConnect {
             chainId: chain.id,
             token: this.options?.tokens?.[chain.id]?.address as Address
         })
-
+        
         return balance
     }
 
@@ -471,9 +497,7 @@ export class QrConnect {
 
                     request : async ({method, params}) => {
                         if (method === 'eth_chainId') {
-                            return isHexString(caipNetworkIdToNumber(this.Accounts.value[0].caipAddress))
-                                ? caipNetworkIdToNumber(this.Accounts.value[0].caipAddress)
-                                : `0x${caipNetworkIdToNumber(this.Accounts.value[0].caipAddress)}`
+                            return`0x${parseInt(caipNetworkIdToNumber(this.Accounts.value[0].caipAddress), 10).toString(16)}`
                         }
 
                         if (method === 'eth_requestAccounts') {
@@ -495,29 +519,9 @@ export class QrConnect {
                             })
                         }
 
-                        if (method === 'wallet_switchEthereumChain') {
-                            if (!params) {
-                                throw new ProviderRpcError({
-                                    code: ProviderRpcErrorCode.INVALID_PARAMS,
-                                    message: `The Provider requires a chainId to be passed in as an argument`
-                                })
-                            }
-                            const chainIdObj = params[0] as { chainId?: number }
-                            if (
-                                // eslint-disable-next-line no-prototype-builtins
-                                !chainIdObj.hasOwnProperty('chainId') ||
-                                typeof chainIdObj['chainId'] === 'undefined'
-                            ) {
-                                throw new ProviderRpcError({
-                                    code: ProviderRpcErrorCode.INVALID_PARAMS,
-                                    message: `The Provider requires a chainId to be passed in as an argument`
-                                })
-                            }
 
-
-                            return this.switchCaipNetwork(chainIdObj.chainId.toString())
-                        }
                         if( method === 'eth_sign') {
+
                             if (!params) {
                                 throw new ProviderRpcError({
                                     code: ProviderRpcErrorCode.INVALID_PARAMS,
@@ -562,9 +566,40 @@ export class QrConnect {
                                     message: `${(e as Error).message}`
                                 })
                             }
+                        }
+                        if( method === 'wallet_switchEthereumChain'){
+
+
+                            if (!params) {
+                                throw new ProviderRpcError({
+                                    code: ProviderRpcErrorCode.INVALID_PARAMS,
+                                    message: `The Provider requires a chainId to be passed in as an argument`
+                                })
+                            }
+                            const chainIdObj = params[0] as { chainId : string }
+
+                            if (
+                                // eslint-disable-next-line no-prototype-builtins
+                                !chainIdObj.hasOwnProperty('chainId') ||
+                                typeof chainIdObj['chainId'] === 'undefined'
+                            ) {
+                                throw new ProviderRpcError({
+                                    code: ProviderRpcErrorCode.INVALID_PARAMS,
+                                    message: `The Provider requires a chainId to be passed in as an argument`
+                                })
+                            }
+                            try{
+
+                                return await switchNetwork({ chainId : parseInt(chainIdObj.chainId, 16), })
+                            }catch (e){
+                                // eslint-disable-next-line no-console
+                                console.log((e as Error).message)
+                            }
+
 
 
                         }
+
 
 
                      // @ts-expect-error

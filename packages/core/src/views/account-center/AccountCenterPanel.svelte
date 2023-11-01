@@ -45,6 +45,7 @@
   }
 
   const { chains: appChains, wallets } = state.get()
+  console.log('appChains', appChains)
   let disconnectConfirmModal = false
   let hideWalletRowMenu: () => void
   let enableTransactionProtection = false
@@ -434,7 +435,8 @@
           {/if}
         </div>
       </div>
-      {#if wallets[0].type === 'evm'}
+      {#if $wallets$[0]}
+      {#if $wallets$[0].type === 'evm'}
       <!-- network section -->
       <div
         class="network-container"
@@ -516,6 +518,7 @@
           </div>
         {/if}
       </div>
+        {/if}
         {/if}
       <!-- app info section -->
       <div class="app-info-container">
