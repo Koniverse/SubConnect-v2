@@ -61,6 +61,7 @@ function keepkey({
     if (filtered) return null
 
     return {
+      type: 'evm',
       label: 'KeepKey',
       getIcon,
       getInterface: async ({ EventEmitter, chains }) => {

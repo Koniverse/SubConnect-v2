@@ -8,6 +8,7 @@ function XDEFIWallet(): WalletInit {
   return () => {
     return {
       label: 'XDEFI Wallet',
+     type : 'evm',
       injectedNamespace: 'xfi',
       checkProviderIdentity: ({ provider }: { provider: any }) => {
         !!provider && !!provider['isXDEFI']

@@ -5,6 +5,7 @@ function phantom(): WalletInit {
   return () => {
     return {
       label: 'Phantom',
+      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async () => {
         if ('phantom' in window) {

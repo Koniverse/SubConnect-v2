@@ -1,6 +1,6 @@
 import { CedeProvider, detectCedeProvider } from '@cedelabs/providers'
 import type { WalletInit } from '@web3-onboard/common'
-import { createEIP1193Provider } from '@web3-onboard/common'
+import { createEIP1193Provider } from "@web3-onboard/common";
 
 type CustomWindow = typeof window & {
   cede: CedeProvider
@@ -9,6 +9,7 @@ type CustomWindow = typeof window & {
 function cedeStoreWallet(): WalletInit {
   if (typeof window === 'undefined') return () => null
   return () => ({
+    type : 'evm',
     label: 'cede.store',
     injectedNamespace: 'cede',
     checkProviderIdentity: () => (window as CustomWindow).cede,
@@ -36,7 +37,7 @@ function cedeStoreWallet(): WalletInit {
               return []
             }
 
-            const activeVault = accounts.find(account => account.isActive)
+            const activeVault = accounts.find((account : any) => account.isActive)
 
             return [activeVault?.name || accounts[0].name]
           },

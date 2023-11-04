@@ -54,10 +54,10 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^4.5.5"
+    "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@toruslabs/torus-embed": "2.2.9",
+    "@toruslabs/torus-embed": "4.0.4",
     "@web3-onboard/common": "^2.3.3"
   }
 }

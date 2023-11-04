@@ -11,6 +11,7 @@ function venly(options: VenlyOptions): WalletInit {
   return () => {
     return {
       label: 'Venly',
+      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains }) => {
         const { VenlyProvider, SECRET_TYPES } = await import('@venly/web3-provider')

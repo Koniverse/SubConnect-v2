@@ -18,6 +18,7 @@ function gnosis(options?: GnosisOptions): WalletInit {
     return loadedInIframe
       ? {
           label: 'Safe',
+          type :'evm',
           getIcon: async () => (await import('./icon.js')).default,
           getInterface: async () => {
             const { default: SafeAppsSDK } = await import(

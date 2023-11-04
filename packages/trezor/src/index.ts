@@ -151,10 +151,11 @@ function trezor(options: TrezorOptions): WalletInit {
 
     return {
       label: 'Trezor',
+      type : 'evm',
       getIcon,
       getInterface: async ({ EventEmitter, chains }) => {
         const { default: Trezor } = await import('@trezor/connect-web')
-        const { Transaction, FeeMarketEIP1559Transaction } = await import(
+        const {  Transaction, FeeMarketEIP1559Transaction } = await import(
           '@ethereumjs/tx'
         )
 

@@ -10,6 +10,7 @@ function metamask({
   return () => {
     return {
       label: 'MetaMask',
+      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ appMetadata }) => {
         const { name, icon } = appMetadata || {}

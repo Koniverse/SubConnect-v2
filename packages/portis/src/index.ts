@@ -6,6 +6,7 @@ function portis(options: APIKey): WalletInit {
   return () => {
     return {
       label: 'Portis',
+      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains }) => {
         const { default: Portis } = await import('@portis/web3')
