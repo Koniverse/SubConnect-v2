@@ -2,6 +2,10 @@
 export { default as defaultBnIcon } from './blocknative-icon.js'
 export { default as poweredByBlocknative } from './poweredByBlocknative.js'
 // chain icons
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
+
 export { default as ethereumIcon } from './ethereum.js'
 export { default as polygonIcon } from './polygon.js'
 export { default as binanceIcon } from './binance.js'
@@ -13,6 +17,17 @@ export { default as gnosisIcon } from './gnosis.js'
 export { default as harmonyOneIcon } from './harmony-one.js'
 export { default as arbitrumIcon } from './arbitrum.js'
 export { default as baseIcon } from './base.js'
+export { default as acalaIcon } from './acala.js'
+export { default as crutsIcon } from './crust.js'
+export { default as astarNetworkIcon } from './astar-network.js'
+export { default as hydraxIcon } from './hydradx.js'
+export { default as kusamaIcon } from './kusama.js'
+export { default as phalaNetworkIcon } from './phala-network.js'
+export { default as polkadotIcon } from './polkadot.js'
+export { default as statemint } from './statemint.js'
+export { default as turingNetworkIcon } from './turing-network.js'
+export { default as westendIcon } from './westend.js'
+
 // other
 export { default as hourglass } from './hourglass.js'
 export { default as questionIcon } from './question.js'

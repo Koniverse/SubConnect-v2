@@ -8,7 +8,7 @@ import type {
   WalletModule,
   Chain,
   TokenSymbol,
-  ChainWithDecimalId
+  ChainWithDecimalId, AccountAddress, SubstrateProvider
 } from '@web3-onboard/common'
 
 import type gas from '@web3-onboard/gas'
@@ -17,6 +17,7 @@ import type { TransactionPreviewAPI } from '@web3-onboard/transaction-preview'
 
 import type en from './i18n/en.json'
 import type { EthereumTransactionData, Network } from 'bnc-sdk'
+import type { Signer } from  '@polkadot/types/types';
 
 export interface InitOptions {
   /**
@@ -84,7 +85,14 @@ export interface InitOptions {
    * address resolution similar to that of ens (Ethereum Name Service)
    * ENS resolution will take president if available
    */
-  unstoppableResolution?: typeof unstoppableResolution
+  unstoppableResolution?: typeof unstoppableResolution,
+
+  projectId?: string,
+
+  url : string,
+
+  chainsPolkadot: Chain[]
+
 }
 
 export type Theme = ThemingMap | BuiltInThemes | 'system'
@@ -117,7 +125,7 @@ export interface WalletWithLoadedIcon extends Omit<WalletModule, 'getIcon'> {
 }
 
 export interface WalletWithLoadingIcon
-  extends Omit<WalletWithLoadedIcon, 'icon'> {
+    extends Omit<WalletWithLoadedIcon, 'icon'> {
   icon: Promise<string>
 }
 
@@ -129,12 +137,14 @@ export type ConnectedChain = {
 export interface WalletState {
   label: string //  wallet name
   icon: string // wallet icon svg string
-  provider: EIP1193Provider
+  provider: EIP1193Provider | SubstrateProvider
   accounts: Account[]
   // in future it will be possible that a wallet
   // is connected to multiple chains at once
   chains: ConnectedChain[]
-  instance?: unknown
+  instance?: unknown,
+  signer ?: Signer | undefined
+  type : 'evm' | 'substrate'
 }
 
 export type Account = {
@@ -143,7 +153,9 @@ export type Account = {
   uns: Uns | null
   balance: Balances | null
   secondaryTokens?: SecondaryTokenBalances[] | null
+  message ?: string
 }
+
 
 export type Balances = Record<TokenSymbol, string> | null
 
@@ -263,10 +275,10 @@ export type ConnectModalOptions = {
 }
 
 export type CommonPositions =
-  | 'topRight'
-  | 'bottomRight'
-  | 'bottomLeft'
-  | 'topLeft'
+    | 'topRight'
+    | 'bottomRight'
+    | 'bottomLeft'
+    | 'topLeft'
 
 export type AccountCenterPosition = CommonPositions
 
@@ -282,13 +294,13 @@ export type AccountCenter = {
    */
   hideTransactionProtectionBtn?: boolean
   /**
-   * Controls the visibility of the 'Enable Transaction Protection' button 
+   * Controls the visibility of the 'Enable Transaction Protection' button
    * within the expanded Account Center.
    * - When set to false (default), the button is visible.
    * - When set to true, the button is hidden.
-   * This setting can be configured globally for the Account Center, or 
+   * This setting can be configured globally for the Account Center, or
    * separately for different interfaces like desktop/mobile.
-   * defaults to 
+   * defaults to
    * `docs.blocknative.com/blocknative-mev-protection/transaction-boost-alpha`
    * Use this property to override the default link to give users
    * more information about transaction protection and the RPC be set
@@ -308,13 +320,13 @@ export type AccountCenterOptions = {
   desktop: Omit<AccountCenter, 'expanded'>
   mobile: Omit<AccountCenter, 'expanded'>
   /**
-   * Controls the visibility of the 'Enable Transaction Protection' button 
+   * Controls the visibility of the 'Enable Transaction Protection' button
    * within the expanded Account Center.
    * - When set to false (default), the button is visible.
    * - When set to true, the button is hidden.
-   * This setting can be configured globally for the Account Center, or 
+   * This setting can be configured globally for the Account Center, or
    * separately for different interfaces like desktop/mobile.
-   * defaults to 
+   * defaults to
    * `docs.blocknative.com/blocknative-mev-protection/transaction-boost-alpha`
    * Use this property to override the default link to give users
    * more information about transaction protection and the RPC be set
@@ -358,7 +370,7 @@ export type Notify = {
    * Or return undefined for a default notification
    */
   transactionHandler: (
-    event: EthereumTransactionData
+      event: EthereumTransactionData
   ) => TransactionHandlerReturn
   /**
    * Position of notifications that defaults to the same position as the
@@ -418,11 +430,11 @@ export type Notification = {
 export type TransactionHandlerReturn = CustomNotification | boolean | void
 
 export type CustomNotification = Partial<
-  Omit<Notification, 'startTime' | 'network' | 'id' | 'key'>
+    Omit<Notification, 'startTime' | 'network' | 'id' | 'key'>
 >
 
 export type CustomNotificationUpdate = Partial<
-  Omit<Notification, 'startTime' | 'network'>
+    Omit<Notification, 'startTime' | 'network'>
 >
 
 export type NotificationType = 'pending' | 'success' | 'error' | 'hint'
@@ -451,22 +463,23 @@ export interface TxDetails {
 
 // ==== ACTIONS ==== //
 export type Action =
-  | AddChainsAction
-  | UpdateChainsAction
-  | AddWalletAction
-  | UpdateWalletAction
-  | RemoveWalletAction
-  | ResetStoreAction
-  | UpdateAccountAction
-  | UpdateAccountCenterAction
-  | SetWalletModulesAction
-  | SetLocaleAction
-  | UpdateNotifyAction
-  | AddNotificationAction
-  | RemoveNotificationAction
-  | UpdateAllWalletsAction
-  | UpdateConnectModalAction
-  | UpdateAppMetadataAction
+    | AddChainsAction
+    | UpdateChainsAction
+    | AddWalletAction
+    | UpdateWalletAction
+    | RemoveWalletAction
+    | ResetStoreAction
+    | UpdateAccountAction
+    | UpdateAccountCenterAction
+    | SetWalletModulesAction
+    | SetLocaleAction
+    | UpdateNotifyAction
+    | AddNotificationAction
+    | RemoveNotificationAction
+    | UpdateAllWalletsAction
+    | UpdateConnectModalAction
+    | UpdateAppMetadataAction
+    | SendSignMessage
 
 export type AddChainsAction = { type: 'add_chains'; payload: Chain[] }
 export type UpdateChainsAction = { type: 'update_chains'; payload: Chain }
@@ -537,6 +550,11 @@ export type UpdateAppMetadataAction = {
   payload: AppMetadata | Partial<AppMetadata>
 }
 
+export type SendSignMessage = {
+  type : 'send_sign_message',
+  payload : string
+}
+
 // ==== MISC ==== //
 export type ChainStyle = {
   icon: string
@@ -566,4 +584,9 @@ export type WalletPermission = {
   }[]
 
   date: number
+}
+
+export type WalletConnectState = {
+  signer ?: Signer,
+  address : AccountAddress[]
 }
