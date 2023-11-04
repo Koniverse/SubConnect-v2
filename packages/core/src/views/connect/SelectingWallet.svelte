@@ -22,6 +22,8 @@
 
   const wheresMyWalletDefault =
     'https://www.blocknative.com/blog/metamask-wont-connect-web3-wallet-troubleshooting'
+
+  console.log(wallets, 'wallets')
 </script>
 
 <style>

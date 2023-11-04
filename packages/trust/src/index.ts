@@ -8,6 +8,7 @@ function trust(): WalletInit {
   return () => {
     return {
       label: 'Trust Wallet',
+      type: 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async () => {
         const ethereumInjectionExists = window.hasOwnProperty('ethereum')

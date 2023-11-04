@@ -12,6 +12,7 @@ function infinityWallet(options?: InfinityWalletOptions): WalletInit {
 
   return () => {
     return {
+      type : 'evm',
       label: 'Infinity Wallet',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async () => {

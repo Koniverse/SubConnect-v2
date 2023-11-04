@@ -15,6 +15,7 @@ module.exports = {
     alias: {
       svelte: path.dirname(require.resolve('svelte/package.json')),
       assert: 'assert',
+      react: 'react',
       buffer: 'buffer',
       crypto: 'crypto-browserify',
       http: 'stream-http',
@@ -26,7 +27,8 @@ module.exports = {
       zlib: 'browserify-zlib'
     },
     extensions: ['.mjs', '.js', '.svelte'],
-    mainFields: ['svelte', 'browser', 'module', 'main']
+    mainFields: ['svelte', 'browser', 'module', 'main'],
+    conditionNames: ['svelte', 'browser', 'import']
   },
   output: {
     path: path.join(__dirname, '/public/build'),

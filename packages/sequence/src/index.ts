@@ -1,4 +1,5 @@
 import type { WalletInit } from '@web3-onboard/common'
+import * as net from "net";
 
 interface SequenceOptions {
   appName?: string
@@ -14,6 +15,7 @@ function sequence(options?: SequenceOptions): WalletInit {
       ? []
       : {
           label: 'Sequence',
+          type :'evm',
           getIcon: async () => (await import('./icon.js')).default,
           getInterface: async () => {
             const { sequence } = await import('0xsequence')

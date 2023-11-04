@@ -4,6 +4,7 @@ function mew(): WalletInit {
   return () => {
     return {
       label: 'MEW Wallet',
+      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, EventEmitter }) => {
         const {

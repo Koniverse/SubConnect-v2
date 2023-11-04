@@ -39,8 +39,9 @@ import {
   REMOVE_NOTIFICATION,
   UPDATE_ALL_WALLETS,
   UPDATE_CHAINS,
-  UPDATE_APP_METADATA
+  UPDATE_APP_METADATA, SEND_SIGN_MESSAGE
 } from './constants.js'
+
 
 function reducer(state: AppState, action: Action): AppState {
   const { type, payload } = action
@@ -110,10 +111,9 @@ function reducer(state: AppState, action: Action): AppState {
       const updatedWallets = state.wallets.map(wallet => {
         if (wallet.label === id) {
           wallet.accounts = wallet.accounts.map(account => {
-            if (account.address === address) {
+            if (account && account.address === address) {
               return { ...account, ...accountUpdate }
             }
-
             return account
           })
         }
@@ -234,6 +234,13 @@ function reducer(state: AppState, action: Action): AppState {
 
     case RESET_STORE:
       return APP_INITIAL_STATE
+
+    case SEND_SIGN_MESSAGE : {
+      state.wallets[0].accounts[0].message = payload as string;
+      return {
+        ...state
+      }
+    }
 
     default:
       throw new Error(`Unknown type: ${type} in appStore reducer`)

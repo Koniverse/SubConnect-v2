@@ -23,6 +23,7 @@ function bitKeep(): WalletInit {
   return () => {
     return {
       label: 'BitKeep',
+      type : 'evm',
       getIcon: async () => {
         const { WalletInfo } = await loadBitKeepDependencies();
         return WalletInfo.logolist.svg[256];

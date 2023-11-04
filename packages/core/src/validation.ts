@@ -10,7 +10,7 @@ import {
   chainIdValidation,
   chainValidation,
   validate,
-  AppMetadata
+  type AppMetadata
 } from '@web3-onboard/common'
 
 import type {

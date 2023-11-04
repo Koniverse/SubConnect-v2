@@ -27,6 +27,7 @@ function ledger(options?: LedgerOptionsWCv2): WalletInit {
 
   return () => {
     return {
+      type : 'evm',
       label: 'Ledger',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, EventEmitter }) => {

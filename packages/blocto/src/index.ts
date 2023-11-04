@@ -4,6 +4,7 @@ function BloctoWallet(): WalletInit {
   if (typeof window === 'undefined') return () => null
   return () => {
     return {
+      type : 'evm',
       label: 'Blocto',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains }) => {

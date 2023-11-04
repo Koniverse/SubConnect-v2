@@ -64,9 +64,10 @@
     "test-playwright": "cd test && yarn && yarn playwright test"
   },
   "devDependencies": {
-    "prettier": "^2.4.1",
-    "prettier-plugin-svelte": "^2.4.0",
-    "typescript": "^4.5.5"
+    "prettier": "^3.0.3",
+    "prettier-plugin-svelte": "^3.0.3",
+    "typescript": "^5.2.2",
+    "react": "^18.2.0"
   },
   "dependencies": {
     "wsrun": "^5.2.4"

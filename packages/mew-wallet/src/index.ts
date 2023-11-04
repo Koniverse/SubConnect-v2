@@ -9,6 +9,7 @@ function mewWallet(): WalletInit {
     return device.type === 'mobile'
       ? {
           label: 'MEW wallet',
+          type : 'evm',
           getIcon: async () => (await import('./icon.js')).default,
           getInterface: async () => {
             const provider =

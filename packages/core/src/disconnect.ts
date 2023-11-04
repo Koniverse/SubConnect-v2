@@ -14,6 +14,7 @@ async function disconnect(options: DisconnectOptions): Promise<WalletState[]> {
   }
 
   const { label } = options
+  console.log('disconnect in Disconnect')
 
   if (state.get().notify.enabled) {
     // handle unwatching addresses
@@ -39,8 +40,8 @@ async function disconnect(options: DisconnectOptions): Promise<WalletState[]> {
 
   if (Array.isArray(labels) && labels.indexOf(label) >= 0) {
     setLocalStore(
-      STORAGE_KEYS.LAST_CONNECTED_WALLET,
-      JSON.stringify(labels.filter(walletLabel => walletLabel !== label))
+        STORAGE_KEYS.LAST_CONNECTED_WALLET,
+        JSON.stringify(labels.filter(walletLabel => walletLabel !== label))
     )
   }
   if (typeof labels === 'string' && labels === label) {

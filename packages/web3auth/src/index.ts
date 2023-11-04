@@ -22,6 +22,7 @@ type Web3AuthModuleOptions = Omit<Web3AuthOptions, 'chainConfig'> & {
 function web3auth(options: Web3AuthModuleOptions): WalletInit {
   return () => ({
     label: 'Web3Auth',
+    type : 'evm',
     getIcon: async () => (await import('./icon.js')).default,
     getInterface: async ({ EventEmitter, chains }) => {
       const { Web3Auth } = await import('@web3auth/modal')

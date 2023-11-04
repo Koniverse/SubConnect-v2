@@ -78,6 +78,7 @@ function dcent({
 
     return {
       label: "D'CENT",
+      type : 'evm',
       getIcon,
       getInterface: async ({ EventEmitter, chains }) => {
         const eventEmitter = new EventEmitter()

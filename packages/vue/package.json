@@ -56,15 +56,15 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^4.5.5",
+    "typescript": "^5.2.2",
     "vue": "^3.2.31"
   },
   "dependencies": {
-    "@vueuse/core": "^8.4.2",
-    "@vueuse/rxjs": "^8.2.0",
+    "@vueuse/core": "^10.5.0",
+    "@vueuse/rxjs": "^10.5.0",
     "@web3-onboard/common": "^2.3.3",
     "@web3-onboard/core": "^2.21.2",
-    "vue-demi": "^0.12.4"
+    "vue-demi": "^0.14.6"
   },
   "peerDependencies": {
     "@vue/composition-api": "^1.0.0",

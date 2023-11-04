@@ -2,7 +2,7 @@ import connectWallet from './connect.js'
 import disconnectWallet from './disconnect.js'
 import setChain from './chain.js'
 import { state } from './store/index.js'
-import { reset$, wallets$ } from './streams.js'
+import { AccountQrConnect$, qrConnect$, reset$, uri$, wallets$ } from './streams.js'
 import initI18N from './i18n/index.js'
 import App from './views/Index.svelte'
 import type {
@@ -16,9 +16,9 @@ import { configuration, updateConfiguration } from './configuration.js'
 import updateBalances from './update-balances.js'
 import { chainIdToHex, getLocalStore, setLocalStore } from './utils.js'
 import { preflightNotifications } from './preflight-notifications.js'
+import { listWagmiNetwork } from './listNetworkWagmi.js'
 
 import {
-  validateInitOptions,
   validateNotify,
   validateNotifyOptions
 } from './validation.js'
@@ -37,6 +37,9 @@ import {
 } from './store/actions.js'
 import type { PatchedEIP1193Provider } from '@web3-onboard/transaction-preview'
 import { getBlocknativeSdk } from './services.js'
+import { QrConnect } from '@web3-onboard/qrCodeConnect';
+
+
 
 const API = {
   connectWallet,
@@ -82,14 +85,13 @@ export type { EIP1193Provider } from '@web3-onboard/common'
 
 function init(options: InitOptions): OnboardAPI {
   if (typeof window === 'undefined') return API
-
-  if (options) {
-    const error = validateInitOptions(options)
-
-    if (error) {
-      throw error
-    }
-  }
+  // if (options) {
+  //   const error = validateInitOptions(options)
+  //
+  //   if (error) {
+  //     throw error
+  //   }
+  // }
 
   const {
     wallets,
@@ -105,8 +107,27 @@ function init(options: InitOptions): OnboardAPI {
     transactionPreview,
     theme,
     disableFontDownload,
-    unstoppableResolution
+    unstoppableResolution,
+    url,
+    chainsPolkadot,
+    projectId
   } = options
+
+
+  qrConnect$.next(new QrConnect({
+        chains: chains.map((chain) => (
+            listWagmiNetwork[typeof  chain.id === 'number' ?
+                chain.id.toString() :
+                parseInt(chain.id, 16).toString()]
+        )),
+        projectId ,
+        url ,
+        chainsPolkadot,
+        uri: uri$,
+        accountState: AccountQrConnect$
+      }
+  ))
+
 
   if (containerElements) updateConfiguration({ containerElements })
 
@@ -119,16 +140,16 @@ function init(options: InitOptions): OnboardAPI {
   }
 
   initI18N(i18n)
-  addChains(chainIdToHex(chains))
+  addChains(chainIdToHex(chains).concat(chainsPolkadot))
 
-  if (typeof connect !== undefined) {
+  if (typeof connect !== 'undefined') {
     updateConnectModal(connect)
   }
   // update accountCenter
   if (typeof accountCenter !== 'undefined') {
     let accountCenterUpdate
     const { hideTransactionProtectionBtn, transactionProtectionInfoLink } =
-      accountCenter
+        accountCenter
 
     if (device.type === 'mobile') {
       accountCenterUpdate = {
@@ -158,19 +179,19 @@ function init(options: InitOptions): OnboardAPI {
       }
 
       if (
-        (!notify.desktop || (notify.desktop && !notify.desktop.position)) &&
-        accountCenter &&
-        accountCenter.desktop &&
-        accountCenter.desktop.position
+          (!notify.desktop || (notify.desktop && !notify.desktop.position)) &&
+          accountCenter &&
+          accountCenter.desktop &&
+          accountCenter.desktop.position
       ) {
         notify.desktop.position = accountCenter.desktop.position
       }
 
       if (
-        (!notify.mobile || (notify.mobile && !notify.mobile.position)) &&
-        accountCenter &&
-        accountCenter.mobile &&
-        accountCenter.mobile.position
+          (!notify.mobile || (notify.mobile && !notify.mobile.position)) &&
+          accountCenter &&
+          accountCenter.mobile &&
+          accountCenter.mobile.position
       ) {
         notify.mobile.position = accountCenter.mobile.position
       }
@@ -221,7 +242,10 @@ function init(options: InitOptions): OnboardAPI {
     unstoppableResolution
   })
 
+
   appMetadata && updateAppMetadata(appMetadata)
+
+
 
   if (apiKey && transactionPreview) {
     const getBnSDK = async () => {
@@ -243,18 +267,18 @@ function init(options: InitOptions): OnboardAPI {
 
   // handle auto connection of last wallet
   if (
-    connect &&
-    (connect.autoConnectLastWallet || connect.autoConnectAllPreviousWallet)
+      connect &&
+      (connect.autoConnectLastWallet || connect.autoConnectAllPreviousWallet)
   ) {
     const lastConnectedWallets = getLocalStore(
-      STORAGE_KEYS.LAST_CONNECTED_WALLET
+        STORAGE_KEYS.LAST_CONNECTED_WALLET
     )
     try {
       const lastConnectedWalletsParsed = JSON.parse(lastConnectedWallets)
       if (
-        lastConnectedWalletsParsed &&
-        Array.isArray(lastConnectedWalletsParsed) &&
-        lastConnectedWalletsParsed.length
+          lastConnectedWalletsParsed &&
+          Array.isArray(lastConnectedWalletsParsed) &&
+          lastConnectedWalletsParsed.length
       ) {
         connectAllPreviousWallets(lastConnectedWalletsParsed, connect)
       }
@@ -276,16 +300,16 @@ function init(options: InitOptions): OnboardAPI {
 }
 
 const fontFamilyExternallyDefined = (
-  theme: Theme,
-  disableFontDownload: boolean
+    theme: Theme,
+    disableFontDownload: boolean
 ): boolean => {
   if (disableFontDownload) return true
   if (
-    document.body &&
-    (getComputedStyle(document.body).getPropertyValue(
-      '--onboard-font-family-normal'
-    ) ||
-      getComputedStyle(document.body).getPropertyValue('--w3o-font-family'))
+      document.body &&
+      (getComputedStyle(document.body).getPropertyValue(
+              '--onboard-font-family-normal'
+          ) ||
+          getComputedStyle(document.body).getPropertyValue('--w3o-font-family'))
   )
     return true
   if (!theme) return false
@@ -306,8 +330,8 @@ const importInterFont = async (): Promise<void> => {
 }
 
 const connectAllPreviousWallets = async (
-  lastConnectedWallets: Array<string>,
-  connect: ConnectModalOptions
+    lastConnectedWallets: Array<string>,
+    connect: ConnectModalOptions
 ): Promise<void> => {
   const activeWalletsList = []
   const parsedWalletList = lastConnectedWallets
@@ -330,8 +354,8 @@ const connectAllPreviousWallets = async (
     }
   }
   setLocalStore(
-    STORAGE_KEYS.LAST_CONNECTED_WALLET,
-    JSON.stringify(activeWalletsList)
+      STORAGE_KEYS.LAST_CONNECTED_WALLET,
+      JSON.stringify(activeWalletsList)
   )
 }
 
@@ -401,7 +425,6 @@ function mountApp(theme: Theme, disableFontDownload: boolean) {
           --warning-700: #664600;
 
           /* FONTS */
-          --font-family-normal: var(--w3o-font-family, Inter, sans-serif);
 
           --font-size-1: 3rem;
           --font-size-2: 2.25rem;
@@ -454,23 +477,21 @@ function mountApp(theme: Theme, disableFontDownload: boolean) {
   const connectModalContEl = configuration.containerElements.connectModal
 
   const containerElementQuery =
-    connectModalContEl || state.get().accountCenter.containerElement || 'body'
+      connectModalContEl || state.get().accountCenter.containerElement || 'body'
 
   const containerElement = document.querySelector(containerElementQuery)
 
   if (!containerElement) {
     throw new Error(
-      `Element with query ${containerElementQuery} does not exist.`
+        `Element with query ${containerElementQuery} does not exist.`
     )
   }
 
   containerElement.appendChild(onboard)
 
-  const app = new App({
+  return new App({
     target
   })
-
-  return app
 }
 
 export default init
