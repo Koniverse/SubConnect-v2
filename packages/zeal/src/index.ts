@@ -9,7 +9,6 @@ function zealWallet(): WalletInit {
 
   return () => ({
     label: 'Zeal',
-    type : 'evm',
     injectedNamespace: 'zeal',
     checkProviderIdentity: ({ provider }: { provider: any }) => {
       !!provider && !!provider['isZeal']

@@ -26,7 +26,6 @@
   export let notification: Notification
   export let updateParentOnRemove: () => void
 
-  // eslint-disable-next-line no-undef
   let timeoutId: NodeJS.Timeout
   let hovered = false
 

@@ -14,6 +14,7 @@
     "Hardware Wallet",
     "Notifications",
     "React",
+    "Solid.js",
     "Svelte",
     "Vue",
     "Next",
@@ -56,13 +57,11 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@polkadot/dev": "^0.76.26",
-    "@types/sass": "^1.45.0",
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
-    "@typescript-eslint/parser": "^6.8.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.1",
+    "@typescript-eslint/parser": "^4.31.1",
     "eip-712": "^0.4.3",
-    "eslint": "^8.51.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
     "eventemitter3": "^4.0.7",
     "prettier": "^2.4.0",
     "prettier-plugin-svelte": "^2.4.0",
@@ -72,10 +71,9 @@
     "svelte-check": "^2.2.6",
     "svelte-preprocess": "^4.9.4",
     "tslib": "^2.0.0",
-    "typescript": "^5.2.2"
+    "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@polkadot/extension-inject": "^0.46.5",
     "bignumber.js": "^9.1.0",
     "ethers": "5.5.4",
     "joi": "17.9.1"

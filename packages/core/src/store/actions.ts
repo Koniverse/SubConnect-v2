@@ -4,7 +4,6 @@ import { dispatch } from './index.js'
 import { configuration } from '../configuration.js'
 import { handleThemeChange, returnTheme } from '../themes.js'
 
-
 import type {
   Account,
   AddChainsAction,
@@ -31,8 +30,7 @@ import type {
   UpdateConnectModalAction,
   Theme,
   UpdateChainsAction,
-  UpdateAppMetadataAction,
-  SendSignMessage
+  UpdateAppMetadataAction
 } from '../types.js'
 
 import {
@@ -42,6 +40,7 @@ import {
   validateCustomNotification,
   validateCustomNotificationUpdate,
   validateString,
+  validateWallet,
   validateWalletInit,
   validateUpdateBalances,
   validateNotify,
@@ -67,11 +66,8 @@ import {
   UPDATE_ALL_WALLETS,
   UPDATE_CONNECT_MODAL,
   UPDATE_CHAINS,
-  UPDATE_APP_METADATA, SEND_SIGN_MESSAGE
+  UPDATE_APP_METADATA
 } from './constants.js'
-import { getBalance } from '../provider.js';
-
-
 
 export function addChains(chains: Chain[]): void {
   // chains are validated on init
@@ -111,12 +107,12 @@ export function updateChain(updatedChain: Chain): void {
 }
 
 export function addWallet(wallet: WalletState): void {
-  // const error = validateWallet(wallet)
-  //
-  // if (error) {
-  //   console.error(error)
-  //   throw error
-  // }
+  const error = validateWallet(wallet)
+
+  if (error) {
+    console.error(error)
+    throw error
+  }
 
   const action = {
     type: ADD_WALLET,
@@ -127,12 +123,12 @@ export function addWallet(wallet: WalletState): void {
 }
 
 export function updateWallet(id: string, update: Partial<WalletState>): void {
-  // const error = validateWallet(update)
-  //
-  // if (error) {
-  //   console.error(error)
-  //   throw error
-  // }
+  const error = validateWallet(update)
+
+  if (error) {
+    console.error(error)
+    throw error
+  }
 
   const action = {
     type: UPDATE_WALLET,
@@ -159,45 +155,29 @@ export function removeWallet(id: string): void {
     }
   }
 
-
   dispatch(action as RemoveWalletAction)
 }
 
-export async function setPrimaryWallet(
-    wallet: WalletState,
-    chains : Chain[],
-    address?: string): Promise<void> {
-  // const error =
-  //   validateWallet(wallet) || (address && validateString(address, 'address'))
-  //
-  // if (error) {
-  //   throw error
-  // }
+export function setPrimaryWallet(wallet: WalletState, address?: string): void {
+  const error =
+    validateWallet(wallet) || (address && validateString(address, 'address'))
+
+  if (error) {
+    throw error
+  }
 
   // if also setting the primary account
   if (address) {
     const account = wallet.accounts.find(ac => ac.address === address)
-    const chain = chains.find( chain => chain.id === wallet.chains[0].id)
-    if(!account.balance){
-      account.balance = await getBalance(address,chain, wallet.type)
-    }
 
     if (account) {
       wallet.accounts = [
-          account,
-        ...wallet.accounts
-        .map((acc) => ({ ...acc, balance : null }))
-        .filter(acc => {
-            return acc.address !== address
-            }
-        )
+        account,
+        ...wallet.accounts.filter(({ address }) => address !== account.address)
       ]
-
     }
   }
 
-
-  updateWallet(wallet.label, { accounts : wallet.accounts })
   // add wallet will set it to first wallet since it already exists
   addWallet(wallet)
 }
@@ -477,16 +457,4 @@ export function updateAppMetadata(
   }
 
   dispatch(action as UpdateAppMetadataAction)
-}
-
-export function sendSignMessage(message : string): void {
-
-  if(!message || message.length === 0) return ;
-  console.log(message)
-  const action = {
-    type: SEND_SIGN_MESSAGE ,
-    payload: message
-  }
-
-  dispatch(action as SendSignMessage)
 }

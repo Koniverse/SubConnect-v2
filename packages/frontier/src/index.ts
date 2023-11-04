@@ -8,7 +8,6 @@ function frontier(): WalletInit {
   return () => {
     return {
       label: 'Frontier',
-      type: 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async () => {
         const { createEIP1193Provider } = await import('@web3-onboard/common')

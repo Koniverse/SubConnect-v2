@@ -87,8 +87,6 @@ export const bigNumberFieldsToStrings = (
     transaction
   ) as StringifiedTransactionRequest
 
-
-
 /**
  * Helper method for hardware wallets to build an object
  * with a request method used for making rpc requests.
@@ -99,9 +97,7 @@ export const bigNumberFieldsToStrings = (
 export const getHardwareWalletProvider = (
   getRpcUrl: () => string
 ): { request: EIP1193Provider['request'] } => ({
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-  request: ({ method, params })  =>
+  request: ({ method, params }) =>
     fetch(getRpcUrl(), {
       method: 'POST',
       headers: {

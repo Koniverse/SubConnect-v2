@@ -4,8 +4,6 @@
   import en from '../../i18n/en.json'
   import CloseButton from '../shared/CloseButton.svelte'
   import Modal from '../shared/Modal.svelte'
-  import { shareReplay, startWith } from 'rxjs/operators';
-  import { state } from '../../store/index.js'
 
   const nextNetworkName = $switchChainModal$.chain.label
 

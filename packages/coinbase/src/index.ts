@@ -8,7 +8,6 @@ function coinbaseWallet({
   return () => {
     return {
       label: 'Coinbase Wallet',
-      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, appMetadata }) => {
         const [chain] = chains

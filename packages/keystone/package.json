@@ -52,10 +52,9 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^5.2.2"
+    "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@ethereumjs/common": "^4.1.0",
     "@ethereumjs/tx": "^3.4.0",
     "@ethersproject/providers": "^5.5.0",
     "@keystonehq/eth-keyring": "^0.14.00.3",

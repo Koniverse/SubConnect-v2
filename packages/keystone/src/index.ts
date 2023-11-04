@@ -91,7 +91,6 @@ function keystone({
     if (filtered) return null
 
     return {
-      type: 'evm',
       label: 'Keystone',
       getIcon,
       getInterface: async ({ EventEmitter, chains }) => {

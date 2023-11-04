@@ -46,7 +46,6 @@ function uauth(options: UauthInitOptions): WalletInit {
 
     return {
       label: 'Unstoppable',
-      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, EventEmitter, appMetadata }) => {
         const UAuth = await import('@uauth/js')

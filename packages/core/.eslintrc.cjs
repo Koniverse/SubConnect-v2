@@ -28,7 +28,6 @@ module.exports = {
       { allowTemplateLiterals: true }
     ],
     '@typescript-eslint/no-case-declarations': 'off',
-    "@typescript-eslint/no-explicit-any" : 'off',
     'max-len': [
       'error',
       {

@@ -15,7 +15,6 @@ function frame(): WalletInit {
   return () => {
     return {
       label: 'Frame',
-      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async () => {
         const provider = await getProvider()

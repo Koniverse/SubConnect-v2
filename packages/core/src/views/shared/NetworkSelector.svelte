@@ -26,7 +26,6 @@
         : prev[0] && next[0] && prev[0].chains[0].id === next[0].chains[0].id
     )
   )
-  console.log('chain', chains)
 
   $: if ($resize$) {
     resizeSelect()
@@ -40,7 +39,7 @@
 
       await setChain({
         chainId: selectedChain,
-        chainNamespace: wallet.type,
+        chainNamespace: 'evm',
         wallet: wallet.label
       })
 
@@ -135,11 +134,9 @@
         >
       {/if}
       {#each chains as chain (chain.id)}
-        {#if (chain.namespace === wallet.type)}
         <option value={chain.id}
           >{chain.label || chainIdToLabel[chain.id] || chain.id}</option
         >
-        {/if}
       {/each}
     </select>
   {/if}

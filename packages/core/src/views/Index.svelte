@@ -440,7 +440,7 @@
       {/await}
     {/if}
     {#if $accountCenter$.position.includes('bottom')}
-      <div id="w3o-transaction-preview-container6" style="margin-bottom: 8px;" />
+      <div id="w3o-transaction-preview-container" style="margin-bottom: 8px;" />
     {/if}
     <div id="account-center-with-notify">
       {#await accountCenterComponent then AccountCenter}
@@ -450,7 +450,7 @@
       {/await}
     </div>
     {#if $accountCenter$.position.includes('top')}
-      <div id="w3o-transaction-preview-container5" style="margin-top: 8px;" />
+      <div id="w3o-transaction-preview-container" style="margin-top: 8px;" />
     {/if}
     {#if $notify$.position.includes('top') && $accountCenter$.position.includes('top') && samePositionOrMobile}
       {#await notifyComponent then Notify}
@@ -478,7 +478,7 @@
       : ''} "
   >
     {#if $accountCenter$.position.includes('bottom')}
-      <div id="w3o-transaction-preview-container4" style="margin-bottom: 8px;" />
+      <div id="w3o-transaction-preview-container" style="margin-bottom: 8px;" />
     {/if}
     <div>
       {#if $accountCenter$.enabled && $wallets$.length}
@@ -490,7 +490,7 @@
       {/if}
     </div>
     {#if $accountCenter$.position.includes('top')}
-      <div id="w3o-transaction-preview-container3" style="margin-top: 8px;" />
+      <div id="w3o-transaction-preview-container" style="margin-top: 8px;" />
     {/if}
   </div>
 {/if}
@@ -506,7 +506,7 @@
       : ''} "
   >
     {#if $notify$.position.includes('top')}
-      <div id="w3o-transaction-preview-container2" />
+      <div id="w3o-transaction-preview-container" />
     {/if}
     {#await notifyComponent then Notify}
       {#if Notify}
@@ -519,7 +519,7 @@
       {/if}
     {/await}
     {#if $notify$.position.includes('bottom')}
-      <div id="w3o-transaction-preview-container1" />
+      <div id="w3o-transaction-preview-container" />
     {/if}
   </div>
 {/if}

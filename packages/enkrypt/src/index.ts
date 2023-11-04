@@ -12,7 +12,6 @@ function enkrypt(): WalletInit {
   return () => {
     return {
       label: 'Enkrypt',
-      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async () => {
         const enkryptExists = window.hasOwnProperty('enkrypt')

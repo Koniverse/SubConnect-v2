@@ -11,8 +11,6 @@
   import { MOBILE_WINDOW_WIDTH } from '../../constants.js'
   import { state } from '../../store'
   import { shareReplay, startWith } from 'rxjs'
-  import { uri$ } from '../../streams.js';
-  import QrCode from './QrCode.svelte';
 
   export let step: keyof i18n['connect']
 
@@ -21,22 +19,8 @@
   const defaultContent = en.connect[step].sidebar
   const { subheading, paragraph } = defaultContent
 
-
-
   const { heading } =
     defaultContent as i18n['connect']['selectingWallet']['sidebar']
-
-  $: uriPolkadot  = uri$.value.polkadot
-  $: uriEth = uri$.value.eth
-
-  uri$.pipe(
-          shareReplay(1)
-  ).subscribe((uri) =>{
-    uriPolkadot = uri.polkadot
-    uriEth = uri.eth
-  })
-
-
 
   let windowWidth: number
 
@@ -204,14 +188,12 @@
       </div>
       {#if $_(`connect.${step}.sidebar.header`, { default: '' })}
         <div class="heading">
-           {$_(`connect.${step}.sidebar.header`, {
-             default: heading
-           })}
-
+          {$_(`connect.${step}.sidebar.header`, {
+            default: heading
+          })}
         </div>
       {/if}
     {/if}
-    {#if (uriPolkadot === '' || uriEth === '')}
 
     <div class="subheading">
       {$_(`connect.${step}.sidebar.subheading`, {
@@ -225,9 +207,6 @@
         default: paragraph
       })}
     </div>
-      {:else }
-    <QrCode uriPolkadot = "{uriPolkadot}" uriEth = "{uriEth}" size="200px"/>
-      {/if}
     {#if !connect.removeIDontHaveAWalletInfoLink}
       <a
         href={connect.iDontHaveAWalletLink ||

@@ -23,7 +23,6 @@ function bitgetWallet(): WalletInit {
   return () => {
     return {
       label: 'Bitget Wallet',
-      type : 'evm',
       getIcon: async () => {
         const { WalletInfo } = await loadBitgetWalletDependencies()
         return WalletInfo.logolist.svg[256];

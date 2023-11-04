@@ -4,7 +4,6 @@ import { configuration } from './configuration.js'
 import { state } from './store/index.js'
 import type { WalletState } from './types.js'
 import { gweiToWeiHex, networkToChainId, toHexString } from './utils.js'
-import type { EIP1193Provider } from '@web3-onboard/common';
 
 const ACTIONABLE_EVENT_CODES: string[] = ['txPool']
 const VALID_GAS_NETWORKS: Network[] = ['main', 'matic-main']
@@ -63,8 +62,8 @@ export async function replaceTransaction({
 
   // Some wallets do not like empty '0x' val
   const dataObj = input === '0x' ? {} : { data: input }
-  if( wallet.type !== 'evm') return;
-  return (wallet.provider as EIP1193Provider).request({
+
+  return wallet.provider.request({
     method: 'eth_sendTransaction',
     params: [
       {

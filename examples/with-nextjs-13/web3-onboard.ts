@@ -1,23 +1,26 @@
-
+import fortmaticModule from '@web3-onboard/fortmatic'
+import safeModule from '@web3-onboard/gnosis'
 import injectedModule from '@web3-onboard/injected-wallets'
-import { init } from '@web3-onboard/react'
-import walletConnectModule from '@web3-onboard/walletconnect'
-
-import cedeStoreWalletModule from '@web3-onboard/cede-store'
 import keepkeyModule from '@web3-onboard/keepkey'
 import keystoneModule from '@web3-onboard/keystone'
 import ledgerModule from '@web3-onboard/ledger'
-import ledgerPolkadot from "@web3-onboard/ledgerpolkadot";
+import portisModule from '@web3-onboard/portis'
+import torusModule from '@web3-onboard/torus'
+import trezorModule from '@web3-onboard/trezor'
+import walletConnectModule from '@web3-onboard/walletconnect'
+import coinbaseModule from '@web3-onboard/coinbase'
+import magicModule from '@web3-onboard/magic'
+import dcentModule from '@web3-onboard/dcent'
+import mewModule from '@web3-onboard/mew-wallet'
+import sequenceModule from '@web3-onboard/sequence'
+import tahoWalletModule from '@web3-onboard/taho'
+import web3authModule from '@web3-onboard/web3auth'
 
+import { init } from '@web3-onboard/react'
 
 // Example key • Replace with your infura key
 const INFURA_KEY = '2996ff3d1a1142689324a8341cb75c68'
 
-const cedeStore = cedeStoreWalletModule();
-const ledger = ledgerModule({ projectId : '16c6ad72b95e09bfdddfde13bf7f90b4',   walletConnectVersion: 2 })
-// const keepkey = keepkeyModule()
-// const keystone = keystoneModule()
-const ledgerPolkadot_ = ledgerPolkadot();
 const injected = injectedModule({
   custom: [
     // include custom injected wallet modules here
@@ -26,62 +29,68 @@ const injected = injectedModule({
     // mapping of wallet labels to filter here
   }
 })
-const walletConnect = walletConnectModule({
-  projectId : '16c6ad72b95e09bfdddfde13bf7f90b4',
-  version: 2,
+
+const walletLink = coinbaseModule()
+
+const walletConnect = walletConnectModule()
+const portis = portisModule({
+  // Replace with your apiKey
+  apiKey: 'b2b7586f-2b1e-4c30-a7fb-c2d1533b153b'
+})
+
+const fortmatic = fortmaticModule({
+  // Replace with your apiKey
+  apiKey: 'pk_test_886ADCAB855632AA'
+})
+
+const torus = torusModule()
+const ledger = ledgerModule()
+const keepkey = keepkeyModule()
+const keystone = keystoneModule()
+const safe = safeModule()
+const dcent = dcentModule()
+const mew = mewModule()
+const tahoWalletSdk = tahoWalletModule() // Previously named Tally Ho wallet
+const web3auth = web3authModule({
+  clientId:
+    'DJuUOKvmNnlzy6ruVgeWYWIMKLRyYtjYa9Y10VCeJzWZcygDlrYLyXsBQjpJ2hxlBO9dnl8t9GmAC2qOP5vnIGo'
+})
+
+const sequence = sequenceModule({
+  appName: 'My app'
+})
+
+const trezorOptions = {
+  email: 'test@test.com',
+  appUrl: 'https://www.blocknative.com'
+}
+const trezor = trezorModule(trezorOptions)
+
+const magic = magicModule({
+  // Replace with your apiKey
+  apiKey: 'pk_live_02207D744E81C2BA'
 })
 
 export default init({
-  connect : {
-    autoConnectLastWallet : true,
-    autoConnectAllPreviousWallet : true
-  },
-  projectId : '16c6ad72b95e09bfdddfde13bf7f90b4',
-
-  url : 'http://localhost:3000/',
-
-  chainsPolkadot:[
-    {
-      // hex encoded string, eg '0x1' for Ethereum Mainnet
-      id: '91b171bb158e2d3848fa23a9f1c25182',
-      // string indicating chain namespace. Defaults to 'evm' but will allow other chain namespaces in the future
-      namespace: 'substrate',
-      // the native token symbol, eg ETH, BNB, MATIC
-      token: 'DOT',
-      // used for display, eg Polkadot
-      label: 'Polkadot',
-      // used for get balance
-      rpcUrl: `polkadot.api.subscan.io`,
-      decimal: 10
-    },
-    {
-      id: 'afdc188f45c71dacbaa0b62e16a91f72' ,
-      token: 'HDX',
-      namespace: 'substrate',
-      label: 'Hydradx',
-      rpcUrl: 'hydradx.api.subscan.io',
-      decimal : 12
-    },
-    {
-      id: '9eb76c5184c4ab8679d2d5d819fdf90b',
-      token: 'ASTR',
-      label: 'Astar Network',
-      decimal: 18,
-      namespace: 'substrate',
-      rpcUrl: 'astar.api.subscan.io'
-    }
-
-  ],
-
   // An array of wallet modules that you would like to be presented to the user to select from when connecting a wallet.
   wallets: [
     injected,
-    walletConnect,
-    cedeStore,
+    safe,
+    fortmatic,
+    portis,
+    walletLink,
+    magic,
+    torus,
     ledger,
-    // keepkey,
-    // keystone,
-    ledgerPolkadot_
+    trezor,
+    walletConnect,
+    keepkey,
+    keystone,
+    dcent,
+    mew,
+    tahoWalletSdk,
+    web3auth,
+    sequence
   ],
   // An array of Chains that your app supports
   chains: [
@@ -108,24 +117,23 @@ export default init({
       token: 'ARB',
       label: 'Arbitrum Nova',
       rpcUrl: 'https://nova.arbitrum.io/rpc'
+    },
+    {
+      id: '0x89',
+      token: 'MATIC',
+      label: 'Matic Mainnet',
+      rpcUrl: 'https://matic-mainnet.chainstacklabs.com'
     }
-
   ],
   appMetadata: {
     // The name of your dApp
-    name: 'SubWallet Connect',
+    name: 'Blocknative',
     // SVG icon string, with height or width (whichever is larger) set to 100% or a valid image URL
-    icon: '<svg width="283" height="64" viewBox="0 0 283 64" fill="none" \n' +
-        '    xmlns="http://www.w3.org/2000/svg">\n' +
-        '    <path d="M141.04 16c-11.04 0-19 7.2-19 18s8.96 18 20 18c6.67 0 12.55-2.64 16.19-7.09l-7.65-4.42c-2.02 2.21-5.09 3.5-8.54 3.5-4.79 0-8.86-2.5-10.37-6.5h28.02c.22-1.12.35-2.28.35-3.5 0-10.79-7.96-17.99-19-17.99zm-9.46 14.5c1.25-3.99 4.67-6.5 9.45-6.5 4.79 0 8.21 2.51 9.45 6.5h-18.9zM248.72 16c-11.04 0-19 7.2-19 18s8.96 18 20 18c6.67 0 12.55-2.64 16.19-7.09l-7.65-4.42c-2.02 2.21-5.09 3.5-8.54 3.5-4.79 0-8.86-2.5-10.37-6.5h28.02c.22-1.12.35-2.28.35-3.5 0-10.79-7.96-17.99-19-17.99zm-9.45 14.5c1.25-3.99 4.67-6.5 9.45-6.5 4.79 0 8.21 2.51 9.45 6.5h-18.9zM200.24 34c0 6 3.92 10 10 10 4.12 0 7.21-1.87 8.8-4.92l7.68 4.43c-3.18 5.3-9.14 8.49-16.48 8.49-11.05 0-19-7.2-19-18s7.96-18 19-18c7.34 0 13.29 3.19 16.48 8.49l-7.68 4.43c-1.59-3.05-4.68-4.92-8.8-4.92-6.07 0-10 4-10 10zm82.48-29v46h-9V5h9zM36.95 0L73.9 64H0L36.95 0zm92.38 5l-27.71 48L73.91 5H84.3l17.32 30 17.32-30h10.39zm58.91 12v9.69c-1-.29-2.06-.49-3.2-.49-5.81 0-10 4-10 10V51h-9V17h9v9.2c0-5.08 5.91-9.2 13.2-9.2z" fill="#000"/>\n' +
-        '</svg>',
+    icon: '<svg></svg>',
     // Optional wide format logo (ie icon and text) to be displayed in the sidebar of connect modal. Defaults to icon if not provided
-    logo: '<svg width="283" height="64" viewBox="0 0 283 64" fill="none" \n' +
-        '    xmlns="http://www.w3.org/2000/svg">\n' +
-        '    <path d="M141.04 16c-11.04 0-19 7.2-19 18s8.96 18 20 18c6.67 0 12.55-2.64 16.19-7.09l-7.65-4.42c-2.02 2.21-5.09 3.5-8.54 3.5-4.79 0-8.86-2.5-10.37-6.5h28.02c.22-1.12.35-2.28.35-3.5 0-10.79-7.96-17.99-19-17.99zm-9.46 14.5c1.25-3.99 4.67-6.5 9.45-6.5 4.79 0 8.21 2.51 9.45 6.5h-18.9zM248.72 16c-11.04 0-19 7.2-19 18s8.96 18 20 18c6.67 0 12.55-2.64 16.19-7.09l-7.65-4.42c-2.02 2.21-5.09 3.5-8.54 3.5-4.79 0-8.86-2.5-10.37-6.5h28.02c.22-1.12.35-2.28.35-3.5 0-10.79-7.96-17.99-19-17.99zm-9.45 14.5c1.25-3.99 4.67-6.5 9.45-6.5 4.79 0 8.21 2.51 9.45 6.5h-18.9zM200.24 34c0 6 3.92 10 10 10 4.12 0 7.21-1.87 8.8-4.92l7.68 4.43c-3.18 5.3-9.14 8.49-16.48 8.49-11.05 0-19-7.2-19-18s7.96-18 19-18c7.34 0 13.29 3.19 16.48 8.49l-7.68 4.43c-1.59-3.05-4.68-4.92-8.8-4.92-6.07 0-10 4-10 10zm82.48-29v46h-9V5h9zM36.95 0L73.9 64H0L36.95 0zm92.38 5l-27.71 48L73.91 5H84.3l17.32 30 17.32-30h10.39zm58.91 12v9.69c-1-.29-2.06-.49-3.2-.49-5.81 0-10 4-10 10V51h-9V17h9v9.2c0-5.08 5.91-9.2 13.2-9.2z" fill="#000"/>\n' +
-        '</svg>',
+    logo: '<svg></svg>',
     // The description of your app
-    description: 'Demo app for SubWalletConnect V2',
+    description: 'Demo app for Onboard V2',
     // The url to a getting started guide for app
     gettingStartedGuide: 'http://mydapp.io/getting-started',
     // url that points to more information about app
@@ -147,4 +155,14 @@ export default init({
       privacyUrl: 'https://www.blocknative.com/privacy-policy'
     }
   }
+  // example customising copy
+  // i18n: {
+  //   en: {
+  //     connect: {
+  //       selectingWallet: {
+  //         header: 'custom text header'
+  //       }
+  //     }
+  //   }
+  // }
 })

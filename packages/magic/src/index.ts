@@ -16,7 +16,6 @@ function magic(options: MagicInitOptions): WalletInit {
   return () => {
     return {
       label: walletName,
-      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ EventEmitter, BigNumber, chains }) => {
         const { Magic, RPCErrorCode } = await import('magic-sdk')

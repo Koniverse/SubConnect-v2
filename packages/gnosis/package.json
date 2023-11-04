@@ -53,9 +53,9 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "20.8.10",
-    "typescript": "^5.2.2",
-    "@safe-global/safe-apps-provider": "^0.18.0",
+    "@types/node": "17.0.19",
+    "typescript": "^4.5.5",
+    "@safe-global/safe-apps-provider": "^0.17.1",
     "@safe-global/safe-apps-sdk": "^8.0.0"
   },
   "dependencies": {

@@ -15,7 +15,6 @@ import { isHexString, LedgerOptionsWCv1 } from './index.js'
 function ledger(options: LedgerOptionsWCv1 = { walletConnectVersion: 1 }): WalletInit {
   return () => {
     return {
-      type: 'evm',
       label: 'Ledger',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, EventEmitter }: GetInterfaceHelpers) => {

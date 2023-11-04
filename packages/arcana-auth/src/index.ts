@@ -8,7 +8,6 @@ export default function (opts: {
 }): WalletInit {
   return () => ({
     label: 'Arcana Auth',
-    type : 'evm',
     async getIcon() {
       return icon
     },

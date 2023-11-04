@@ -6,7 +6,6 @@ function walletLink(options?: { darkMode?: boolean }): WalletInit {
   return () => {
     return {
       label: 'Coinbase',
-      type: 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, appMetadata }) => {
         const [chain] = chains

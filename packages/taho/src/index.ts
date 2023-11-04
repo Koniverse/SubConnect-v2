@@ -10,7 +10,6 @@ function tahoWallet(): WalletInit {
   return () => {
     return {
       label: 'Taho',
-      type : 'evm',
       injectedNamespace: 'tally',
       checkProviderIdentity: ({ provider }: { provider: any }) => {
         !!provider && !!provider['isTally']
