@@ -129,10 +129,12 @@
               >{account.address}</td
             >
             <td>{account.derivationPath}</td>
+            {#if account.balance.value.toString() !== '0'}
             <td class="asset-td"
               >{weiToEth(account.balance.value.toString())}
               {account.balance.asset}</td
             >
+              {/if}
           </tr>
         {/each}
       {/if}
