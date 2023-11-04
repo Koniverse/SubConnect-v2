@@ -3,7 +3,7 @@ import { filter, withLatestFrom, pluck } from 'rxjs/operators'
 import { configuration } from './configuration.js'
 import { state } from './store/index.js'
 import { setWalletModules } from './store/actions.js'
-import { connectWallet$, wallets$ } from './streams.js'
+import { connectWallet$, qrConnect$, wallets$ } from './streams.js'
 import type {
   ConnectOptions,
   ConnectOptionsString,
@@ -12,8 +12,9 @@ import type {
 import { wait } from './utils.js'
 import { validateConnectOptions } from './validation.js'
 
+
 async function connect(
-  options?: ConnectOptions | ConnectOptionsString
+    options ?: ConnectOptions | ConnectOptionsString
 ): Promise<WalletState[]> {
   if (options) {
     const error = validateConnectOptions(options)
@@ -28,12 +29,13 @@ async function connect(
   // so we must ensure at least one is set
   if (!chains.length)
     throw new Error(
-      'At least one chain must be set before attempting to connect a wallet'
+        'At least one chain must be set before attempting to connect a wallet'
     )
 
   const { autoSelect } = options || {
     autoSelect: { label: '', disableModals: false }
   }
+
 
   // if auto selecting, wait until next event loop
   if (autoSelect && (typeof autoSelect === 'string' || autoSelect.label)) {
@@ -47,19 +49,23 @@ async function connect(
 
   connectWallet$.next({
     autoSelect:
-      typeof autoSelect === 'string'
-        ? { label: autoSelect, disableModals: false }
-        : autoSelect,
+        typeof autoSelect === 'string'
+            ? { label: autoSelect, disableModals: false }
+            : autoSelect,
     inProgress: true
   })
 
+  qrConnect$.subscribe(async (value)=>{
+    await value.uri();
+  })
+
   const result$ = connectWallet$.pipe(
-    filter(
-      ({ inProgress, actionRequired }) =>
-        inProgress === false && !actionRequired
-    ),
-    withLatestFrom(wallets$),
-    pluck(1)
+      filter(
+          ({ inProgress, actionRequired }) =>
+              inProgress === false && !actionRequired
+      ),
+      withLatestFrom(wallets$),
+      pluck(1)
   )
 
   return firstValueFrom(result$)
