@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n'
   import { fade } from 'svelte/transition'
-  import { ProviderRpcErrorCode } from '@web3-onboard/common'
+  import { type EIP1193Provider, ProviderRpcErrorCode } from '@web3-onboard/common'
   import type { WalletState } from '../../types.js'
   import {
     shortenAddress,
@@ -16,6 +16,7 @@
   import disconnect from '../../disconnect.js'
   import { selectAccounts } from '../../provider.js'
   import { connectWallet$ } from '../../streams.js'
+  import { state } from '../../store/index.js'
 
   export let wallet: WalletState
   export let primary: boolean
@@ -25,19 +26,23 @@
   }
 
   let showMenu = ''
-
+  const { chains: appChains } = state.get()
   function formatBalance(
     balance: WalletState['accounts']['0']['balance']
   ): string {
     const [asset] = Object.keys(balance)
-    return `${
-      balance[asset].length > 7 ? balance[asset].slice(0, 7) : balance[asset]
-    } ${asset}`
+    if(balance[asset]){
+      return `${
+        balance[asset].length > 7 ? balance[asset].slice(0, 7) : balance[asset]
+      } ${asset}`
+    }
+    return '0'
   }
 
   async function selectAnotherAccount(wallet: WalletState) {
     try {
-      await selectAccounts(wallet.provider)
+      if( wallet.type !== 'evm') return;
+      await selectAccounts((wallet.provider as EIP1193Provider))
     } catch (error) {
       const { code } = error as { code: number }
 
@@ -85,7 +90,6 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 100%;
     width: 100%;
     background: var(--action-color);
     border-radius: 12px;
@@ -179,6 +183,7 @@
     margin: 0;
     padding: 0;
     border: none;
+    position: absolute;
     overflow: hidden;
     z-index: 1;
   }
@@ -198,9 +203,9 @@
 </style>
 
 {#each wallet.accounts as { address, ens, uns, balance }, i}
-  <div class="relative">
+  <div class="relative" >
     <div
-      on:click={() => setPrimaryWallet(wallet, address)}
+      on:click={() => setPrimaryWallet(wallet, appChains, address)}
       class:primary={primary && i === 0}
       class="container"
     >
@@ -271,7 +276,7 @@
           <li
             on:click|stopPropagation={() => {
               showMenu = ''
-              setPrimaryWallet(wallet, address)
+              setPrimaryWallet(wallet, appChains , address)
             }}
           >
             {$_('accountCenter.setPrimaryAccount', {

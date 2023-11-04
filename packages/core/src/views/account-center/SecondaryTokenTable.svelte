@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { _ } from 'svelte-i18n'
+
   import { fade } from 'svelte/transition'
   import { isSVG } from '../../utils.js'
   import type { SecondaryTokenBalances } from '../../types'
