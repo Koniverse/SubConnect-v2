@@ -209,6 +209,43 @@
   })
 
   const onboard = Onboard({
+    projectId : 'f6bd6e2911b56f5ac3bc8b2d0e2d7ad5',
+
+    url : 'http://localhost:3000/',
+
+    chainsPolkadot:[
+      {
+        // hex encoded string, eg '0x1' for Ethereum Mainnet
+        id: '91b171bb158e2d3848fa23a9f1c25182',
+        // string indicating chain namespace. Defaults to 'evm' but will allow other chain namespaces in the future
+        namespace: 'substrate',
+        // the native token symbol, eg ETH, BNB, MATIC
+        token: 'DOT',
+        // used for display, eg Polkadot
+        label: 'Polkadot',
+        // used for get balance
+        rpcUrl: `polkadot.api.subscan.io`,
+        decimal: 10
+      },
+      {
+        id: 'afdc188f45c71dacbaa0b62e16a91f72' ,
+        token: 'HDX',
+        namespace: 'substrate',
+        label: 'Hydradx',
+        rpcUrl: 'hydradx.api.subscan.io',
+        decimal : 12
+      },
+      {
+        id: '9eb76c5184c4ab8679d2d5d819fdf90b',
+        token: 'ASTR',
+        label: 'Astar Network',
+        decimal: 18,
+        namespace: 'substrate',
+        rpcUrl: 'astar.api.subscan.io'
+      }
+
+    ],
+
     wallets: [
       metamaskSDKWallet,
       injected,

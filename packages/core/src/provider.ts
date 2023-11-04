@@ -269,63 +269,63 @@ export function trackWallet(
       })
 
 
-  AccountQrConnect$.subscribe(async( account ) => {
-    if(account && account.length === 1){
-      const { address, balance, balanceSymbol, caipAddress } = account[0]
-      updateAccount(label, address, { balance :
-            { [ balanceSymbol ] : balance }, ens : null,
-        uns : null, secondaryTokens : null })
+    AccountQrConnect$.subscribe(async( account ) => {
+      if(account && account.length === 1){
+        const { address, balance, balanceSymbol, caipAddress } = account[0]
+        updateAccount(label, address, { balance :
+              { [ balanceSymbol ] : balance }, ens : null,
+          uns : null, secondaryTokens : null })
 
-      const { wallets } = state.get()
-      const { chains, type } =
-          wallets.find(wallet => wallet.label === label)
-      const chainId = `0x${ parseInt(caipAddress ?caipAddress.split(':')[1] : '0').toString(16)}`
-      const [connectedWalletChain] = chains
-      if ( chainId === connectedWalletChain.id  )return
+        const { wallets } = state.get()
+        const { chains, type } =
+            wallets.find(wallet => wallet.label === label)
+        const chainId = `0x${ parseInt(caipAddress ?caipAddress.split(':')[1] : '0').toString(16)}`
+        const [connectedWalletChain] = chains
+        if ( chainId === connectedWalletChain.id  )return
 
 
-      if (state.get().notify.enabled) {
-        const sdk = await getBNMulitChainSdk()
+        if (state.get().notify.enabled) {
+          const sdk = await getBNMulitChainSdk()
 
-        if (sdk) {
-          const wallet = state
-              .get()
-              .wallets.find(wallet => wallet.label === label)
+          if (sdk) {
+            const wallet = state
+                .get()
+                .wallets.find(wallet => wallet.label === label)
 
-          // Unsubscribe with timeout of 60 seconds
-          // to allow for any currently inflight transactions
-          wallet.accounts.forEach(({ address }) => {
-            sdk.unsubscribe({
-              id: address,
-              chainId: wallet.chains[0].id,
-              timeout: 60000
-            })
-          })
-
-          // resubscribe for new chainId
-          wallet.accounts.forEach(({ address }) => {
-            try {
-              sdk.subscribe({
+            // Unsubscribe with timeout of 60 seconds
+            // to allow for any currently inflight transactions
+            wallet.accounts.forEach(({ address }) => {
+              sdk.unsubscribe({
                 id: address,
-                chainId: chainId,
-                type: 'account'
+                chainId: wallet.chains[0].id,
+                timeout: 60000
               })
-            } catch (error) {
-              // unsupported network for transaction events
-            }
-          })
+            })
+
+            // resubscribe for new chainId
+            wallet.accounts.forEach(({ address }) => {
+              try {
+                sdk.subscribe({
+                  id: address,
+                  chainId: chainId,
+                  type: 'account'
+                })
+              } catch (error) {
+                // unsupported network for transaction events
+              }
+            })
+          }
         }
+
+        updateWallet(label, {
+          chains: [{ namespace: type , id: chainId }],
+        })
+
+      }else{
+        return
       }
 
-      updateWallet(label, {
-        chains: [{ namespace: type , id: chainId }],
-      })
-
-    }else{
-      return
-    }
-
-  })
+    })
 
   const chainChanged$ = listenChainChanged(
       { provider, disconnected$, type }).pipe(

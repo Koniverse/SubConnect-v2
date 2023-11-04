@@ -82,7 +82,8 @@
     "addAccount": "Add Account",
     "setPrimaryAccount": "Set Primary Account",
     "disconnectWallet": "Disconnect Wallet",
-    "copyAddress": "Copy Wallet address"
+    "copyAddress": "Copy Wallet address",
+    "signMessage": "Sign Message"
   },
   "notify": {
     "transaction": {

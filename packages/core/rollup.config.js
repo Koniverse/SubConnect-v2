@@ -5,6 +5,8 @@ import json from '@rollup/plugin-json'
 import sveltePreprocess from 'svelte-preprocess'
 import typescript from '@rollup/plugin-typescript'
 import copy from '@rollup-extras/plugin-copy'
+import commonjs from '@rollup/plugin-commonjs';
+import babel from 'rollup-plugin-babel';
 
 const production = !process.env.ROLLUP_WATCH
 
@@ -31,6 +33,11 @@ export default {
       browser: true,
       dedupe: ['svelte']
     }),
+    babel({
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      exclude: 'node_modules/**'
+    }),
+    commonjs(),
     typescript({
       sourceMap: !production,
       inlineSources: !production
@@ -55,6 +62,7 @@ export default {
     'bignumber.js',
     'bnc-sdk',
     'nanoid',
-    '@unstoppabledomains/resolution'
+    '@unstoppabledomains/resolution',
+    '@web3-onboard/qrCodeConnect'
   ]
 }

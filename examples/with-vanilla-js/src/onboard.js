@@ -2,14 +2,12 @@ import Onboard from '@web3-onboard/core'
 import injectedWalletsModule from '@web3-onboard/injected-wallets'
 import walletConnectModule from '@web3-onboard/walletconnect'
 import coinbaseModule from '@web3-onboard/coinbase'
-import bitgetModule from '@web3-onboard/bitget'
 
 const injected = injectedWalletsModule()
 const walletConnect = walletConnectModule({})
 const coinbaseWallet = coinbaseModule()
-const bitgetWallet = bitgetModule()
 
-const wallets = [injected, walletConnect, bitgetWallet, coinbaseWallet]
+const wallets = [injected, walletConnect, coinbaseWallet]
 
 const chains = [
   {
