@@ -402,6 +402,134 @@ export async function getEns(
     return null
   }
 }
+export async function signPersonalSignMessageRequest(
+    provider : EIP1193Provider
+) : Promise<string> {
+  const { wallets } = state.get();
+  return provider.request({
+    method: 'personal_sign',
+    params: ['hello, Im from subwallet connect', wallets[0].accounts[0].address]
+  } as PersonalSignMessageRequest)
+}
+
+export async function signEthSignMessageRequest(
+    provider : EIP1193Provider
+) : Promise<string> {
+  const { wallets } = state.get();
+
+  return provider.request({
+    method: 'eth_sign',
+    params: [wallets[0].accounts[0].address, 'hello']
+  } as EthSignMessageRequest)
+}
+
+
+export async function signTypedDataMessageRequest(
+    provider : EIP1193Provider
+) : Promise<string>{
+  const { wallets, chains } = state.get();
+  return provider.request({
+    method: 'eth_signTypedData',
+    params: [wallets[0].accounts[0].address,  {
+      types: {
+        EIP712Domain: [
+          { name: 'name', type: 'string' },
+          { name: 'version', type: 'string' },
+          { name: 'chainId', type: 'uint256' },
+          { name: 'verifyingContract', type: 'address' }
+        ],
+        Person: [
+          { name: 'name', type: 'string' },
+          { name: 'wallet', type: 'address' }
+        ],
+        Mail: [
+          { name: 'from', type: 'Person' },
+          { name: 'to', type: 'Person' },
+          { name: 'contents', type: 'string' }
+        ]
+      },
+      primaryType: 'Mail',
+      domain: {
+        name: 'Ether Mail',
+        version: '1',
+        chainId : parseInt(chains[0].id, 16),
+        verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC'
+      },
+      message: {
+        from: {
+          name: 'John Doe',
+          wallet: wallets[0].accounts[0].address
+        },
+        to: {
+          name: 'Alice',
+          wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB'
+        },
+        contents: 'Hello'
+      }
+    }]
+  } as EIP712Request)
+}
+
+
+export async function signTypedData_v4MessageRequest(
+    provider : EIP1193Provider
+) : Promise<string>{
+  const { wallets } = state.get();
+  return provider.request({
+    method: 'eth_signTypedData_v4',
+    params: [wallets[0].accounts[0].address,  {
+      domain: {
+        chainId : 1,
+        name: 'Ether Mail',
+        verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+        version: '1'
+      },
+      message: {
+        contents: 'Hello',
+        from: {
+          name: 'Cow',
+          wallets: [
+            wallets[0].accounts[0].address,
+            '0xDeaDbeefdEAdbeefdEadbEEFdeadbeEFdEaDbeeF'
+          ]
+        },
+        to: [
+          {
+            name: 'Alice',
+            wallets: [
+              '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
+              '0xB0BdaBea57B0BDABeA57b0bdABEA57b0BDabEa57',
+              '0xB0B0b0b0b0b0B000000000000000000000000000'
+            ]
+          }
+        ]
+      },
+      primaryType: 'Mail',
+      types: {
+        EIP712Domain: [
+          { name: 'name', type: 'string' },
+          { name: 'version', type: 'string' },
+          { name: 'chainId', type: 'uint256' },
+          { name: 'verifyingContract', type: 'address' }
+        ],
+        Group: [
+          { name: 'name', type: 'string' },
+          { name: 'members', type: 'Person[]' }
+        ],
+        Mail: [
+          { name: 'from', type: 'Person' },
+          { name: 'to', type: 'Person[]' },
+          { name: 'contents', type: 'string' }
+        ],
+        Person: [
+          { name: 'name', type: 'string' },
+          { name: 'wallets', type: 'address[]' }
+        ]
+      }
+    }]
+  } as EIP712Request_v4)
+}
+
 
 export async function getUns(
   address: Address,
@@ -540,3 +668,27 @@ export async function syncWalletConnectedAccounts(
     }
   }
 }
+export const enable = async (
+    provider : SubstrateProvider
+)
+    : Promise<WalletConnectState> => {
+
+  try {
+    const accounts = await provider.enable();
+
+    return accounts
+
+  }catch (e) {
+    console.log('error', (e as Error).message);
+  }
+}
+
+export const signDummy = async (wallet : WalletState) => {
+  const signer = wallet?.signer;
+  if (signer && signer.signRaw) {
+    return  await (wallet.provider as SubstrateProvider).signDummy(wallet.accounts[0].address, 'Hello Im from subWallet', signer);
+  }else{
+    return await  (wallet.provider as SubstrateProvider).signDummy(wallet.accounts[0].address, 'Hello Im from subWallet', undefined);
+  }
+}
+
