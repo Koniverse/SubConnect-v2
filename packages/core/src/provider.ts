@@ -2,14 +2,25 @@ import { fromEventPattern, Observable } from 'rxjs'
 import { filter, takeUntil, take, share, switchMap } from 'rxjs/operators'
 import partition from 'lodash.partition'
 import { providers, utils } from 'ethers'
-import { weiToEth } from '@web3-onboard/common'
-import { disconnectWallet$ } from './streams.js'
+import type {
+  EthSignMessageRequest,
+  PersonalSignMessageRequest,
+
+  EIP712Request_v4,
+  EIP712Request,
+  SubstrateProvider
+} from '@web3-onboard/common'
+import {   weiToEth  } from '@web3-onboard/common'
+import { AccountQrConnect$, disconnectWallet$ } from './streams.js'
 import { updateAccount, updateWallet } from './store/actions.js'
 import { validEnsChain } from './utils.js'
 import disconnect from './disconnect.js'
 import { state } from './store/index.js'
 import { getBNMulitChainSdk } from './services.js'
 import { configuration } from './configuration.js'
+import { getBalanceSubstrate } from './utils.js';
+import { BN } from 'bn.js';
+
 
 import type {
   ChainId,
@@ -26,13 +37,14 @@ import type {
   Account,
   Address,
   Balances,
-  Ens,
+  Ens, WalletConnectState,
   WalletPermission,
   WalletState
 } from './types.js'
 
 import type { Uns } from '@web3-onboard/unstoppable-resolution'
 import { updateSecondaryTokens } from './update-balances'
+
 
 export const ethersProviders: {
   [key: string]: providers.StaticJsonRpcProvider
@@ -43,24 +55,25 @@ export function getProvider(chain: Chain): providers.StaticJsonRpcProvider {
 
   if (!ethersProviders[chain.rpcUrl]) {
     ethersProviders[chain.rpcUrl] = new providers.StaticJsonRpcProvider(
-      chain.providerConnectionInfo && chain.providerConnectionInfo.url
-        ? chain.providerConnectionInfo
-        : chain.rpcUrl
+        chain.providerConnectionInfo && chain.providerConnectionInfo.url
+            ? chain.providerConnectionInfo
+            : chain.rpcUrl
     )
   }
 
   return ethersProviders[chain.rpcUrl]
 }
 
-export function requestAccounts(
-  provider: EIP1193Provider
-): Promise<ProviderAccounts> {
+export async function requestAccounts(
+    provider: EIP1193Provider
+): Promise<WalletConnectState> {
   const args = { method: 'eth_requestAccounts' } as EIP1102Request
-  return provider.request(args)
+  const address = await provider.request(args)
+  return ({ address })
 }
 
 export function selectAccounts(
-  provider: EIP1193Provider
+    provider: EIP1193Provider
 ): Promise<ProviderAccounts> {
   const args = { method: 'eth_selectAccounts' } as SelectAccountsRequest
   return provider.request(args)
@@ -70,53 +83,65 @@ export function getChainId(provider: EIP1193Provider): Promise<string> {
   return provider.request({ method: 'eth_chainId' }) as Promise<string>
 }
 
+
+
+
 export function listenAccountsChanged(args: {
-  provider: EIP1193Provider
-  disconnected$: Observable<string>
+  provider: EIP1193Provider | SubstrateProvider
+  disconnected$: Observable<string>,
+  type : 'evm'|'substrate'
 }): Observable<ProviderAccounts> {
-  const { provider, disconnected$ } = args
+  const { provider, disconnected$, type } = args
 
   const addHandler = (handler: AccountsListener) => {
-    provider.on('accountsChanged', handler)
+    if( type === 'substrate' || typeof (provider as EIP1193Provider).on !== 'function') return ;
+    (provider as EIP1193Provider).on('accountsChanged', handler)
   }
 
   const removeHandler = (handler: AccountsListener) => {
-    provider.removeListener('accountsChanged', handler)
+    if( type === 'substrate' || typeof (provider as EIP1193Provider).on !== 'function') return ;
+    (provider as EIP1193Provider).removeListener('accountsChanged', handler)
   }
 
   return fromEventPattern<ProviderAccounts>(addHandler, removeHandler).pipe(
-    takeUntil(disconnected$)
+      takeUntil(disconnected$)
   )
 }
 
 export function listenChainChanged(args: {
-  provider: EIP1193Provider
+  provider: EIP1193Provider | SubstrateProvider
   disconnected$: Observable<string>
+  type : 'evm' | 'substrate'
 }): Observable<ChainId> {
-  const { provider, disconnected$ } = args
+  const { provider, disconnected$, type } = args
   const addHandler = (handler: ChainListener) => {
-    provider.on('chainChanged', handler)
+    if( type === 'substrate' || typeof (provider as EIP1193Provider).on !== 'function') return ;
+    (provider as EIP1193Provider).on('chainChanged', handler)
   }
 
   const removeHandler = (handler: ChainListener) => {
-    provider.removeListener('chainChanged', handler)
+    if( type === 'substrate' || typeof (provider as EIP1193Provider).on !== 'function') return ;
+    (provider as EIP1193Provider).removeListener('chainChanged', handler)
   }
 
   return fromEventPattern<ChainId>(addHandler, removeHandler).pipe(
-    takeUntil(disconnected$)
+      takeUntil(disconnected$)
   )
 }
 
 export function trackWallet(
-  provider: EIP1193Provider,
-  label: WalletState['label']
+    provider: EIP1193Provider | SubstrateProvider,
+    label: WalletState['label'],
+    type : 'evm' | 'substrate'
 ): void {
   const disconnected$ = disconnectWallet$.pipe(
-    filter(wallet => wallet === label),
-    take(1)
+      filter(wallet => wallet === label),
+      take(1)
   )
 
+
   const accountsChanged$ = listenAccountsChanged({
+    type,
     provider,
     disconnected$
   }).pipe(share())
@@ -129,8 +154,8 @@ export function trackWallet(
       await syncWalletConnectedAccounts(label)
     } catch (error) {
       console.warn(
-        'Web3Onboard: Error whilst trying to sync connected accounts:',
-        error
+          'Web3Onboard: Error whilst trying to sync connected accounts:',
+          error
       )
     }
 
@@ -146,8 +171,8 @@ export function trackWallet(
     const { accounts } = wallets.find(wallet => wallet.label === label)
 
     const [[existingAccount], restAccounts] = partition(
-      accounts,
-      account => account.address === address
+        accounts,
+        account => account.address === address
     )
 
     // update accounts without ens/uns and balance first
@@ -170,8 +195,8 @@ export function trackWallet(
 
       if (sdk) {
         const wallet = state
-          .get()
-          .wallets.find(wallet => wallet.label === label)
+            .get()
+            .wallets.find(wallet => wallet.label === label)
         try {
           sdk.subscribe({
             id: address,
@@ -187,63 +212,124 @@ export function trackWallet(
 
   // also when accounts change, update Balance and ENS/UNS
   accountsChanged$
-    .pipe(
-      switchMap(async ([address]) => {
-        if (!address) return
+      .pipe(
+          switchMap(async ([address]) => {
+            if (!address) return
 
-        const { wallets, chains } = state.get()
+            const { wallets, chains } = state.get()
 
-        const primaryWallet = wallets.find(wallet => wallet.label === label)
-        const { chains: walletChains, accounts } = primaryWallet
+            const primaryWallet = wallets.find(wallet => wallet.label === label)
+            const { chains: walletChains, accounts } = primaryWallet
 
-        const [connectedWalletChain] = walletChains
+            const [connectedWalletChain] = walletChains
 
-        const chain = chains.find(
-          ({ namespace, id }) =>
-            namespace === 'evm' && id === connectedWalletChain.id
-        )
+            const chain = chains.find(
+                ({ namespace, id }) =>
+                    namespace === 'evm' && id === connectedWalletChain.id
+            )
 
-        const balanceProm = getBalance(address, chain)
-        const secondaryTokenBal = updateSecondaryTokens(
-          primaryWallet,
-          address,
-          chain
-        )
-        const account = accounts.find(account => account.address === address)
+            const balanceProm = getBalance(address, chain, primaryWallet.type )
+            const secondaryTokenBal = updateSecondaryTokens(
+                primaryWallet,
+                address,
+                chain
+            )
+            const account =
+                accounts.find(account => account.address === address)
 
-        const ensChain = chains.find(
-          ({ id }) => id === validEnsChain(connectedWalletChain.id)
-        )
+            const ensChain = chains.find(
+                ({ id }) => id === validEnsChain(connectedWalletChain.id)
+            )
 
-        const ensProm =
-          account && account.ens
-            ? Promise.resolve(account.ens)
-            : ensChain
-            ? getEns(address, ensChain)
-            : Promise.resolve(null)
+            const ensProm =
+                account && account.ens
+                    ? Promise.resolve(account.ens)
+                    : ensChain
+                        ? getEns(address, ensChain)
+                        : Promise.resolve(null)
 
-        const unsProm =
-          account && account.uns
-            ? Promise.resolve(account.uns)
-            : getUns(address, chain)
+            const unsProm =
+                account && account.uns
+                    ? Promise.resolve(account.uns)
+                    : getUns(address, chain)
 
-        return Promise.all([
-          Promise.resolve(address),
-          balanceProm,
-          ensProm,
-          unsProm,
-          secondaryTokenBal
-        ])
+            return Promise.all([
+              Promise.resolve(address),
+              balanceProm,
+              ensProm,
+              unsProm,
+              secondaryTokenBal
+            ])
+          })
+      )
+      .subscribe(res => {
+        if (!res) return
+        const [address, balance, ens, uns, secondaryTokens] = res
+        updateAccount(label, address, { balance, ens, uns, secondaryTokens })
       })
-    )
-    .subscribe(res => {
-      if (!res) return
-      const [address, balance, ens, uns, secondaryTokens] = res
-      updateAccount(label, address, { balance, ens, uns, secondaryTokens })
-    })
 
-  const chainChanged$ = listenChainChanged({ provider, disconnected$ }).pipe(
-    share()
+
+  AccountQrConnect$.subscribe(async( account ) => {
+    if(account && account.length === 1){
+      const { address, balance, balanceSymbol, caipAddress } = account[0]
+      updateAccount(label, address, { balance :
+            { [ balanceSymbol ] : balance }, ens : null,
+        uns : null, secondaryTokens : null })
+
+      const { wallets } = state.get()
+      const { chains, type } =
+          wallets.find(wallet => wallet.label === label)
+      const chainId = `0x${ parseInt(caipAddress ?caipAddress.split(':')[1] : '0').toString(16)}`
+      const [connectedWalletChain] = chains
+      if ( chainId === connectedWalletChain.id  )return
+
+
+      if (state.get().notify.enabled) {
+        const sdk = await getBNMulitChainSdk()
+
+        if (sdk) {
+          const wallet = state
+              .get()
+              .wallets.find(wallet => wallet.label === label)
+
+          // Unsubscribe with timeout of 60 seconds
+          // to allow for any currently inflight transactions
+          wallet.accounts.forEach(({ address }) => {
+            sdk.unsubscribe({
+              id: address,
+              chainId: wallet.chains[0].id,
+              timeout: 60000
+            })
+          })
+
+          // resubscribe for new chainId
+          wallet.accounts.forEach(({ address }) => {
+            try {
+              sdk.subscribe({
+                id: address,
+                chainId: chainId,
+                type: 'account'
+              })
+            } catch (error) {
+              // unsupported network for transaction events
+            }
+          })
+        }
+      }
+
+      updateWallet(label, {
+        chains: [{ namespace: type , id: chainId }],
+      })
+
+    }else{
+      return
+    }
+
+  })
+
+  const chainChanged$ = listenChainChanged(
+      { provider, disconnected$, type }).pipe(
+      share()
   )
 
   // Update chain on wallet when chainId changed
@@ -259,8 +345,8 @@ export function trackWallet(
 
       if (sdk) {
         const wallet = state
-          .get()
-          .wallets.find(wallet => wallet.label === label)
+            .get()
+            .wallets.find(wallet => wallet.label === label)
 
         // Unsubscribe with timeout of 60 seconds
         // to allow for any currently inflight transactions
@@ -288,13 +374,13 @@ export function trackWallet(
     }
 
     const resetAccounts = accounts.map(
-      ({ address }) =>
-        ({
-          address,
-          ens: null,
-          uns: null,
-          balance: null
-        } as Account)
+        ({ address }) =>
+            ({
+              address,
+              ens: null,
+              uns: null,
+              balance: null
+            } as Account)
     )
 
     updateWallet(label, {
@@ -305,67 +391,74 @@ export function trackWallet(
 
   // when chain changes get ens/uns and balance for each account for wallet
   chainChanged$
-    .pipe(
-      switchMap(async chainId => {
-        const { wallets, chains } = state.get()
-        const primaryWallet = wallets.find(wallet => wallet.label === label)
-        const { accounts } = primaryWallet
+      .pipe(
+          switchMap(async chainId => {
+            const { wallets, chains } = state.get()
+            const primaryWallet = wallets.find(wallet => wallet.label === label)
+            const { accounts } = primaryWallet
 
-        const chain = chains.find(
-          ({ namespace, id }) => namespace === 'evm' && id === chainId
-        )
-
-        return Promise.all(
-          accounts.map(async ({ address }) => {
-            const balanceProm = getBalance(address, chain)
-
-            const secondaryTokenBal = updateSecondaryTokens(
-              primaryWallet,
-              address,
-              chain
-            )
-            const ensChain = chains.find(
-              ({ id }) => id === validEnsChain(chainId)
+            const chain = chains.find(
+                ({ namespace, id }) => namespace === 'evm' && id === chainId
             )
 
-            const ensProm = ensChain
-              ? getEns(address, ensChain)
-              : Promise.resolve(null)
+            return Promise.all(
+                accounts.map(async ({ address }, index) => {
+                  const balanceProm
+                      = getBalance(address, chain, primaryWallet.type)
 
-            const unsProm = validEnsChain(chainId)
-              ? getUns(address, ensChain)
-              : Promise.resolve(null)
+                  const secondaryTokenBal = updateSecondaryTokens(
+                      primaryWallet,
+                      address,
+                      chain
+                  )
+                  const ensChain = chains.find(
+                      ({ id }) => id === validEnsChain(chainId)
+                  )
 
-            const [balance, ens, uns, secondaryTokens] = await Promise.all([
-              balanceProm,
-              ensProm,
-              unsProm,
-              secondaryTokenBal
-            ])
+                  const ensProm = ensChain
+                      ? getEns(address, ensChain)
+                      : Promise.resolve(null)
 
-            return {
-              address,
-              balance,
-              ens,
-              uns,
-              secondaryTokens
-            }
+                  const unsProm = validEnsChain(chainId)
+                      ? getUns(address, ensChain)
+                      : Promise.resolve(null)
+
+                  const [ ens, uns, secondaryTokens]
+                      = await Promise.all([
+                    ensProm,
+                    unsProm,
+                    secondaryTokenBal
+                  ])
+                  const balance = index === 0 ?
+                      await balanceProm : { [chain.token] : null }
+
+                  return {
+                    address,
+                    balance,
+                    ens,
+                    uns,
+                    secondaryTokens
+                  }
+                })
+            )
           })
-        )
+      )
+      .subscribe(updatedAccounts => {
+        updatedAccounts && updateWallet(label, { accounts: updatedAccounts })
       })
-    )
-    .subscribe(updatedAccounts => {
-      updatedAccounts && updateWallet(label, { accounts: updatedAccounts })
-    })
 
-  disconnected$.subscribe(() => {
-    provider.disconnect && provider.disconnect()
+  disconnected$.subscribe(async () => {
+    if( type  === 'substrate') { await (provider as SubstrateProvider).disconnect()
+    } else {
+      (provider as EIP1193Provider).disconnect
+      && (provider as EIP1193Provider).disconnect()
+    }
   })
 }
 
 export async function getEns(
-  address: Address,
-  chain: Chain
+    address: Address,
+    chain: Chain
 ): Promise<Ens | null> {
   // chain we don't recognize and don't have a rpcUrl for requests
   if (!chain) return null
@@ -402,6 +495,152 @@ export async function getEns(
     return null
   }
 }
+
+export async function getUns(
+    address: Address,
+    chain: Chain
+): Promise<Uns | null> {
+  const { unstoppableResolution } = configuration
+
+  // check if address is valid ETH address before attempting to resolve
+  // chain we don't recognize and don't have a rpcUrl for requests
+  if (!unstoppableResolution || !utils.isAddress(address) || !chain) return null
+
+  try {
+    return await unstoppableResolution(address)
+  } catch (error) {
+    console.error(error)
+    return null
+  }
+}
+
+export async function getBalance(
+    address: string,
+    chain: Chain,
+    type : 'evm' | 'substrate'
+): Promise<Balances | null> {
+  // chain we don't recognize and don't have a rpcUrl for requests
+  if (!chain) return null
+
+  const { wallets } = state.get()
+
+  try {
+    const wallet = wallets.find(wallet => !!wallet.provider);
+    const provider = wallet.provider
+    if( type === 'evm'){
+      const balanceHex =  await ( provider as  EIP1193Provider) .request({
+        method: 'eth_getBalance',
+        params: [address, 'latest']
+      })
+      return balanceHex ? { [  chain.token || 'ETH']: weiToEth(balanceHex) } : null
+    }else if( type === 'substrate'){
+      try{
+
+        const balancedData = await getBalanceSubstrate(
+            { url : chain.rpcUrl, data : { address : address }
+            }
+        )
+
+        return {
+          [chain.token] : parseFloat(new BN(balancedData).div(
+              new BN(10 ** chain.decimal)).toString()).toString(10)
+        }
+
+      }catch(e){
+        console.log(( e as Error).message)
+        return {
+          [chain.token] : '0'
+        }
+      }
+    }
+
+
+
+
+
+
+
+  } catch (error) {
+    console.error(error)
+    return null
+  }
+}
+
+export function switchChain(
+    provider: EIP1193Provider ,
+    chainId: ChainId
+): Promise<unknown> {
+
+  return provider.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId }]
+  })
+}
+
+export function addNewChain(
+    provider: EIP1193Provider,
+    chain: Chain
+): Promise<unknown> {
+  return provider.request({
+    method: 'wallet_addEthereumChain',
+    params: [
+      {
+        chainId: chain.id,
+        chainName: chain.label,
+        nativeCurrency: {
+          name: chain.label,
+          symbol: chain.token,
+          decimals: 18
+        },
+        rpcUrls: [chain.publicRpcUrl || chain.rpcUrl],
+        blockExplorerUrls: chain.blockExplorerUrl
+            ? [chain.blockExplorerUrl]
+            : undefined
+      }
+    ]
+  })
+}
+
+export function updateChainRPC(
+    provider: EIP1193Provider,
+    chain: Chain,
+    rpcUrl: string
+): Promise<unknown> {
+  return provider.request({
+    method: 'wallet_addEthereumChain',
+    params: [
+      {
+        chainId: chain.id,
+        chainName: chain.label,
+        nativeCurrency: {
+          name: chain.label,
+          symbol: chain.token,
+          decimals: 18
+        },
+        rpcUrls: [rpcUrl],
+        blockExplorerUrls: chain.blockExplorerUrl
+            ? [chain.blockExplorerUrl]
+            : undefined
+      }
+    ]
+  })
+}
+
+export async function getPermissions(
+    provider: EIP1193Provider
+): Promise<WalletPermission[]> {
+  try {
+
+    const permissions = (await provider.request({
+      method: 'wallet_getPermissions'
+    })) as WalletPermission[]
+
+    return Array.isArray(permissions) ? permissions : []
+  } catch (error) {
+    return []
+  }
+}
+
 export async function signPersonalSignMessageRequest(
     provider : EIP1193Provider
 ) : Promise<string> {
@@ -531,143 +770,30 @@ export async function signTypedData_v4MessageRequest(
 }
 
 
-export async function getUns(
-  address: Address,
-  chain: Chain
-): Promise<Uns | null> {
-  const { unstoppableResolution } = configuration
-
-  // check if address is valid ETH address before attempting to resolve
-  // chain we don't recognize and don't have a rpcUrl for requests
-  if (!unstoppableResolution || !utils.isAddress(address) || !chain) return null
-
-  try {
-    return await unstoppableResolution(address)
-  } catch (error) {
-    console.error(error)
-    return null
-  }
-}
-
-export async function getBalance(
-  address: string,
-  chain: Chain
-): Promise<Balances | null> {
-  // chain we don't recognize and don't have a rpcUrl for requests
-  if (!chain) return null
-
-  const { wallets } = state.get()
-
-  try {
-    const wallet = wallets.find(wallet => !!wallet.provider)
-    const provider = wallet.provider
-    const balanceHex = await provider.request({
-      method: 'eth_getBalance',
-      params: [address, 'latest']
-    })
-    return balanceHex ? { [chain.token || 'eth']: weiToEth(balanceHex) } : null
-  } catch (error) {
-    console.error(error)
-    return null
-  }
-}
-
-export function switchChain(
-  provider: EIP1193Provider,
-  chainId: ChainId
-): Promise<unknown> {
-  return provider.request({
-    method: 'wallet_switchEthereumChain',
-    params: [{ chainId }]
-  })
-}
-
-export function addNewChain(
-  provider: EIP1193Provider,
-  chain: Chain
-): Promise<unknown> {
-  return provider.request({
-    method: 'wallet_addEthereumChain',
-    params: [
-      {
-        chainId: chain.id,
-        chainName: chain.label,
-        nativeCurrency: {
-          name: chain.label,
-          symbol: chain.token,
-          decimals: 18
-        },
-        rpcUrls: [chain.publicRpcUrl || chain.rpcUrl],
-        blockExplorerUrls: chain.blockExplorerUrl
-          ? [chain.blockExplorerUrl]
-          : undefined
-      }
-    ]
-  })
-}
-
-export function updateChainRPC(
-  provider: EIP1193Provider,
-  chain: Chain,
-  rpcUrl: string
-): Promise<unknown> {
-  return provider.request({
-    method: 'wallet_addEthereumChain',
-    params: [
-      {
-        chainId: chain.id,
-        chainName: chain.label,
-        nativeCurrency: {
-          name: chain.label,
-          symbol: chain.token,
-          decimals: 18
-        },
-        rpcUrls: [rpcUrl],
-        blockExplorerUrls: chain.blockExplorerUrl
-          ? [chain.blockExplorerUrl]
-          : undefined
-      }
-    ]
-  })
-}
-
-export async function getPermissions(
-  provider: EIP1193Provider
-): Promise<WalletPermission[]> {
-  try {
-    const permissions = (await provider.request({
-      method: 'wallet_getPermissions'
-    })) as WalletPermission[]
-
-    return Array.isArray(permissions) ? permissions : []
-  } catch (error) {
-    return []
-  }
-}
-
 export async function syncWalletConnectedAccounts(
-  label: WalletState['label']
+    label: WalletState['label']
 ): Promise<void> {
   const wallet = state.get().wallets.find(wallet => wallet.label === label)
-  const permissions = await getPermissions(wallet.provider)
+  const permissions = wallet.type === 'evm' ? await getPermissions((wallet.provider) as EIP1193Provider) : []
   const accountsPermissions = permissions.find(
-    ({ parentCapability }) => parentCapability === 'eth_accounts'
+      ({ parentCapability }) => parentCapability === 'eth_accounts'
   )
 
   if (accountsPermissions) {
     const { value: connectedAccounts } = accountsPermissions.caveats.find(
-      ({ type }) => type === 'restrictReturnedAccounts'
+        ({ type }) => type === 'restrictReturnedAccounts'
     ) || { value: null }
 
     if (connectedAccounts) {
       const syncedAccounts = wallet.accounts.filter(({ address }) =>
-        connectedAccounts.includes(address)
+          connectedAccounts.includes(address)
       )
 
       updateWallet(wallet.label, { ...wallet, accounts: syncedAccounts })
     }
   }
 }
+
 export const enable = async (
     provider : SubstrateProvider
 )
@@ -691,4 +817,7 @@ export const signDummy = async (wallet : WalletState) => {
     return await  (wallet.provider as SubstrateProvider).signDummy(wallet.accounts[0].address, 'Hello Im from subWallet', undefined);
   }
 }
+
+
+
 
