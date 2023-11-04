@@ -48,7 +48,7 @@ export enum ProviderIdentityFlag {
   Rabby = 'isRabby',
   MathWallet = 'isMathWallet',
   GameStop = 'isGamestop',
-  Bitget = 'isBitKeep',
+  BitKeep = 'isBitKeep',
   Sequence = 'isSequence',
   Core = 'isAvalanche',
   Opera = 'isOpera',
@@ -67,7 +67,9 @@ export enum ProviderIdentityFlag {
   Fordefi = 'isFordefi',
   Coin98Wallet = 'isCoin98',
   SubWallet = 'isSubWallet',
-  Kayros = 'isKayros'
+  Kayros = 'isKayros',
+  SubWalletDOT = 'subwallet-js',
+  TalismanDOT = 'talisman'
 }
 
 /**
@@ -80,19 +82,18 @@ export enum ProviderIdentityFlag {
  */
 export enum ProviderExternalUrl {
   Binance = 'https://www.bnbchain.org/ru/blog/binance-extension-wallet/',
-  Bitget = 'https://web3.bitget.com/en/wallet-download',
+  BitKeep = 'https://bitkeep.com/en/download?type=0',
   Coinbase = 'https://www.coinbase.com/wallet/downloads',
   MetaMask = 'https://metamask.io/download/',
   OKXWallet = 'https://okx.com/download',
-  Phantom = 'https://phantom.app/ul/v1/connect',
+  Phantom = 'https://phantom.app/download',
   Talisman = 'https://www.talisman.xyz/',
-  Trust = 'https://link.trustwallet.com',
+  Trust = 'https://trustwallet.com/download/',
   OneKey = 'https://onekey.so/download/',
   RoninWallet = 'https://wallet.skymavis.com/',
   Coin98Wallet = 'https://coin98.com/wallet/',
   SubWallet = 'https://www.subwallet.app/',
-  Kayros = 'https://www.kayros.games/wallet/',
-  XDEFI = 'https://xdefi.io/'
+  Kayros = 'https://www.kayros.games/wallet/'
 }
 
 export enum ProviderLabel {
@@ -133,7 +134,7 @@ export enum ProviderLabel {
   Rabby = 'Rabby Wallet',
   MathWallet = 'MathWallet',
   GameStop = 'GameStop Wallet',
-  Bitget = 'Bitget Wallet',
+  BitKeep = 'BitKeep',
   Sequence = 'Sequence',
   Core = 'Core',
   Enkrypt = 'Enkrypt',
@@ -151,7 +152,9 @@ export enum ProviderLabel {
   RoninWallet = 'Ronin Wallet',
   Coin98Wallet = 'Coin98 Wallet',
   SubWallet = 'SubWallet',
-  Kayros = 'Kayros'
+  Kayros = 'Kayros',
+  SubWalletDOT = 'SubWallet(substrate)',
+  TalismanDOT = 'Talisman(substrate)'
 }
 
 export interface MeetOneProvider extends ExternalProvider {
@@ -172,7 +175,7 @@ export enum InjectedNameSpace {
   Arbitrum = 'arbitrum',
   XFI = 'xfi',
   GameStop = 'gamestop',
-  Bitget = 'bitkeep',
+  BitKeep = 'bitkeep',
   Avalanche = 'avalanche',
   Bitski = 'Bitski',
   Enkrypt = 'enkrypt',
@@ -188,7 +191,10 @@ export enum InjectedNameSpace {
   RoninWallet = 'ronin',
   Coin98Wallet = 'coin98',
   SubWallet = 'SubWallet',
-  Kayros = 'kayros'
+  Kayros = 'kayros',
+  SubWalletDOT = 'subwallet-js',
+  TalismanDOT = 'talisman'
+
 }
 
 export interface CustomWindow extends Window {
@@ -241,10 +247,10 @@ export interface CustomWindow extends Window {
 }
 
 export type InjectedProvider = ExternalProvider &
-  BinanceProvider &
-  MeetOneProvider &
-  Record<string, boolean> &
-  Record<string, InjectedProvider[]>
+    BinanceProvider &
+    MeetOneProvider &
+    Record<string, boolean> &
+    Record<string, InjectedProvider[]>
 
 export type WalletFilters = {
   /**A provider label mapped to a list of excluded platforms
@@ -285,4 +291,6 @@ export interface InjectedWalletModule extends WalletModule {
    * to be shown if not installed or available on the browser
    */
   externalUrl?: string
+
+
 }

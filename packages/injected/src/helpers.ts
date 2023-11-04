@@ -14,18 +14,19 @@ export class ProviderRpcError extends Error {
   }
 }
 
-export const defaultWalletUnavailableMsg = ({
-  label,
-  externalUrl
-}: InjectedWalletModule) =>
-  externalUrl
-    ? `Please <a href="${externalUrl}" target="_blank">install or switch to</a> ${label} to continue`
-    : `Please install or enable ${label} to continue`
+export const defaultWalletUnavailableMsg =
+    ({
+       label,
+       externalUrl
+     }: InjectedWalletModule) =>
+        externalUrl
+            ? `Please <a href="${externalUrl}" target="_blank">install</a> or enable ${label} to continue`
+            : `Please install or enable ${label} to continue`
 
 export const isWalletAvailable = (
-  provider: InjectedProvider,
-  checkProviderIdentity: InjectedWalletModule['checkProviderIdentity'],
-  device: Device
+    provider: InjectedProvider,
+    checkProviderIdentity: InjectedWalletModule['checkProviderIdentity'],
+    device: Device
 ): boolean => {
   // No injected providers exist.
   if (!provider) {
@@ -41,6 +42,6 @@ export const isWalletAvailable = (
   // example coinbase inj wallet pushes over-ridden wallets
   // into a providers array at window.ethereum
   return !!provider.providers?.some(provider =>
-    checkProviderIdentity({ provider, device })
+      checkProviderIdentity({ provider, device })
   )
 }
