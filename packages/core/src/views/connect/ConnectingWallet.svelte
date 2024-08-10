@@ -27,11 +27,11 @@
     if(isOpen && modal && uri !== ''){
       try{
           await modal.openModal({ uri });
-      }catch (e) {
+      } catch (e) {
         console.log(e)
       }
-    }else{
-      modal.closeModal();
+    } else {
+      modal?.closeModal();
     }
   })
 

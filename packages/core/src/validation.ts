@@ -222,7 +222,8 @@ const themeMap = Joi.object({
   '--w3o-text-color': Joi.string(),
   '--w3o-border-color': Joi.string(),
   '--w3o-action-color': Joi.string(),
-  '--w3o-border-radius': Joi.string()
+  '--w3o-border-radius': Joi.string(),
+  '--w3o-background-color-item': Joi.string()
 })
 
 const presetTheme = Joi.string().valid('default', 'dark', 'light', 'system')

@@ -106,14 +106,12 @@ function init(options: InitOptions): OnboardAPI {
     connect,
     containerElements,
     transactionPreview,
-    theme,
+    theme = 'default',
     disableFontDownload,
     unstoppableResolution,
     chainsPolkadot,
     wcConfigOption
   } = options
-
-
 
   if (containerElements) updateConfiguration({ containerElements })
 

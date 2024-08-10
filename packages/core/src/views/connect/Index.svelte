@@ -87,7 +87,7 @@
     if(isOpen && modal && uri !== ''){
       modal.openModal({ uri })
     }else{
-      modal.closeModal();
+      modal?.closeModal();
     }
   })
 

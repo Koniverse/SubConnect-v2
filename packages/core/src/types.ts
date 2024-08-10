@@ -105,7 +105,8 @@ export type ThemingMap = {
   '--w3o-text-color'?: string
   '--w3o-border-color'?: string
   '--w3o-action-color'?: string
-  '--w3o-border-radius'?: string
+  '--w3o-border-radius'?: string,
+  '--w3o-background-color-item'?: string,
 }
 export interface ConnectOptions {
   autoSelect?: { label: string; disableModals: boolean, type : WalletState['type'] }

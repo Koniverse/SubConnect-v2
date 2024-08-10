@@ -4,14 +4,14 @@ import type { BuiltInThemes, Theme, ThemingMap } from './types'
 
 export const themes = {
   default: {
-    '--w3o-background-color': 'unset',
-    '--w3o-foreground-color': 'unset',
-    '--w3o-text-color': 'unset',
-    '--w3o-border-color': 'unset',
-    '--w3o-action-color': 'unset',
-    '--w3o-border-radius': 'unset',
+    '--w3o-background-color': '#0C0C0C',
+    '--w3o-foreground-color': '#0C0C0C',
+    '--w3o-text-color': 'rgba(255, 255, 255, 0.8)',
+    '--w3o-border-color': '#212121',
+    '--w3o-action-color': '#252525',
+    '--w3o-border-radius': '16px',
     '--w3o-font-family': 'inherit',
-    '--w3o-background-color-item': 'inherit'
+    '--w3o-background-color-item': '#1A1A1A'
   },
   light: {
     '--w3o-background-color': '#ffffff',
