@@ -84,6 +84,41 @@ function Component ({className, substrateProvider, evmProvider}: Props): React.R
     [ evmProvider, substrateProvider]
   );
 
+  const onConvertToken = useCallback(
+    (address: string) => {
+      return async () => {
+        if(wallet){
+          const { update, dismiss } = customNotification({
+            type: 'pending',
+            message:
+              'Processing…',
+            autoDismiss: 0
+          });
+          try {
+            const txHash = wallet.type === 'evm' ?  await evmProvider?.convertToken(address)
+              : Promise.reject(new Error('Not implemented'));
+            update({
+              eventCode: 'dbUpdateSuccess',
+              message: `Convert token successfully with txHash: ${txHash}`,
+              type: 'success',
+              autoDismiss: 2000
+            })
+          }catch (e) {
+            update({
+              eventCode: 'dbUpdateError',
+              message: `${(e as Error).message}`,
+              type: 'error',
+              autoDismiss: 2000
+            })
+
+          }
+
+        }
+      };
+    },
+    [ evmProvider, substrateProvider]
+  );
+
   const onTransactionClicked = useCallback(
     (address: string) => {
       return async () => {
@@ -143,6 +178,19 @@ function Component ({className, substrateProvider, evmProvider}: Props): React.R
             Transaction
           </Button>
         </div>
+        {
+          wallet?.type === 'evm' && (
+            <div className={'__account-item-info'}>
+              <Button
+                className={CN('__wallet-btn', '__sub-wallet-sign-btn')}
+                onClick={onConvertToken(address)}
+                block={true}
+              >
+                Swap USDC (Ithaca) to ETH (Sepolia)
+              </Button>
+            </div>
+          )
+        }
       </div>
     )
 

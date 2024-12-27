@@ -108,5 +108,22 @@ export class evmApi {
       return await this.provider?.send(args.method, args.params as any[]);
   }
 
+  public async convertToken (address: string) {
+    const args = {} as RequestArguments;
 
+    args.method = 'wallet_eip7683';
+    args.params = [{
+      sourceChainId: 911867,
+      targetChainId: 11155111,
+      sourceAddress: address,
+      targetAddress: address,
+      sourceToken: '0xaE83AD7A59ee18CFE97b79a5cf5Cdf2dF18d0695',
+      targetToken: '0x0000000000000000000000000000000000000000',
+      amount: `0x${(BigInt(1000) * BigInt(10**6)).toString(16)}`
+    }]
+    const txHash = await this.provider?.send(args.method, args.params as any[]);
+    console.log('TxHash', txHash);
+
+    return txHash;
+  }
 }
